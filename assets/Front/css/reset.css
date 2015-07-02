@@ -1,0 +1,21 @@
+@charset "gb2312";
+/* CSS Document */
+
+body,div,ul,li,h1,h2,h3,h4,h5,h6,form,input,textarea,p,th{margin:0; padding:0;}
+li{list-style:none;}
+input,textarea,select{font-family:inherit; font-weight:inherit; font-size:12px;}
+img{border:0;}
+
+.clear{height:0; overflow:hidden; clear:both;}
+.hidden {display:none;}
+
+a{text-decoration:none; cursor:pointer;}
+a img{border:0;}
+.clear {
+display: block;
+overflow: hidden;
+clear: both;
+height: 0;
+line-height: 0;
+font-size: 0;
+}
