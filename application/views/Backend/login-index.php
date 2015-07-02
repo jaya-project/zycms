@@ -15,7 +15,17 @@
 </head>
 <body>
 	
-	<!--[if IE]><div style="font-size:20px;">该后台系统不支持IE内核的浏览器, 如果您使用360浏览器, 请切换到极速模式</div><![endif]-->
+	<!--[if IE]>
+		<div style="font-size:20px; width:400px; position:fixed; left:50%; margin-left:-200px; margin-top:200px;">
+			该后台系统不支持IE内核的浏览器, 如果您使用360浏览器, 请切换到极速模式
+			请点此下载<a href="http://download.firefox.com.cn/releases/stub/official/zh-CN/Firefox-latest.exe">Firefox 浏览器</a> 或 <a href="http://www.google.cn/chrome/">Chrome 浏览器</a>
+		</div>
+		
+		<style type="text/css">
+			#main { display:none; }
+			div a {font-size:14px; font-weight:bold; color:#f00;}
+		</style>
+	<![endif]-->
 
 	<div id="main">
 		<h1 class="label-input bold margin-bottom-10 font-size-20">朝阳CMS后台登录</h1>
