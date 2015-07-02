@@ -11,11 +11,7 @@ class Welcome extends FRONT_Controller {
 	
 	public function index() {
 		
-		$this->header_template = '';
-		
-		$this->footer_template = '';
-			
-		$this->view('welcome-index');
+		echo "hello!world";
 		
 		
 		

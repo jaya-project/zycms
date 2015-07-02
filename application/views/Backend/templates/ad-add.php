@@ -16,6 +16,13 @@
       <td>&nbsp;</td>
     </tr>
 	
+	 <tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>广告链接</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1"><input type="text" name="ad.url" ng-model="ad.url" placeholder="广告链接" /></td>
+      <td>&nbsp;</td>
+    </tr>
 	
 	
 	

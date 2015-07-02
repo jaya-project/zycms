@@ -15,6 +15,15 @@
       <td class="okinput k1"><input type="text" name="column.column_name" ng-model="column.column_name" placeholder="栏目名称" /></td>
       <td>&nbsp;</td>
     </tr>
+	
+	 <tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>栏目名称(英文)</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1"><input type="text" name="column.english_name" ng-model="column.english_name" placeholder="栏目名称-英文" /></td>
+      <td>&nbsp;</td>
+    </tr>
+	
     <tr>
       <td>&nbsp;</td>
       <td align="right"><span class="red">*</span>内容模型</td>

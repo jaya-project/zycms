@@ -25,7 +25,8 @@ $config['backend'] = array(
 											
 					'recommend_types' => array(
 												'c' => '推荐',
-												'h' => '热门'
+												'h' => '热门',
+												'n' => '最新'
 											),
 					'menus' => array(
 									array(
