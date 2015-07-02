@@ -8,11 +8,13 @@ class Login extends LN_Controller
 	{
 		parent::__construct();
 		$this->load->library(array('session', 'MyCaptcha', 'form_validation', 'MyAuth'));
+		$this->check_env();
 		
 	}
 	
 	public function index()
 	{
+		
 		if($redirect = $this->session->flashdata('redirect')) {
 			$this->session->set_flashdata('redirect', $redirect);
 		}
@@ -77,5 +79,13 @@ class Login extends LN_Controller
 		}
 	}
 	
+	
+	private function check_env() 
+	{
+		if (version_compare(PHP_VERSION, '5.4.0') < 0 && !ini_get('short_open_tag')) {
+			die ('您使用的PHP版本为'.PHP_VERSION .', 小于5.4, 请开启short_open_tag! 否则模板无法正常输出');
+		}
+		
+	}
 	
 }
