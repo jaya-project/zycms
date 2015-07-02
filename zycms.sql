@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-07-02 00:49:26
+-- Generation Time: 2015-07-02 03:15:22
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `zycms_ad` (
   `id` int(10) unsigned NOT NULL COMMENT '广告ID',
   `name` varchar(255) NOT NULL COMMENT '广告名',
+  `url` varchar(255) NOT NULL COMMENT '链接地址',
   `thumb` varchar(255) NOT NULL COMMENT '广告图片',
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `pid` int(10) unsigned NOT NULL COMMENT '广告位ID'
@@ -38,9 +39,9 @@ CREATE TABLE IF NOT EXISTS `zycms_ad` (
 -- 转存表中的数据 `zycms_ad`
 --
 
-INSERT INTO `zycms_ad` (`id`, `name`, `thumb`, `sort`, `pid`) VALUES
-(2, '首页广告一', '/uploads/2015/06/16/2015_06_16_1434445774.jpg', 1, 1),
-(3, '首页广告二', '/uploads/2015/06/16/2015_06_16_1434445854.jpg', 2, 1);
+INSERT INTO `zycms_ad` (`id`, `name`, `url`, `thumb`, `sort`, `pid`) VALUES
+(2, '首页广告一', 'http://www.baidu.com', '/uploads/2015/06/16/2015_06_16_1434445774.jpg', 1, 1),
+(3, '首页广告二', '', '/uploads/2015/06/16/2015_06_16_1434445854.jpg', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `zycms_admin` (
 INSERT INTO `zycms_admin` (`id`, `username`, `password`, `create_time`, `is_enable`, `rid`) VALUES
 (1, 'church', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-10 07:22:20', 1, 0),
 (3, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-23 14:20:43', 1, 6),
-(4, 'test3', '7c4a8d09ca3762af61e59520943dc26494f8941b', '2015-06-27 14:19:47', 1, 7);
+(4, 'test3', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '2015-06-27 14:19:47', 1, 7);
 
 -- --------------------------------------------------------
 
@@ -3696,6 +3697,7 @@ INSERT INTO `zycms_cities` (`id`, `cityid`, `city`, `provinceid`) VALUES
 CREATE TABLE IF NOT EXISTS `zycms_column` (
   `id` int(10) unsigned NOT NULL COMMENT '栏目ID',
   `column_name` varchar(255) NOT NULL COMMENT '栏目名称',
+  `english_name` varchar(255) NOT NULL COMMENT '栏目英文名',
   `channel_id` int(10) unsigned NOT NULL COMMENT '模型ID',
   `pid` int(10) unsigned NOT NULL COMMENT '父栏目ID',
   `column_thumb` varchar(255) NOT NULL COMMENT '栏目图片',
@@ -3712,11 +3714,11 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
 -- 转存表中的数据 `zycms_column`
 --
 
-INSERT INTO `zycms_column` (`id`, `column_name`, `channel_id`, `pid`, `column_thumb`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
-(10, '新闻中心', 14, 0, '', '', '', '', '', 0, 2, 1),
-(11, '产品中心', 15, 0, '', '', '', '', '<p>123213</p>\n', 0, 1, 1),
-(12, '电子产品', 15, 11, '', '', '', '', '', 0, 0, 2),
-(13, '家电产品', 15, 11, '', '', '', '', '', 0, 0, 2);
+INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `pid`, `column_thumb`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
+(10, '新闻中心', '', 14, 0, '', '', '', '', '', 0, 2, 1),
+(11, '产品中心', 'product', 15, 0, '', '', '', '', '<p>123213</p>\n', 0, 1, 1),
+(12, '电子产品', '', 15, 11, '', '', '', '', '', 0, 1, 2),
+(13, '家电产品', '', 15, 11, '', '', '', '', '', 0, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -3856,7 +3858,7 @@ CREATE TABLE IF NOT EXISTS `zycms_message` (
   `pid` int(10) unsigned NOT NULL COMMENT '若为0, 则为新留言; 若为留言ID, 则为回复',
   `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
   `level` tinyint(3) unsigned NOT NULL COMMENT '消息层级'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='留言表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='留言表';
 
 --
 -- 转存表中的数据 `zycms_message`
@@ -3864,7 +3866,11 @@ CREATE TABLE IF NOT EXISTS `zycms_message` (
 
 INSERT INTO `zycms_message` (`id`, `title`, `content`, `mid`, `pid`, `create_time`, `level`) VALUES
 (1, '123', '123', 0, 0, 1435545908, 1),
-(2, '我是在回复自己', '我是在回复自己', 0, 1, 1435545927, 2);
+(2, '我是在回复自己', '我是在回复自己', 0, 1, 1435545927, 2),
+(3, '我是齐庆', '你们网站好烂 ', 4, 0, 1435804642, 1),
+(4, 'fuck', 'fuck', 0, 3, 1435804670, 2),
+(5, '我在回复系统消息', '我在回复系统消息', 4, 1, 1435804739, 2),
+(6, '我在回复church', '我在回复church', 5, 5, 1435804805, 3);
 
 -- --------------------------------------------------------
 
@@ -4109,19 +4115,21 @@ CREATE TABLE IF NOT EXISTS `zycms_rule` (
   `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
   `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
   `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页; 2.列表; 3.详细)'
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8 COMMENT='规则表';
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COMMENT='规则表';
 
 --
 -- 转存表中的数据 `zycms_rule`
 --
 
 INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`) VALUES
-(121, 11, 'product/category/11-page.html', 'product/category/11/page/1', 2),
-(122, 11, 'product/detail/aid.html', 'product/detail/aid', 3),
-(124, 12, 'product/category/12-page.html', 'product/category/12/page/1', 2),
-(125, 12, 'product/detail/aid.html', 'product/detail/aid', 3),
-(127, 13, 'product/category/13-page.html', 'product/category/13/page/1', 2),
-(128, 13, 'product/detail/aid.html', 'product/detail/aid', 3);
+(130, 10, 'article/category/10-page.html', 'article/category/10/page/12', 2),
+(131, 10, 'article/detail/aid.html', 'article/detail/aid', 3),
+(133, 11, 'product/category/11-page.html', 'product/category/11/page/12', 2),
+(134, 11, 'product/detail/aid.html', 'product/detail/aid', 3),
+(136, 12, 'product/category/12-page.html', 'product/category/12/page/12', 2),
+(137, 12, 'product/detail/aid.html', 'product/detail/aid', 3),
+(139, 13, 'product/category/13-page.html', 'product/category/13/page/12', 2),
+(140, 13, 'product/detail/aid.html', 'product/detail/aid', 3);
 
 -- --------------------------------------------------------
 
@@ -4156,6 +4164,7 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('13ac35eea643af5152c2b5af64de2c899b648841', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435456809;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435457013),
 ('1683c6e98e8c6a09ddfe454b6d84c147887da39e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388578;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435388822),
 ('19353ea46181b5b4bedc327b2e0da490a606f0c6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435635408;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435635408),
+('198e5598e6ef24b4743cb26a5bf34f7eacd5b718', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803585;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803829),
 ('1c1edca5e2f57713accb6d87754e969af91a09d7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477602;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477602),
 ('1c280c85215ed57f3d553bda56cb5c26b2f80eb7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435386424;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386424),
 ('1d9983ae93efc98656fd7fb1c5511832736e134c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435457707;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435458003),
@@ -4169,6 +4178,8 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('2b74b8845876829e69870f4cc636250ac70660e8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477603;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477875),
 ('2f82953a96e4da456a485999523a002a2c6bc3f5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479877;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435480173),
 ('3021150935f88b64118ead87b2eb8e3117d8e590', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435462320;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435462595),
+('33f7b70e2177d9ecd881d9a678ae8d09e00736f9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435805617;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435805727),
+('3426883dbf2c55183ceeea2087a7b214df49d1e0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435806447;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435806543),
 ('37ba1c6a8c0a9e73088c31b0239ed9c02017e865', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479245;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479245),
 ('3a63b416ba4482ae09b0dd19855ce9dbf060fe69', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435463605;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435463800),
 ('3c309371c1739c6c07c4c7845624a85cc6f2b581', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435470999;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435471248),
@@ -4180,6 +4191,7 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('494ebeddace09ab05f19ed4bb67ff0cccdd07582', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479245;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479544),
 ('4983ba66938e9c2734b54a58c9540053fc8f8ccd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543679;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543977),
 ('4b62b367734fa73885ef487327e0fa37633d0e49', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435461976;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435462257),
+('531bfd2d77ae344161ff0f5564579838d3d762a9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804251;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804511),
 ('5796119a37afb621d1a1d0d6c302b1ddb833d071', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435473892;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435473932),
 ('57b6d3e921cac2be37b74f63a878142388aa4263', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545205;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435545461),
 ('5b0be73c5590591425566d33ccfd51b9607d3098', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545832;error_flag|i:1;code|s:4:"ucRT";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435546131),
@@ -4200,12 +4212,16 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('6c7bb628cbd1c323d4b65d0549d85a4d2b92bee5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435635409;', 1435635409),
 ('6ef67fc7aa138b61d0d3a24c334d97e40f8c8aa6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435399638;redirect|s:13:"admin/welcome";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435399638),
 ('6fc79e54a8f1fdc223450b239d4d554755b03693', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543374;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543374),
+('70be8944a95d5bc8879c5902c21daa1c4a8d95d4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803937;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804212),
 ('71015ead30dc4e7a5841f6e03e9a7f174d231864', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545507;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435545755),
 ('71262bdd6d312f5a92a85cdf4e593f5131222f39', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435365001;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435365011),
 ('71e548921b1a5e756e13b8843afbaa58867bf14a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435644516;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435644529),
+('76f5e2e9abdfbb3b7b1f62efe8093baacb65211e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435802916;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803137),
 ('78e1dd41a3dbfb6ca80215c572e5019b5db15321', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479572;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479863),
 ('7c06187a82cd65ac6d5d6a7cf34ec9bc7fff3f36', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435384745;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435384942),
+('7d1649f76f91999a38fce2eca5b81e506861581e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803284;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803583),
 ('7fc25f151f7f746d4da8796fd91976116d3a3b06', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435542455;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435542740),
+('802ec5662a3498715552c0b3e72ef9a512f4f14b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435806112;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435806195),
 ('81c34b95e5f31b42bf8b1b93a17b13df66149953', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435385806;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386039),
 ('822a0870fb174d66cd9a864a1ad4ff6cd7dd8612', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435646574;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435646832),
 ('83e162a7264550bc1fafcff2b9b6249cdd31868c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435451033;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435451197),
@@ -4228,6 +4244,7 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('a5c2e18ad6040dfdb9e4a2882fe28e901a1d1e4d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435480570;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435480614),
 ('a7cfc42b49f7c6dcd6c23462ec9d8eff52fdb1d6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435384367;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435384523),
 ('a8cc93099f466f042a4dc33b0d1fd1ccc363c9d0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398852;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435399090),
+('abd4ed8de4021243971d8aa32328563686f06143', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804251;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804251),
 ('ad2bd74320bc50148b9345e2bcb7a93d27baa4c5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435482586;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435482876),
 ('aeee4b0622f4d39c0547fb8a7bcec26932801fb6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435472706;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435472878),
 ('af884c38a0f582ffe94458e278111efccf90055b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435470586;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435470786),
@@ -4247,6 +4264,7 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('cab1e73f9d3a8b74fb98203867ed01838a0e03f5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398467;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435398468),
 ('cac35d63b60312191eabec60e9feb70896fdb5c2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477921;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435478212),
 ('d534ca38aef566846c77eb18f1b95b6cc4fc453c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388846;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435388846),
+('d5891250392dfd7b317cb6e4fd726a272702391a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804552;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804845),
 ('d6a0f749b68016d06267f43ba26c8575b815f1ba', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543374;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543674),
 ('d94101d9c3c01ee044a3e3e34a370588051b0610', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435482082;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435482373),
 ('d9cce23bd1f4635e9ed90ca6babab397d6006491', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388847;', 1435388847),
@@ -4255,6 +4273,7 @@ INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`,
 ('de5ec9be468998e28f830b5ea8f8440fd44d85ef', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435367519;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435367716),
 ('df10f074e3507e909190a1176b9766c95bfd6e5b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435366311;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435366312),
 ('e04d5d95a43c7a4bf1638551b91c2d0d7f3f82f6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435374567;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435374607),
+('e09bc87c26843b766e7fcfba43ef37d7b775de3e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435798907;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435798908),
 ('e16700e5fe481897ad65e49523293166e672e433', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435390441;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435390441),
 ('e1b861e89729c715a276fa40ec5c4f4bbe65d0f0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435371918;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435371919),
 ('e26473d92c3a6ae5475db0361e2ed19ac185b15c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435368840;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435368984),
@@ -4514,7 +4533,7 @@ ALTER TABLE `zycms_member`
 -- AUTO_INCREMENT for table `zycms_message`
 --
 ALTER TABLE `zycms_message`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '留言ID',AUTO_INCREMENT=3;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '留言ID',AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `zycms_nav`
 --
@@ -4554,7 +4573,7 @@ ALTER TABLE `zycms_role`
 -- AUTO_INCREMENT for table `zycms_rule`
 --
 ALTER TABLE `zycms_rule`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=129;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=141;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
