@@ -1,5 +1,10 @@
 <?php
-
+/**
+ *  前端API
+ *  @author church
+ *  @date 2015-07-02
+ */
+ 
 class Api
 {
 	//CI实例
@@ -8,7 +13,7 @@ class Api
 	public function __construct() {
 		$this->CI = & get_instance();
 		$this->CI->load->database();
-		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model'));
+		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model'));
 		$this->CI->load->helper(array('array'));
 		$this->CI->load->library(array('MyCategory'));
 	}
@@ -139,6 +144,8 @@ class Api
 	 *  
 	 *  @param $cid 栏目ID
 	 *  @param $flag 推荐类型, 如:热门, 最新等 
+	 *  @param $page 第$page页
+	 *  @param $page_length 页面长度
 	 *  
 	 *  return array
 	 */
@@ -183,6 +190,8 @@ class Api
 	 *  
 	 *  @param $cid 栏目ID
 	 *  @param $flag 推荐类型, 如:热门, 最新等 
+	 *  @param $page 第$page页
+	 *  @param $page_length 页面长度
 	 *  
 	 *  return array
 	 */
@@ -234,17 +243,139 @@ class Api
 	
 	/**
 	 *  获取某篇指定的文章
+	 *  
+	 *  @param $id 文章ID
 	 */
 	public function get_article($id) 
 	{
+		$archive = $this->CI->archives_model->get_one($id);
+		
+		$table_name = $this->get_table_by_column($archive['cid']);
+		
+		$row = $this->CI->db->where("id=$id")->get($table_name)->row_array();
+		
+		return array_merge($archive, $row);
+		
+	}
+	
+	/**
+	 *  获取某篇文章的上一篇和下一篇
+	 *  
+	 *  @param $id 文章ID 
+	 *  @param $template 模板
+	 */
+	public function get_prev_next($id, $template=array('prev'=>'<a href="%s" class="prev">上一篇: %s</a>', 'next'=>'<a href="%s" class="next">下一篇: %s</a>'))
+	{
+		$row = $this->CI->archives_model->get_one($id);
+		
+		$siblings = $this->CI->db->where("cid={$row['cid']}")->order_by('sort asc')->get('archives')->result_array();
+		
+		$ids = array_column($siblings, 'id');
+		
+		
+		$current_keys = array_keys($ids, $id);
+		
+		$current_key = array_shift($current_keys);
+		
+		$html = array();
+		
+		if ($current_key == 0) {
+			$html['prev'] = array(
+									'title' => '没有了',
+									'url' => 'javascript:void(0)'
+								);
+		} else {
+			$row = $this->CI->archives_model->get_one($ids[$current_key-1]);
+			$html['prev'] = array(
+									'title' => $row['title'],
+									'url' => build_url($row['id'], $row['cid'], 3)
+								);
+		}
+		
+		if ($current_key == sizeof($ids) - 1) {
+			$html['next'] = array(
+									'title' => '没有了',
+									'url' => 'javascript:void(0)'
+								);
+		} else {
+			$row = $this->CI->archives_model->get_one($ids[$current_key+1]);
+			$html['next'] = array(
+									'title' => $row['title'],
+									'url' => build_url($row['id'], $row['cid'], 3)
+								);
+		}
+		
+		$html['prev'] = sprintf($template['prev'], $html['prev']['url'], $html['prev']['title']);
+		$html['next'] = sprintf($template['next'], $html['next']['url'], $html['next']['title']);
+		
+		return join(' ', $html);
+		
 		
 	}
 	
 	
+	/**
+	 *  获取面包屑导航
+	 *  
+	 *  @param $id 
+	 *  @param $type [list|detail]
+	 *  
+	 */
+	public function get_bread($id, $type, $separator = ' > ') 
+	{
+		if ($type == 'detail') {
+			$row = $this->CI->archives_model->get_one($id);
+			$id = $row['cid'];
+		}
+		
+		$bread = array();
+		
+		$this->build_bread($id, $bread);
+		
+		array_push($bread, array('title'=>'首页', 'url'=>'/'));
+		
+		$html = '';
+		
+		while($arr = array_pop($bread)) {
+			$html .= "<a href='{$arr['url']}'>{$arr['title']}</a>  $separator";
+		}
+		
+		return rtrim($html,  $separator);
+		
+	}
+	
+	/**
+	 *  构造面包屑
+	 *  
+	 *  递归查找父栏目, 压入栈
+	 *  
+	 *  @param $id 分类ID
+	 *  @param $stack 栈引用
+	 */
+	private function build_bread($id, &$stack) 
+	{
+		$row = $this->CI->column_model->get_one($id);
+		
+		$temp = array(
+						'title' => $row['column_name'],
+						'url' => build_url(1, $id, 2)
+						);
+						
+		array_push($stack, $temp);
+		
+		
+		if ($row['pid'] == 0) {
+			return $stack;
+		} else {
+			$this->build_bread($row['pid'], $stack);
+		}
+	}
 	
 	
 	/**
 	 *  根据栏目ID获取表名
+	 *  
+	 *  @param $cid 分类ID
 	 */
 	private function get_table_by_column($cid)
 	{

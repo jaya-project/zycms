@@ -64,7 +64,7 @@ li {
               <div class="notice_wrapper" id="notice_bar"><ul id="notice_con"><li></li></ul></div>
      </div>
     <ul style="float:right;">
-      <li><span class="homepage"><a href="<?=site_url('/')?>" title="首页">&nbsp;</a></span></li>
+      <li><span class="homepage"><a href="<?=site_url('welcome/index')?>" title="首页">&nbsp;</a></span></li>
       <li><span class="back"><a href="<?=site_url('admin/logout')?>" target="_top" title="退出">&nbsp;</a></span></li>
     </ul>
   </div>
