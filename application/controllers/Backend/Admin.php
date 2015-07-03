@@ -194,6 +194,11 @@ class Admin extends Admin_Controller {
 		$this->view('message-list');
 	}
 	
+	public function auto_push()
+	{
+		$this->view('auto-push');
+	}
+	
 	private function get_role_menu($rid) 
 	{
 		if (!empty($rid)) {

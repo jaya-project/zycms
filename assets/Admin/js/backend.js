@@ -225,6 +225,34 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	
 })
 
+Module.controller('autoPushCtrl', function($scope, $http) {
+	var NG = $scope;
+	
+	NG.autoPush = function() {
+		if (typeof NG.push == 'undefined') {
+			generate({'text':'请至少填写一个链接', 'type':'error'});
+			return;
+		}
+		
+		var data = NG.push;
+		
+		
+		
+		$http.post('/Backend/tools/auto_push', data).success(function(result) {
+			if(result.code == 200 ) {
+				var message = '';
+				message += '已成功推送' + result.data.success + '条<br />';
+				message += '还剩余' + result.data.remain + '条<br />';
+				typeof result.data.not_same_site == 'undefined' ||	(message += '不是该域名下的非法域名有' + result.data.not_same_site.join(' ') + '<br />');
+				typeof result.data.not_valid == 'undefined' ||	(message += '不符合域名格式的有' + result.data.not_valid.join(' '));
+				generate({"text":message, "type":"success", 'timeout':10000});
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+})
+
 Module.controller('messageCtrl', function($scope, $http, List, $compile, template) {
 	var NG = $scope;
 	

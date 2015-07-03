@@ -41,6 +41,16 @@
 	
 	<tr>
       <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>百度推送密钥(token)</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<input type="text"  ng-model="system.token" placeholder="百度推送密钥" >
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	<tr>
+      <td>&nbsp;</td>
       <td align="right"><span class="red"></span>SMTP服务器</td>
       <td>&nbsp;</td>
       <td class="okinput k1">

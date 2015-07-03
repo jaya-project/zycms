@@ -106,6 +106,7 @@ $config['backend'] = array(
 															'/admin/database_backup' => '数据库备份',
 															'/admin/sitemap' => '网站地图生成',
 															'/admin/qr_code' => '二维码生成器',
+															'/admin/auto_push' => '百度主动推送',
 														),
 									),
 									

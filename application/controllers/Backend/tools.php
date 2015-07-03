@@ -233,5 +233,40 @@ class Tools extends Admin_Controller {
 		die(json_encode(array('code'=>200, 'message'=>'删除成功')));
 	}
 	
+	public function auto_push()
+	{
+		$data = $this->input->stream();
+		
+		$urls = explode("\n", $data['links']);
+		
+		$this->config->load('system', True);
+		
+		$temp = $this->config->item('system');
+		
+		$domain = $_SERVER['HTTP_HOST'];
+		// $domain = 'www.dgchengfu.com';
+		
+		$api = 'http://data.zz.baidu.com/urls?site='.$domain.'&token='.$temp['system_set']['token'];
+		
+		$ch = curl_init();
+		
+		$options =  array(
+			CURLOPT_URL => $api,
+			CURLOPT_POST => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_POSTFIELDS => implode("\n", $urls),
+			CURLOPT_HTTPHEADER => array('Content-Type: text/plain'),
+		);
+		
+		curl_setopt_array($ch, $options);
+		
+		$result = json_decode(curl_exec($ch), true);
+		
+		if (isset($result['error'])) {
+			die(json_encode(array('code'=>403, 'message'=>$result['message'])));
+		} else {
+			die(json_encode(array('code'=>200, 'message'=>'推送成功', 'data'=>$result)));
+		}
+	}
 	
 }
