@@ -13,7 +13,7 @@
       <td>&nbsp;</td>
       <td align="right"><span class="red"></span>网站绝对链接</td>
       <td>&nbsp;</td>
-      <td class="okinput k1"><textarea type="text" name="push.links" ng-model="push.links" placeholder="网站绝对链接(一行一个链接)" cols="60" rows="5"></textarea></td>
+      <td class="okinput k1"><textarea type="text" name="push.links" ng-model="push.links" placeholder="网站绝对链接(一行一个链接) 50条/天 (百度限制)" cols="60" rows="5"></textarea></td>
       <td>&nbsp;</td>
     </tr>
 	
