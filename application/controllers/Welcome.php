@@ -15,6 +15,8 @@ class Welcome extends FRONT_Controller {
 		
 		$this->footer_template = '';
 		
+		
+		
 		print_r($this->api->get_prev_next(4));
 		
 		echo $this->api->get_bread(6, 'detail', ' >> ');die;
