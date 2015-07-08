@@ -17,11 +17,8 @@ class Welcome extends FRONT_Controller {
 		
 		
 		
-		print_r($this->api->get_prev_next(4));
 		
-		echo $this->api->get_bread(6, 'detail', ' >> ');die;
-		
-		$this->view('welcome-index');
+		$this->view('welcome-index', array('test'=>1));
 		
 		
 		

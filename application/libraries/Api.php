@@ -40,6 +40,17 @@ class Api
 		return $navs;
 	}
 	
+	/**
+	 *  获取系统设置项
+	 *  
+	 *  return array
+	 */
+	public function get_conf()
+	{
+		$this->CI->config->load('system', True);
+		$temp = $this->CI->config->item('system');
+		return $temp['system_set'];
+	}
 	
 	/**
 	 *  获取指定广告位的广告信息
