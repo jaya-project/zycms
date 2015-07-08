@@ -76,6 +76,7 @@ class Build_html extends Admin_Controller {
 		
 		$content = file_get_contents($domain . $v['source_rule']);
 		
+		
 		$destination = './'.$v['destination_rule'];
 		
 		$dir = dirname($destination);
@@ -94,6 +95,8 @@ class Build_html extends Admin_Controller {
 		$record_count = $this->db->where("cid=$v[id]")->get('archives')->num_rows();
 		
 		$page_count = ceil($record_count / $temp[4]);
+		
+		$page_count == 0 && $page_count = 1;
 		
 		for ($i=1; $i <= $page_count; $i++) {
 			$temp = $v;
