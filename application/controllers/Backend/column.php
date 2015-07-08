@@ -8,7 +8,7 @@ class Column extends Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model(array('column_model'));
+		$this->load->model(array('column_model', 'archives_model', 'channel_model'));
 		$this->load->library(array('session'));
 		$this->load->helper(array('array', 'url'));
 		
@@ -159,6 +159,8 @@ class Column extends Admin_Controller {
 				@unlink('.'.$row['column_thumb']);
 				
 			}
+			$this->delete_archives_under_column($data['id'], $row['channel_id']);
+			
 			if ($this->column_model->delete($data['id'])) {
 				$response_data['code'] = 200;
 				$response_data['message'] = '删除成功';
@@ -174,6 +176,28 @@ class Column extends Admin_Controller {
 		die(json_encode($response_data));
 	}
 	
+	/**
+	 *  删除栏目下的文章
+	 */
+	private function delete_archives_under_column($column_id, $channel_id)
+	{
+		$row = $this->channel_model->get_one($channel_id);
+		
+		$archives = $this->archives_model->get_where("cid=$column_id");
+		
+		
+		$ids = array_column($archives, 'id');
+		
+		if (!empty($ids)) {
+			
+			$where = join(',', $ids);
+		
+			$this->archives_model->delete_where("id in ($where)") && $this->db->where("id in ($where)")->delete($row['table_name']);
+		}
+		
+		
+		
+	}
 	
 	public function modify_sort()
 	{
