@@ -47,6 +47,8 @@ class Build_html extends Admin_Controller {
 	 */
 	public function build_html()
 	{
+		//生成之前先删除已经生成的html文件
+		$this->_delete_already_exists_static_file();
 		
 		// Load the routes.php file.
 		if (file_exists(APPPATH.'config/routes.php'))
@@ -89,6 +91,8 @@ class Build_html extends Admin_Controller {
 	 */
 	private function build($v)
 	{
+		
+		
 		$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']), 'http') !== FALSE ? 'http://' : 'https://';
 		
 		$host = $_SERVER['HTTP_HOST'];
@@ -216,7 +220,21 @@ class Build_html extends Admin_Controller {
 		
 	}
 	
-	
+	/**
+	 *  删除已经生成的旧静态文件
+	 *  只清除根目录的静态文件
+	 */
+	private function _delete_already_exists_static_file() 
+	{
+		$handle = dir('./');
+		while(false !== ($entry=$handle->read())) {
+			if (!is_dir($entry)) {
+				if (($extend = substr($entry, strrpos($entry, '.')+1)) == 'html') {
+					@unlink('./'.$entry);
+				}
+			}
+		}
+	}
 	
 	
 	/**
