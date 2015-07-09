@@ -42,10 +42,27 @@ class Build_html extends Admin_Controller {
 		}
 	}
 	
+	/**
+	 *  生成静态页面
+	 */
 	public function build_html()
 	{
+		
+		// Load the routes.php file.
+		if (file_exists(APPPATH.'config/routes.php'))
+		{
+			include(APPPATH.'config/routes.php');
+		}
+
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
+		{
+			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
+		}
+		
+		$index_controller_method = $route['default_controller'] . '/index';
+		
 		//更新首页
-		$this->build(array('destination_rule' => 'index.html', 'source_rule' => 'welcome/index'));
+		$this->build(array('destination_rule' => 'index.html', 'source_rule' => $index_controller_method));
 		
 		//更新栏目
 		$this->db->select('c.id, c.column_name, r.destination_rule, r.source_rule, r.type');
@@ -67,6 +84,9 @@ class Build_html extends Admin_Controller {
 		die(json_encode(array('code'=>200, 'message' => '更新成功')));
 	}
 	
+	/**
+	 *  生成某一个页面
+	 */
 	private function build($v)
 	{
 		$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']), 'http') !== FALSE ? 'http://' : 'https://';
@@ -87,6 +107,9 @@ class Build_html extends Admin_Controller {
 		
 	}
 	
+	/**
+	 *  生成某个栏目列表
+	 */
 	private function build_list($v)
 	{
 		$temp = explode('/', $v['source_rule']);
@@ -114,11 +137,18 @@ class Build_html extends Admin_Controller {
 		
 	}
 	
+	
+	/**
+	 *  生成某个单页
+	 */
 	private function build_single($v)
 	{
 		$this->build($v);
 	}
 	
+	/**
+	 *  生成详细页面
+	 */
 	private function build_detail($v)
 	{
 		$articles = $this->archives_model->get_where($v['id']);
