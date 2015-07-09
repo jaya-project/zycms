@@ -73,6 +73,7 @@ class Build_html extends Admin_Controller {
 		
 		$columns = $this->db->get()->result_array();
 		
+		
 		foreach ($columns as $k=>$v) {
 			if ($v['type'] == self::LISTPAGE) {
 				$this->build_list($v);
@@ -115,7 +116,10 @@ class Build_html extends Admin_Controller {
 		
 		$destination = './'.$v['destination_rule'];
 		
+		
 		$dir = dirname($destination);
+		
+		
 		
 		@mkdir($dir, 0777, TRUE);
 		
@@ -167,9 +171,10 @@ class Build_html extends Admin_Controller {
 	 */
 	private function build_detail($v)
 	{
-		$articles = $this->archives_model->get_where($v['id']);
+		$articles = $this->archives_model->get_where("id=$v[id]");
 		
 		$ids = array_column($articles, 'id');
+		
 		
 		foreach ($ids as $id) {
 			
