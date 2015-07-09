@@ -389,7 +389,8 @@ class Api
 			$html .= "<a href='{$arr['url']}'>{$arr['title']}</a>  $separator";
 		}
 		
-		return rtrim($html,  $separator);
+		
+		return substr($html, 0, strrpos($html, $separator));
 		
 	}
 	
