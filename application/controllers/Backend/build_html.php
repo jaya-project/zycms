@@ -13,7 +13,7 @@ class Build_html extends Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model(array('column_model', 'rule_model', 'archives_model'));
-		$this->load->library(array('session', 'Pinyin'));
+		$this->load->library(array('session', 'Pinyin', 'MyCategory'));
 		$this->load->helper(array('array', 'url', 'file'));
 		
 	}
@@ -92,7 +92,10 @@ class Build_html extends Admin_Controller {
 		$temp = explode('/', $v['source_rule']);
 		empty($temp[0]) && array_shift($temp);
 		
-		$record_count = $this->db->where("cid=$v[id]")->get('archives')->num_rows();
+		$arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
+		$str_cid = implode(',', $arr_columns);
+		
+		$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
 		
 		$page_count = ceil($record_count / $temp[4]);
 		
