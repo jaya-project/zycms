@@ -98,7 +98,19 @@ class Build_html extends Admin_Controller {
 		$host = $_SERVER['HTTP_HOST'];
 		$domain = $protocol . $host . '/';
 		
-		$content = file_get_contents($domain . $v['source_rule']);
+		// $content = file_get_contents($domain . $v['source_rule']);
+		
+		$ch = curl_init();
+		
+		$options =  array(
+			CURLOPT_URL => $domain . $v['source_rule'],
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HTTPHEADER => array('Content-Type: text/html'),
+		);
+		
+		curl_setopt_array($ch, $options);
+		
+		$content = curl_exec($ch);
 		
 		
 		$destination = './'.$v['destination_rule'];
