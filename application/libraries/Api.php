@@ -281,6 +281,7 @@ class Api
 			
 			return array(
 							'pages' => $total_pages,
+							'count' => $total_count,
 							'current_page' => $page,
 							'prev_page' => ($page > 1 ? $page-1 : 1),
 							'next_page' => ($page < $total_pages ? $page+1 : $total_pages),
