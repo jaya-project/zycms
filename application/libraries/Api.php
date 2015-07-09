@@ -157,10 +157,14 @@ class Api
 	 *  @param $flag 推荐类型, 如:热门, 最新等 
 	 *  @param $page 第$page页
 	 *  @param $page_length 页面长度
+	 *  @param $search_arr 查询数组 例: array(
+	 *  								'title' => '产品一',	//根据主表标题进行查询
+	 *  								'xinghao' => '型号一',	//可根据副表某字段进行查询 (如:型号)
+	 *  							);
 	 *  
 	 *  return array
 	 */
-	public function get_articles($cid, $flag = '', $page=1, $page_length=12)
+	public function get_articles($cid, $flag = '', $page=1, $page_length=12, $search_arr=array())
 	{
 		$table_name = $this->get_table_by_column($cid);
 		
@@ -184,6 +188,20 @@ class Api
 			}
 			$where .= "ac.cid in ($ids)";
 			
+			$search_arr = array_merge(array('relationship'=>'AND'), $search_arr);
+			
+			$relationship = $search_arr['relationship'];
+			unset($search_arr['relationship']);
+			
+			//组装查询语句
+			if (is_array($search_arr) && !empty($search_arr)) {
+				$where .= " AND (";
+				foreach ($search_arr as $field=>$value) {
+					$field == 'title' ? ($where .= " ac.{$field} like '%$value%' $relationship ") : ($where .= " a.{$field} like '%$value%'  $relationship ");
+				}
+				$where = rtrim($where, "$relationship ");
+				$where .= ")";
+			}
 			
 			$this->CI->db->select('*');
 			$this->CI->db->from('archives as ac');
@@ -203,10 +221,15 @@ class Api
 	 *  @param $flag 推荐类型, 如:热门, 最新等 
 	 *  @param $page 第$page页
 	 *  @param $page_length 页面长度
+	 *  @param $search_arr 例: array(
+	 *  								'title' => '产品一',	//根据主表标题进行查询
+	 *  								'xinghao' => '型号一',	//可根据副表某字段进行查询 (如:型号)
+	 *  								'relationship' => 'AND'
+	 *  							);
 	 *  
 	 *  return array
 	 */
-	public function get_pages($cid, $flag = '', $page=1, $page_length=12)
+	public function get_pages($cid, $flag = '', $page=1, $page_length=12, $search_arr=array())
 	{
 		$table_name = $this->get_table_by_column($cid);
 		
@@ -230,6 +253,21 @@ class Api
 			}
 			$where .= "ac.cid in ($ids)";
 			
+			
+			$search_arr = array_merge(array('relationship'=>'AND'), $search_arr);
+			
+			$relationship = $search_arr['relationship'];
+			unset($search_arr['relationship']);
+			
+			//组装查询语句
+			if (is_array($search_arr) && !empty($search_arr)) {
+				$where .= " AND (";
+				foreach ($search_arr as $field=>$value) {
+					$field == 'title' ? ($where .= " ac.{$field} like '%$value%' $relationship ") : ($where .= " a.{$field} like '%$value%'  $relationship ");
+				}
+				$where = rtrim($where, "$relationship ");
+				$where .= ")";
+			}
 			
 			$this->CI->db->select('*');
 			$this->CI->db->from('archives as ac');

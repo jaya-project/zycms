@@ -15,8 +15,11 @@ class Welcome extends FRONT_Controller {
 		
 		$this->footer_template = '';
 		
+		$this->load->library('Api');
 		
+		$result = $this->api->get_articles(2);
 		
+		print_r($result);
 		
 		$this->view('welcome-index', array('test'=>1));
 		
