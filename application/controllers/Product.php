@@ -9,13 +9,13 @@ class Product extends FRONT_Controller {
 	}
 	
 	public function index() {
+		$this->load->helper('url');
 		
-		$data['products'] = $this->api->get_articles(11);
+		$data['products'] = $this->api->get_articles(1);
 		
-		$data['columns'] = $this->api->get_columns(11);
 		
-		foreach ($data['columns']['children'] as $k=>$v) {
-			echo '<a href="'.site_url('product/category/'.$v['id']).'">'.$v['column_name'].'</a>';
+		foreach ($data['products'] as $k=>$v) {
+			echo '<a href="'.build_url($v['id'], $v['cid'], 3).'">'.$v['title'].'</a>';
 		}
 		
 		

@@ -12,11 +12,22 @@ function build_url($param, $cid, $type=2)
 	
 	$rule = array_shift($rule);
 	
-	if ($type == 2) {
-		return '/'.str_replace('page', $param, $rule['destination_rule']);
-	} else if ($type == 3) {
-		return '/'.str_replace('aid', $param, $rule['destination_rule']);
-	} else if ($type == 1) {
-		return $rule['destination_rule'];
+	if (ENVIRONMENT == 'production' || ENVIRONMENT == 'testing') {
+		if ($type == 2) {
+			return '/'.str_replace('page', $param, $rule['destination_rule']);
+		} else if ($type == 3) {
+			return '/'.str_replace('aid', $param, $rule['destination_rule']);
+		} else if ($type == 1) {
+			return $rule['destination_rule'];
+		}
+	} else {
+		if ($type == 2) {
+			return '/'.str_replace('page', $param, $rule['source_rule']);
+		} else if ($type == 3) {
+			return '/'.str_replace('aid', $param, $rule['source_rule']);
+		} else if ($type == 1) {
+			return $rule['source_rule'];
+		}
 	}
+	
 }
