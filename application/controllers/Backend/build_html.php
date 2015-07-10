@@ -211,14 +211,14 @@ class Build_html extends Admin_Controller {
 						
 			$rules[] = array(
 							'cid' => $v['id'],
-							'destination_rule' => $table_name . "/category/$v[id]-page.html",
+							'destination_rule' => $column_name . "/$v[id]-page.html",
 							'source_rule' => $table_name . "/category/$v[id]/page/12",
 							'type' => 2
 						);
 			
 			$rules[] = array(
 							'cid' => $v['id'],
-							'destination_rule' => $table_name . "/detail/aid.html",
+							'destination_rule' => $column_name . "/aid.html",
 							'source_rule' => $table_name . "/detail/aid",
 							'type' => 3
 						);

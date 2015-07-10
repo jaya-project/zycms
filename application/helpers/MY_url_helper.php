@@ -18,7 +18,7 @@ function build_url($param, $cid, $type=2)
 		} else if ($type == 3) {
 			return '/'.str_replace('aid', $param, $rule['destination_rule']);
 		} else if ($type == 1) {
-			return $rule['destination_rule'];
+			return '/'.$rule['destination_rule'];
 		}
 	} else {
 		if ($type == 2) {
@@ -26,7 +26,7 @@ function build_url($param, $cid, $type=2)
 		} else if ($type == 3) {
 			return '/'.str_replace('aid', $param, $rule['source_rule']);
 		} else if ($type == 1) {
-			return $rule['source_rule'];
+			return '/'.$rule['source_rule'];
 		}
 	}
 	
