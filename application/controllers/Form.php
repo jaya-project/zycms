@@ -7,7 +7,7 @@ class Form extends FRONT_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('form_model');
-		$this->load->helper(['array', 'email']);
+		$this->load->helper(array('array', 'email'));
 		$this->header_template = '';
 		$this->footer_template = '';
 	}
@@ -21,7 +21,7 @@ class Form extends FRONT_Controller {
 				
 				$table_struct = unserialize($row['table_struct']);
 				
-				$d_data = [];
+				$d_data = array();
 				
 				$body = '';
 				
@@ -36,6 +36,12 @@ class Form extends FRONT_Controller {
 						$this->sendEmail($row['recevied'], $body);
 					}
 					
+					$redirect_uri = isset($data['redirect_uri']) ? $data['redirect_uri'] : '/welcome/index';
+					
+					redirect($redirect_uri);
+					
+				} else {
+					die('提交失败');
 				}
 				
 				

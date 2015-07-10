@@ -362,6 +362,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	}
 	
 	NG.showReplyUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#showSendMessage').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -403,6 +404,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	}
 	
 	NG.showMessageListCallback = function(content) {
+		$('.ui-popup').remove();
 		$('#messageList').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -652,6 +654,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveAdPosition').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1359,6 +1362,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveAd').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1524,6 +1528,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveOrder').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1659,6 +1664,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 	}
 	
 	NG.showSendMessageUICallBack = function(content) {
+		$('.ui-popup').remove();
 		$('#showSendMessage').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1671,6 +1677,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveMember').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1839,6 +1846,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveNav').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1951,6 +1959,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveFlink').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -2073,6 +2082,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 	}
 	
 	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
 		$('#saveHotSearch').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -2180,6 +2190,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 	NG.isEdit = false;
 	
 	NG.showAddUI = function() {
+		$('.ui-dialog-close').click();
 		NG.piece = {};
 		NG.isEdit = false;
 		template.getTemplate('piece-add', NG, function(content) {
@@ -2427,6 +2438,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 	
 	
 	NG.showContentUICallback = function(content, id) {
+		$('.ui-popup').remove();
 		$('#showFormContent').remove();
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');

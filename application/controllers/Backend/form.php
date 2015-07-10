@@ -47,6 +47,8 @@ class Form extends Admin_Controller {
 		
 		$html .= "<input type='hidden' name='formId' value='$formId' />";
 		
+		$html .= "<input type='hidden' name='redirect_uri' value='/' />";
+		
 		$html .= '<table>';
 		
 		foreach($table_struct as $key=>$value) {
