@@ -438,7 +438,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile) {
 	var NG = $scope;
 	
-	NG.article = {'sort':50, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':''};
+	NG.article = {'sort':0, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':''};
 	
 	NG.documentId = window.location.hash.substring(1);
 	
