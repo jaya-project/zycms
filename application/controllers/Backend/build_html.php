@@ -88,6 +88,23 @@ class Build_html extends Admin_Controller {
 	}
 	
 	/**
+	 *  只针对某条规则生成
+	 */
+	public function build_single_html()
+	{
+		$data = $this->input->stream();
+		
+		$row = $this->rule_model->get_one($data['id']);
+		
+		if ($row) {
+			$this->build($row);
+			die(json_encode(array('code'=>200, 'message' => '更新成功')));
+		} else {
+			die(json_encode(array('code'=>403, 'message' => '不存在的规则')));
+		}
+	}
+	
+	/**
 	 *  生成某一个页面
 	 */
 	private function build($v)
