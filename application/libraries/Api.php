@@ -186,7 +186,7 @@ class Api
 				$where = rtrim($where, 'OR ');
 				$where .= ') AND ';
 			}
-			$where .= "ac.cid in ($ids)";
+			$where .= "(ac.cid in ($ids) OR FIND_IN_SET('$cid', sub_column))";
 			
 			$search_arr = array_merge(array('relationship'=>'AND'), $search_arr);
 			
@@ -251,7 +251,7 @@ class Api
 				$where = rtrim($where, 'OR ');
 				$where .= ') AND ';
 			}
-			$where .= "ac.cid in ($ids)";
+			$where .= "(ac.cid in ($ids) OR FIND_IN_SET('$cid', sub_column))";
 			
 			
 			$search_arr = array_merge(array('relationship'=>'AND'), $search_arr);

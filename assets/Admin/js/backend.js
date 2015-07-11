@@ -504,7 +504,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	}
 	
 	NG.saveContent = function(url, data) {
-		console.log(data)
+		
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -531,6 +531,12 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		var url = "/Backend/document/save";
 		
+		for (var i in data.sub_column) {
+			if (!data.sub_column[i]) {
+				delete data.sub_column[i];
+			}
+		}
+		
 		NG.saveContent(url, data);
 		
 		
@@ -551,6 +557,12 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		var url = "/Backend/document/save";
 		
+		for (var i in data.sub_column) {
+			if (!data.sub_column[i]) {
+				delete data.sub_column[i];
+			}
+		}
+		
 		NG.saveContent(url, data);
 	}
 	
@@ -564,6 +576,12 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				if(result.code == 200 ) {
 					
 					NG.article = result.data;
+					var temp = NG.article.sub_column.split(',');
+					var temp_obj = {};
+					for (var i in temp) {
+						temp_obj[temp[i]] = temp[i];
+					}
+					NG.article.sub_column = temp_obj;
 					NG.getStruct(NG.article.cid);
 				} else {
 					generate({"text":result.message, "type":"error"});

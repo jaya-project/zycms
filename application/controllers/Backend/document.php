@@ -34,7 +34,7 @@ class Document extends Admin_Controller {
 			$str_cid = implode(',', $arr_columns);
 			
 			
-			$condition = " a.cid in ($str_cid)";
+			$condition = " a.cid in ($str_cid) OR FIND_IN_SET('{$data['cid']}', a.sub_column)";
 		}
 		
 		if (isset($data['keyword'])) {
@@ -109,7 +109,8 @@ class Document extends Admin_Controller {
 									'sort'				=>	$data['sort'],
 									'click_count'		=> 	0,
 									'recommend_type'	=>	(isset($data['recommend_type']) && !empty($data['recommend_type'])) ? join(',', $data['recommend_type']) : '',
-									'cid'				=>	$data['cid']
+									'cid'				=>	$data['cid'],
+									'sub_column' 		=>	join(',', $data['sub_column'])
 									
 								);
 		
@@ -256,7 +257,9 @@ class Document extends Admin_Controller {
 				if ($channel = $this->channel_model->get_one($data['channel_id'])) {
 					$struct = unserialize($channel['table_struct']);
 					
-					$html = $this->render($struct);
+					$sub_columns = $this->column_model->get_where("channel_id={$data['channel_id']} AND id!={$data['id']}");
+					
+					$html = $this->render($struct, $sub_columns);
 					$response_data['code'] = 200;
 					$response_data['message'] = '获取成功';
 					$response_data['data'] = $html;
@@ -278,7 +281,7 @@ class Document extends Admin_Controller {
 	/**
 	 *  渲染结构
 	 */
-	public function render($struct) 
+	public function render($struct, $sub_columns) 
 	{
 		$html = array();
 		foreach ($struct as $key=>$value) {
@@ -345,6 +348,31 @@ class Document extends Admin_Controller {
 		}
 		
 		$response_html = '';
+		
+		
+		
+		$response_html .= <<< SUBCOLUMNHEAD
+			<tr class="newItem">
+			  <td>&nbsp;</td>
+			  <td align="right"><span class="red"></span>副栏目</td>
+			  <td>&nbsp;</td>
+			  <td class="okinput k1" style="background:none!important;">
+					<div style="width:200px; height:200px; overflow:scroll; border:1px solid #ccc;">
+SUBCOLUMNHEAD;
+
+
+		foreach($sub_columns as $column) {
+			$response_html .= <<< SUBCOLUMNBODY
+				<p><input type="checkbox" ng-model="article.sub_column.$column[id]" value="$column[id]" ng-true-value="$column[id]" />$column[column_name]</p>
+SUBCOLUMNBODY;
+		}
+		
+		$response_html .= <<< SUBCOLUMNFOOTER
+					</div>
+			  </td>
+			  <td>&nbsp;</td>
+			</tr>
+SUBCOLUMNFOOTER;
 		
 		foreach ($html as $key=>$value) {
 			$style = isset($value['style']) ? $value['style'] : '';
