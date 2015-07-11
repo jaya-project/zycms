@@ -51,6 +51,12 @@ $config['backend'] = array(
 														),
 									),
 									array(
+										'title' => '回收站',
+										'sub_menu' => array(
+															'/admin/recycle_bin' => '回收站',
+														),
+									),
+									array(
 										'title' => '广告管理',
 										'sub_menu' => array(
 															'/admin/ad_position' => '广告位管理',

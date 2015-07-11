@@ -161,10 +161,14 @@ class Api
 	 *  								'title' => '产品一',	//根据主表标题进行查询
 	 *  								'xinghao' => '型号一',	//可根据副表某字段进行查询 (如:型号)
 	 *  							);
+	 *  @param $order_arr 例: array(
+	 *  								'field' => 'sort',
+	 *  								'way' => 'asc'
+	 *  							);
 	 *  
 	 *  return array
 	 */
-	public function get_articles($cid, $flag = '', $page=1, $page_length=12, $search_arr=array())
+	public function get_articles($cid, $flag = '', $page=1, $page_length=12, $search_arr=array(), $order_arr=array())
 	{
 		$table_name = $this->get_table_by_column($cid);
 		
@@ -176,7 +180,7 @@ class Api
 			return FALSE;
 		} else {
 			
-			$where = '';
+			$where = 'is_delete=0 AND ';
 			// $where = empty($flag) ? '' : "FIND_IN_SET(ac.recommend_type, '$flag') AND ";
 			if (!empty($flag)) {
 				$where .= '(';
@@ -203,10 +207,21 @@ class Api
 				$where .= ")";
 			}
 			
+			//组装排序语句
+			$order_str = 'ac.sort asc';
+			if (is_array($order_arr) && !empty($order_arr)) {
+				if (in_array($order_arr['field'], array('id', 'sort', 'click_count'))) {
+					$order_str = "ac.{$order_arr['field']} $order_arr[way]";
+				} else {
+					$order_str = "a.{$order_arr['field']} $order_arr[way]";
+				}
+			}
+			
+			
 			$this->CI->db->select('*');
 			$this->CI->db->from('archives as ac');
 			$this->CI->db->join($table_name." as a", 'ac.id=a.id', 'left');
-			$this->CI->db->order_by('ac.sort asc');
+			$this->CI->db->order_by($order_str);
 			$this->CI->db->limit($page_length, ($page-1)*$page_length);
 			$this->CI->db->where($where);
 			
@@ -226,6 +241,7 @@ class Api
 	 *  								'xinghao' => '型号一',	//可根据副表某字段进行查询 (如:型号)
 	 *  								'relationship' => 'AND'
 	 *  							);
+	 *  
 	 *  
 	 *  return array
 	 */
@@ -259,7 +275,7 @@ class Api
 			$relationship = $search_arr['relationship'];
 			unset($search_arr['relationship']);
 			
-			//组装查询语句
+			//组装模糊查询语句
 			if (is_array($search_arr) && !empty($search_arr)) {
 				$where .= " AND (";
 				foreach ($search_arr as $field=>$value) {
@@ -269,9 +285,13 @@ class Api
 				$where .= ")";
 			}
 			
+			
+			
+			
 			$this->CI->db->select('*');
 			$this->CI->db->from('archives as ac');
 			$this->CI->db->join($table_name." as a", 'ac.id=a.id', 'left');
+			
 			$this->CI->db->order_by('ac.sort asc');
 			$this->CI->db->where($where);
 			
@@ -299,6 +319,8 @@ class Api
 	public function get_article($id) 
 	{
 		$archive = $this->CI->archives_model->get_one($id);
+		
+		$this->CI->archives_model->update($id, array('click_count'=>$archive['click_count']+1));
 		
 		$table_name = $this->get_table_by_column($archive['cid']);
 		

@@ -26,7 +26,9 @@ class Document extends Admin_Controller {
 		$page = isset($data['page']) ? $data['page'] : 1;
 		$start = ($page - 1) * self::PAGE_LENGTH;
 		
-		$condition = '';
+		$is_delete = isset($data['is_delete']) ? $data['is_delete'] : 0;
+		
+		$condition = "is_delete=$is_delete AND ";
 		
 		if (isset($data['cid']) && !empty($data['cid'])) {
 			
@@ -34,12 +36,17 @@ class Document extends Admin_Controller {
 			$str_cid = implode(',', $arr_columns);
 			
 			
-			$condition = " a.cid in ($str_cid) OR FIND_IN_SET('{$data['cid']}', a.sub_column)";
+			$condition .= " (a.cid in ($str_cid) OR FIND_IN_SET('{$data['cid']}', a.sub_column)) AND ";
 		}
 		
 		if (isset($data['keyword'])) {
-			$condition = " a.title like '%$data[keyword]%'";
+			$condition .= " a.title like '%$data[keyword]%' AND ";
 		}
+		
+		
+		$condition = rtrim($condition, 'AND ');
+		
+		// echo $condition;
 		
 		$data = $this->archives_model->get_all_after_search($condition, $start, self::PAGE_LENGTH);
 		$count = ceil($this->archives_model->count_all($condition, $start, self::PAGE_LENGTH) / self::PAGE_LENGTH);
@@ -60,11 +67,18 @@ class Document extends Admin_Controller {
 	{
 		$data = $this->input->stream();
 		
-		foreach ($data['ids'] as $key=>$value) {
-			$table_name = $this->get_additional_table($value);
-			$this->archives_model->delete($value);
-			$this->db->where("id=$value")->delete($table_name);
-		}
+		$finally = isset($data['finally']) ? $data['finally'] : '';
+		
+		if (empty($finally)) {
+			$this->archives_model->update_where('id', $data['ids'], array('is_delete'=>1));
+		} else {
+			foreach ($data['ids'] as $key=>$value) {
+				$table_name = $this->get_additional_table($value);
+				$this->archives_model->delete($value);
+				$this->db->where("id=$value")->delete($table_name);
+			}
+		}	 
+		
 		
 		die(json_encode(array('code' => 200, 'message' => '批量删除成功')));
 	}
@@ -197,12 +211,51 @@ class Document extends Admin_Controller {
 		
 		$sub_archives_table = $this->get_additional_table($data['id']);
 		
-		if ($this->archives_model->delete($data['id']) && $this->db->where("id=$data[id]")->delete($sub_archives_table)) {
-			$response_data['code'] = 200;
-			$response_data['message'] = '删除成功';
+		$finally = isset($data['finally']) ? $data['finally'] : '';
+		
+		if (empty($finally)) {
+			
+			if ($this->archives_model->update($data['id'], array('is_delete'=>1))) {
+				$response_data['code'] = 200;
+				$response_data['message'] = '删除成功';
+			} else {
+				$response_data['code'] = 403;
+				$response_data['message'] = '删除失败';
+			}
 		} else {
-			$response_data['code'] = 403;
-			$response_data['message'] = '删除失败';
+			if ($this->archives_model->delete($data['id']) && $this->db->where("id=$data[id]")->delete($sub_archives_table)) {
+				$response_data['code'] = 200;
+				$response_data['message'] = '删除成功';
+			} else {
+				$response_data['code'] = 403;
+				$response_data['message'] = '删除失败';
+			}
+			
+		}
+		
+		die(json_encode($response_data));
+	}
+	
+	public function restore_document()
+	{
+		$data = $this->input->stream();
+		
+		if (empty($data['ids'])) {
+			if ($this->archives_model->update_where_customer("is_delete=1", array('is_delete'=>0))) {
+				$response_data['code'] = 200;
+				$response_data['message'] = '批量还原成功';
+			} else {
+				$response_data['code'] = 403;
+				$response_data['message'] = '批量还原失败';
+			}
+		} else {
+			if ($this->archives_model->update_where('id', $data['ids'], array('is_delete'=>0))) {
+				$response_data['code'] = 200;
+				$response_data['message'] = '还原成功';
+			} else {
+				$response_data['code'] = 403;
+				$response_data['message'] = '还原失败';
+			}
 		}
 		
 		die(json_encode($response_data));

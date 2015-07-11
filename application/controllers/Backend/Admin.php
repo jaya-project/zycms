@@ -199,6 +199,11 @@ class Admin extends Admin_Controller {
 		$this->view('auto-push');
 	}
 	
+	public function recycle_bin()
+	{
+		$this->view('recycle-bin');
+	}
+	
 	private function get_role_menu($rid) 
 	{
 		if (!empty($rid)) {

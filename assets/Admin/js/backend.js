@@ -435,6 +435,131 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	
 })
 
+Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $compile) {
+	var NG = $scope;
+	
+	NG.chk_all = function(obj) {
+		if ($(obj).prop('checked')) {
+			for (var i in NG.data) {
+				NG.data[i].is_chk = NG.data[i].id;
+			}
+		} else {
+			for (var i in NG.data) {
+				delete NG.data[i].is_chk;
+			}
+		}
+		
+	}
+	
+	NG.batDelete = function() {
+		if (window.confirm('你真的要删除吗?删除后不可恢复!')) {
+			var ids = [];
+			for (var i in NG.data) {
+				if (NG.data[i].is_chk == NG.data[i].id) {
+					ids.push(NG.data[i].id);
+				}
+			}
+			
+			var data = {"ids":ids, "finally":1};
+			
+			$http.post("/Backend/document/bat_delete", data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+					NG.getAllArticle();
+					 
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
+	}
+	
+	
+	NG.getAllArticle = function(page) {
+		var data = NG.search;
+		page = typeof page == 'undefined' ? 1 : page;
+		
+		data = $.extend({}, data, {page:page, 'is_delete':1});
+		
+		$http.post("/Backend/document/get_article", data).success(function(result) {
+				if(result.code == 200 ) {
+					NG.data = result.data.data;
+					NG.totalPages = [];
+					NG.totalPages2 = result.data.total_pages;
+					
+					for (var i=1; i<=result.data.total_pages; i++) {
+						NG.totalPages.push(i);
+					}
+					
+					NG.currentPage = result.data.current_page;
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+	}
+	
+	NG.restoreDocument = function(type,id) {
+		var ids = [];
+		for (var i in NG.data) {
+			if (NG.data[i].is_chk == NG.data[i].id) {
+				ids.push(NG.data[i].id);
+			}
+		}
+		
+		typeof id != 'undefined' && ids.push(id);
+		
+		
+		switch(type) {
+			case 1: //还原单个文档
+				break;
+			case 2: //还原所选文档
+			default:
+				if (ids.length == 0) {
+					generate({"text":'请至少选择一个文档', "type":"error"});
+					return;
+				}
+				break;
+			case 3: //还原所有文档
+				if (!window.confirm('你真的要还原所有文档吗?')) {
+					return;
+				}
+				break;
+		}
+		
+		
+		var data = {"ids":ids};
+		$http.post("/Backend/document/restore_document", data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({'text':result.message, 'type':'success'});
+					NG.getAllArticle();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+	}
+	
+	NG.deleteArticle = function(id) {
+		if (window.confirm('你真的删除这篇文章吗?')) {
+			var data = {"id":id, 'finally':1};
+			$http.post("/Backend/document/document_delete", data).success(function(result) {
+					if(result.code == 200 ) {
+						generate({'text':result.message, 'type':'success'});
+						NG.getAllArticle();
+					} else {
+						generate({"text":result.message, "type":"error"});
+					}
+				});
+		}
+	}
+	
+	NG.getAllArticle();
+	
+	
+	List.getAllColumn(NG);
+	
+})
+
+
 Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile) {
 	var NG = $scope;
 	
@@ -463,7 +588,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	}
 	
 	NG.batDelete = function() {
-		if (window.confirm('你真的要删除吗?删除后不可恢复!')) {
+		if (window.confirm('你真的要删除吗?')) {
 			var ids = [];
 			for (var i in NG.data) {
 				if (NG.data[i].is_chk == NG.data[i].id) {
@@ -472,6 +597,11 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 			}
 			
 			var data = {"ids":ids};
+			
+			if (ids.length == 0) {
+				generate({"text":'请至少选择一个文档', "type":"error"});
+				return;
+			}
 			
 			$http.post("/Backend/document/bat_delete", data).success(function(result) {
 				if(result.code == 200 ) {
@@ -565,6 +695,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		NG.saveContent(url, data);
 	}
+
 	
 	NG.modifyContent = function(id) {
 		window.location.href="/admin/document_add#"+id;
@@ -588,7 +719,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				}
 			});
 	}
-	
+
 	
 	NG.getAllArticle = function(page) {
 		var data = NG.search;
