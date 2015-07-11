@@ -206,8 +206,8 @@ class Build_html extends Admin_Controller {
 			
 			$temp = $v;
 			
-			$temp['destination_rule'] = str_replace('id', $id, $temp['destination_rule']);
-			$temp['source_rule'] = str_replace('id', $id, $temp['source_rule']);
+			$temp['destination_rule'] = str_replace('aid', $id, $temp['destination_rule']);
+			$temp['source_rule'] = str_replace('aid', $id, $temp['source_rule']);
 			
 			$this->build($temp);
 			
