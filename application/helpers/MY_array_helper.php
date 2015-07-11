@@ -60,7 +60,10 @@ function find_grand_node($tree, $node) {
 			return $arr;
 		}
 		if(isset($value['children']) && is_array($value['children'])) {
-			$arr[] = find_grand_node($value['children'], $node);
+			$temp = find_grand_node($value['children'], $node);
+			if (!empty($temp)) {
+				$arr[] = $temp;
+			}
 		}
 	}
 	
