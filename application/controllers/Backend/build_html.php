@@ -10,11 +10,21 @@ class Build_html extends Admin_Controller {
 	const LISTPAGE = 2;
 	const DETAILPAGE = 3;
 	
+	private $columns = array();
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->model(array('column_model', 'rule_model', 'archives_model'));
 		$this->load->library(array('session', 'Pinyin', 'MyCategory'));
 		$this->load->helper(array('array', 'url', 'file'));
+		
+		$columns = $this->column_model->get_all(array('field'=>'sort', 'way'=>'asc'));
+		
+		$new_columns = array();
+		foreach($columns as $key=>$value) {
+			$new_columns[$value['id']] = $value;
+		}
+		$this->columns = gen_tree($new_columns, 'pid');
 		
 	}
 	
@@ -160,8 +170,12 @@ class Build_html extends Admin_Controller {
 		$temp = explode('/', $v['source_rule']);
 		empty($temp[0]) && array_shift($temp);
 		
-		$arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
-		$str_cid = implode(',', $arr_columns);
+		// $arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
+		// $str_cid = implode(',', $arr_columns);
+		
+		$ids = get_node_children($this->columns, $v['id']);
+		
+		$str_cid = implode(',', $ids);
 		
 		$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
 		
