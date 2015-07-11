@@ -110,7 +110,7 @@ class Document extends Admin_Controller {
 									'click_count'		=> 	0,
 									'recommend_type'	=>	(isset($data['recommend_type']) && !empty($data['recommend_type'])) ? join(',', $data['recommend_type']) : '',
 									'cid'				=>	$data['cid'],
-									'sub_column' 		=>	join(',', $data['sub_column'])
+									'sub_column' 		=>	(isset($data['sub_column']) && !empty($data['sub_column'])) ? join(',', $data['sub_column']) : ''
 									
 								);
 		
