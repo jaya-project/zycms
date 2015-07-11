@@ -94,14 +94,23 @@ class Build_html extends Admin_Controller {
 	{
 		$data = $this->input->stream();
 		
-		$row = $this->rule_model->get_one($data['id']);
+		$this->db->select('c.id, c.column_name, r.destination_rule, r.source_rule, r.type');
+		$this->db->from('column as c');
+		$this->db->join('rule as r', 'c.id=r.cid', 'left');
+		$this->db->where("r.id=$data[id]");
 		
-		if ($row) {
-			$this->build($row);
-			die(json_encode(array('code'=>200, 'message' => '更新成功')));
+		
+		$row = $this->db->get()->row_array();
+		
+		if ($row['type'] == self::LISTPAGE) {
+			$this->build_list($row);
+		} else if ($row['type'] == self::DETAILPAGE) {
+			$this->build_detail($row);
 		} else {
-			die(json_encode(array('code'=>403, 'message' => '不存在的规则')));
+			$this->build_single($row);
 		}
+			
+		die(json_encode(array('code'=>200, 'message' => '更新成功')));
 	}
 	
 	/**
@@ -109,7 +118,6 @@ class Build_html extends Admin_Controller {
 	 */
 	private function build($v)
 	{
-		
 		
 		$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']), 'http') !== FALSE ? 'http://' : 'https://';
 		
@@ -188,7 +196,8 @@ class Build_html extends Admin_Controller {
 	 */
 	private function build_detail($v)
 	{
-		$articles = $this->archives_model->get_where("id=$v[id]");
+		
+		$articles = $this->archives_model->get_where("cid=$v[id]");
 		
 		$ids = array_column($articles, 'id');
 		

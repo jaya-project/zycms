@@ -28,5 +28,8 @@ class Article extends FRONT_Controller {
 		print_r($data);
 	}
 	
+	public function detail($aid) {
+		echo $aid;
+	}
 	
 }
