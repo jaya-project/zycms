@@ -52,14 +52,8 @@ class Build_html extends Admin_Controller {
 		}
 	}
 	
-	/**
-	 *  生成静态页面
-	 */
-	public function build_html()
+	public function build_index_html()
 	{
-		//生成之前先删除已经生成的html文件
-		$this->_delete_already_exists_static_file();
-		
 		// Load the routes.php file.
 		if (file_exists(APPPATH.'config/routes.php'))
 		{
@@ -73,8 +67,22 @@ class Build_html extends Admin_Controller {
 		
 		$index_controller_method = $route['default_controller'] . '/index';
 		
-		//更新首页
-		$this->build(array('destination_rule' => 'index.html', 'source_rule' => $index_controller_method));
+		$this->build(array('destination_rule'=>'index.html', 'source_rule'=>$index_controller_method));
+		
+		if (file_exists('./index.html')) {
+			die(json_encode(array('code'=>200, 'message'=>'生成成功')));
+		} else {
+			die(json_encode(array('code'=>403, 'message'=>'生成失败')));
+		}
+	}
+	
+	/**
+	 *  生成静态页面
+	 */
+	public function build_html()
+	{
+		//生成之前先删除已经生成的html文件
+		// $this->_delete_already_exists_static_file();
 		
 		//更新栏目
 		$this->db->select('c.id, c.column_name, r.destination_rule, r.source_rule, r.type');
@@ -236,6 +244,14 @@ class Build_html extends Admin_Controller {
 		$columns = $this->column_model->get_all();
 		
 		$rules = array();
+		
+		
+		$rules[] = array(
+							'cid' => 0,
+							'destination_rule' => 'index.html',
+							'source_rule' => $index_controller_method,
+							'type' => 1
+						);
 		
 		foreach ($columns as $k=>$v) {
 			$table_name = $this->get_table_by_column($v['id']);

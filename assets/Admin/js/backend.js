@@ -2765,6 +2765,17 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 		});
 	}
 	
+	NG.buildIndex = function() {
+		$http.post('/Backend/build_html/build_index_html').success(function(result) {
+				
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
 	NG.buildHtml = function() {
 		$http.post('/Backend/build_html/build_html').success(function(result) {
 				

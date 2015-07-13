@@ -19,7 +19,7 @@ class Welcome extends FRONT_Controller {
 		
 		$result = $this->api->get_bread(7, 'single');
 
-		
+		echo 1;
 		print_r($result);
 		
 		$this->view('welcome-index', array('test'=>1));
