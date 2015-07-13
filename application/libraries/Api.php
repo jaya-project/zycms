@@ -13,7 +13,7 @@ class Api
 	public function __construct() {
 		$this->CI = & get_instance();
 		$this->CI->load->database();
-		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model'));
+		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model', 'rule_model'));
 		$this->CI->load->helper(array('array'));
 		$this->CI->load->library(array('MyCategory'));
 	}
@@ -390,7 +390,7 @@ class Api
 	 *  获取面包屑导航
 	 *  
 	 *  @param $id 
-	 *  @param $type [list|detail]
+	 *  @param $type [list|detail|single]
 	 *  
 	 */
 	public function get_bread($id, $type, $separator = ' > ') 
@@ -429,9 +429,17 @@ class Api
 	{
 		$row = $this->CI->column_model->get_one($id);
 		
+		if ($this->CI->rule_model->is_exists("cid=$id AND type=2")) {
+			$build_type = 2;
+		} else if ($this->CI->rule_model->is_exists("cid=$id AND type=1")) {
+			$build_type = 1;
+		} else {
+			$build_type = 2;
+		}
+		
 		$temp = array(
 						'title' => $row['column_name'],
-						'url' => build_url(1, $id, 2)
+						'url' => build_url(1, $id, $build_type)
 						);
 						
 		array_push($stack, $temp);

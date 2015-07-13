@@ -17,7 +17,7 @@ class Welcome extends FRONT_Controller {
 		
 		$this->load->library('Api');
 		
-		$result = $this->api->get_pages(9, '', 1, 1, array());
+		$result = $this->api->get_bread(7, 'single');
 
 		
 		print_r($result);
