@@ -80,7 +80,7 @@ li {
 				<li><a href="#" class="models models_close"><?=$value['title']?></a>
 				  <ul class="childrenmenu" style="display:none">
 					<?php foreach($value['sub_menu'] as $k=>$v) : ?>
-						<li><a href="<?=$k?>">- <?=$v?></a>
+						<li><a href="<?=site_url($k)?>">- <?=$v?></a>
 						  <div class="line"></div>
 						</li>
 					<?php endforeach ?>
