@@ -13,8 +13,21 @@ Module.directive('ckEditor', function() {
 	  ck.on('instanceReady', function(value) {
 			ck.setData(ngModel.$viewValue);
 		});
-
+		
+	  ck.on('change', function() {
+		  scope.$apply(function() {
+			  ngModel.$setViewValue(ck.getData());
+			});
+	  })
+	  
+	  ck.on('key', function() {
+		 scope.$apply(function() {
+			  ngModel.$setViewValue(ck.getData());
+			});
+	  })
+		
       ck.on('pasteState', function() {
+		  
         scope.$apply(function() {
           ngModel.$setViewValue(ck.getData());
         });
