@@ -28,6 +28,14 @@
 	
 	<tr>
       <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>性别</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1" style="background:none!important;"><input type="radio" name="member.sex" ng-model="member.sex" value="1" /> 男 <input type="radio" name="member.sex" ng-model="member.sex" value="2" /> 女 </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	<tr>
+      <td>&nbsp;</td>
       <td align="right"><span class="red">*</span>密码</td>
       <td>&nbsp;</td>
       <td class="okinput k1"><input type="password" name="member.password" ng-model="member.password" placeholder="会员密码" /></td>
@@ -42,33 +50,11 @@
       <td>&nbsp;</td>
     </tr>
 	
-	
 	<tr>
       <td>&nbsp;</td>
-      <td align="right"><span class="red"></span>收货地址</td>
+      <td align="right"><span class="red"></span>通讯地址</td>
       <td>&nbsp;</td>
-      <td class="okinput k1" style="background:none!important; width:900px;">
-			<select name="" style="border:1px solid #ccc;" id="" ng-change="getCities()" ng-model="member.province" ng-options="province.provinceid as province.province for province in provinces">
-				<option value="">请选择省份</option>
-			</select>
-			<select name=""  style="border:1px solid #ccc;" ng-change="getAreas()" ng-show="member.province" ng-model="member.city" id="" ng-options="city.cityid as city.city for city in cities">
-				<option value="">请选择市</option>
-			</select>
-			<select name=""  style="border:1px solid #ccc;" ng-show="member.city" ng-model="member.district" id="" ng-options="area.areaid as area.area for area in areas">
-				<option value="">请选择区</option>
-			</select>
-	  </td>
-      <td>&nbsp;</td>
-    </tr>
-	
-	
-	
-	
-	<tr>
-      <td>&nbsp;</td>
-      <td align="right"><span class="red"></span>详细地址</td>
-      <td>&nbsp;</td>
-      <td class="okinput k1"><input type="text" name="member.address" ng-model="member.address" placeholder="详细地址" /></td>
+      <td class="okinput k1"><input type="text" name="member.address" ng-model="member.address" placeholder="通讯地址" /></td>
       <td>&nbsp;</td>
     </tr>
 	

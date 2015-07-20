@@ -1767,7 +1767,6 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			NG.showAddUICallback(content);
 		});
 		
-		List.getAllProvinces(NG);
 	}
 	
 	NG.chk_all = function(obj) {
@@ -1851,17 +1850,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 		}).show();
 	}
 	
-	NG.getCities = function() {
-		delete NG.cities;
-		delete NG.areas;
-		List.getAllCities(NG, NG.member.province);
-	}
 	
-	NG.getAreas = function() {
-		delete NG.areas;
-		List.getAllAreas(NG, NG.member.city);
-		
-	}
 	
 	NG.addContent = function() {
 		var data = NG.member;
@@ -1967,10 +1956,6 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 				if(result.code == 200 ) {
 					NG.member = result.data;
 					delete NG.member.password;
-					List.getAllCities(NG, NG.member.province);
-					if (typeof NG.member.area != 'undefined') {
-						List.getAllAreas(NG, NG.member.area);
-					}
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
