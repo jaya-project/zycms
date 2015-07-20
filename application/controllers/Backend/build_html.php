@@ -245,6 +245,17 @@ class Build_html extends Admin_Controller {
 		
 		$rules = array();
 		
+		if (file_exists(APPPATH.'config/routes.php'))
+		{
+			include(APPPATH.'config/routes.php');
+		}
+
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
+		{
+			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
+		}
+		
+		$index_controller_method = $route['default_controller'] . '/index';
 		
 		$rules[] = array(
 							'cid' => 0,
