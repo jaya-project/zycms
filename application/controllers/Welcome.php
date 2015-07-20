@@ -17,9 +17,8 @@ class Welcome extends FRONT_Controller {
 		
 		$this->load->library('Api');
 		
-		$result = $this->api->get_bread(7, 'single');
+		$result = $this->api->get_articles(12);
 
-		echo 1;
 		print_r($result);
 		
 		$this->view('welcome-index', array('test'=>1));

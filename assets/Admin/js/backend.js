@@ -635,8 +635,13 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		$http.post("/Backend/document/get_column_struct", data).success(function(result) {
 				if(result.code == 200 ) {
 					
-					var data = $compile(result.data)(NG);
-					$(data).insertAfter($('#thumb'))
+					var data = $compile(result.data.html)(NG);
+					$(data).insertAfter($('#thumb'));
+					
+					for(var i in result.data.code) {
+						// console.log(result.data.code[i])
+						eval(result.data.code[i])
+					}
 					
 					 
 				} else {

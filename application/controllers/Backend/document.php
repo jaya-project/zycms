@@ -313,10 +313,10 @@ class Document extends Admin_Controller {
 					
 					$sub_columns = $this->column_model->get_where("channel_id={$data['channel_id']} AND id!={$data['id']}");
 					
-					$html = $this->render($struct, $sub_columns);
+					$data = $this->render($struct, $sub_columns);
 					$response_data['code'] = 200;
 					$response_data['message'] = '获取成功';
-					$response_data['data'] = $html;
+					$response_data['data'] = $data;
 					
 				} else {
 					$response_data['code'] = 403;
@@ -338,6 +338,7 @@ class Document extends Admin_Controller {
 	public function render($struct, $sub_columns) 
 	{
 		$html = array();
+		$code = array();
 		foreach ($struct as $key=>$value) {
 			switch($value['channel_type']) {
 				case 'text':
@@ -393,7 +394,12 @@ class Document extends Admin_Controller {
 				case 'image':
 					$html[$value['fields']]['text'] = $value['label_fields'];
 					$html[$value['fields']]['html'] = '';
-					$html[$value['fields']]['html'] .= "<input type='text' ng-model='article.$value[fields]' placeholder='$value[label_fields]' readonly='' class='ng-pristine ng-valid'><button class='button ng-pristine ng-valid' ngf-select='' ng-model='files'>上传</button>";
+					$html[$value['fields']]['html'] .= "<input type='text' ng-model='article.$value[fields]' placeholder='$value[label_fields]' readonly='' class='ng-pristine ng-valid'><button class='button ng-pristine ng-valid' ngf-select='' ng-model='$value[fields]'>上传</button></td><td><img ng-show='article.$value[fields]' ng-model='article.$value[fields]' id='fullPath' src='{{article.$value[fields]}}'  alt='' width='80' />";
+					$code[] = " NG.\$watch('$value[fields]', function () {
+								   upload.uploadFile('/Backend/common/upload_image', NG.$value[fields], NG, function(NG, data) {
+									   NG.article = $.extend({}, NG.article, {'$value[fields]':data.data.relative_path + data.data.file_name});
+								   });
+								});";
 					break;
 				
 				case 'multiple-image':
@@ -439,11 +445,11 @@ SUBCOLUMNFOOTER;
 				$value[html]
 			  </td>
 			  <td>&nbsp;</td>
-			</tr>
+			  </tr>
 EOF;
 		}
 
-		return $response_html;
+		return array('html'=>$response_html, 'code'=>$code);
 	}
 	
 	private function get_additional_table_content($article_id)
