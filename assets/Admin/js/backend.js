@@ -197,10 +197,9 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	
 	NG.saveColumn = function() {
 		var data = NG.column;
-		var pid = typeof NG.column.pid == 'undefined' ? 0 : NG.column.pid;
+		var pid = typeof NG.column.pid == 'undefined' || NG.column.pid == null ? 0 : NG.column.pid;
 		
 		$.extend(data, {'pid':pid});
-		
 		$http.post("/Backend/column/column_save", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({'text':result.message, "type":'success'});
