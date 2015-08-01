@@ -257,7 +257,7 @@ class Api
 			return FALSE;
 		} else {
 			
-			$where = '';
+			$where = 'is_delete=0 AND ';
 			// $where = empty($flag) ? '' : "FIND_IN_SET(ac.recommend_type, '$flag') AND ";
 			if (!empty($flag)) {
 				$where .= '(';
