@@ -25,7 +25,7 @@ class Common extends Admin_Controller {
 		
 		$config['upload_path'] = './uploads/'.date('Y').'/'.date('m').'/'.date('d').'/';
 		
-		$config['allowed_types'] = 'gif|jpg|png';
+		$config['allowed_types'] = 'gif|jpg|png|rar';
 		$config['max_size'] = '1024';
 		$config['file_name'] = date('Y').'_'.date('m').'_'.date('d').'_'.time();
 		
