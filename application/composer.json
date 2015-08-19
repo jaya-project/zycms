@@ -1,5 +1,8 @@
 {
     "require": {
         "pclzip/pclzip": "2.8.2"
-    }
+    },
+	"require-dev": {
+		"phpunit/phpunit": "4.7.*"
+	}
 }

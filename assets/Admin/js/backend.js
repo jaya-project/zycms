@@ -571,6 +571,31 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 	
 })
 
+Module.controller('exportCtrl', function($http, $scope, upload, List, $compile) {
+	var NG = $scope;
+	
+	NG.$watch('files', function () {
+       upload.uploadFile('/Backend/tools/bat_export', NG.files, NG, function(NG, data) {
+		   if (data.code == 200) {
+			   generate({'text':data.message, 'type':'success'});
+		   } else {
+			   generate({'text':data.message, 'type':'error'});
+		   }
+		   
+	   });
+    });
+	
+	NG.downloadTemplate = function() {
+		if (typeof NG.search.cid == 'undefined') {
+			generate({'text':'请先选择栏目', 'type':'error'});
+			return;
+		}
+		
+		window.open('/download/columnTemplate/'+NG.search.cid);
+	}
+	
+	List.getAllColumn(NG);
+})
 
 Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile) {
 	var NG = $scope;
@@ -730,6 +755,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 						temp_obj[temp[i]] = temp[i];
 					}
 					NG.article.sub_column = temp_obj;
+					console.log(NG.article)
 					NG.getStruct(NG.article.cid);
 				} else {
 					generate({"text":result.message, "type":"error"});

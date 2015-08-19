@@ -266,7 +266,7 @@ Examples:
 	$config['FilesystemEncoding'] = 'CP1250';
 	$config['FilesystemEncoding'] = 'ISO-8859-2';
 */
-$config['FilesystemEncoding'] = 'UTF-8';
+$config['FilesystemEncoding'] = 'GBK';
 
 /*
 Perform additional checks for image files

@@ -340,7 +340,7 @@ class Api
 	{
 		$row = $this->CI->archives_model->get_one($id);
 		
-		$siblings = $this->CI->db->where("cid={$row['cid']}")->order_by('sort asc')->get('archives')->result_array();
+		$siblings = $this->CI->db->where("cid={$row['cid']} AND is_delete=0")->order_by('sort asc')->get('archives')->result_array();
 		
 		$ids = array_column($siblings, 'id');
 		

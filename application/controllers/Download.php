@@ -6,15 +6,15 @@ class Download extends Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
-		$this->load->model('attendance_model');
-		$this->load->library(['phpexcel', 'mycategory']);
+		$this->load->model(array('channel_model', 'column_model'));
+		$this->load->library(array('phpexcel', 'mycategory'));
 	}
 	
 	public function download_attendance() {
 		
 		//数据获取
 		$data = func_get_args();
-		$query = [];
+		$query = array();
 		foreach($data as $value) {
 			$temp_arr = explode('-', $value);
 			$query[$temp_arr[0]] = $temp_arr[1];
@@ -118,6 +118,31 @@ class Download extends Admin_Controller {
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		exit;
+		
+	}
+	
+	public function columnTemplate($cid)
+	{
+		//加载下载辅助函数
+		$this->load->helper('download');
+		
+		//获取表结构数据
+		$this->db->select('ch.table_struct, ch.table_name');
+		$this->db->from('column as c');
+		$this->db->join('channel as ch', 'ch.channel_id=c.channel_id', 'left');
+		$this->db->where("c.id=$cid");
+		$row = $this->db->get()->row_array();
+		$table_struct_arr = unserialize($row['table_struct']);
+		
+		//组装数据
+		$html = '产品名或文章标题,';
+		foreach ($table_struct_arr as $value) {
+			$html .= "$value[label_fields],";
+		}
+		$html = rtrim($html, ',');
+		
+		//下载
+		force_download($row['table_name'] . '_' . $cid .'.csv', $html); 
 		
 	}
 }

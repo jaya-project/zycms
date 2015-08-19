@@ -5,18 +5,16 @@ class Article extends FRONT_Controller {
 	
 	public function __construct() {
 		parent::__construct();
+        $this->load->library('unit_test');
 		
 	}
 	
 	public function index() {
+
+
+        echo $this->unit->run('123','is_array', "test");
 		
-		$data['products'] = $this->api->get_articles(11);
 		
-		$data['columns'] = $this->api->get_columns(11);
-		
-		foreach ($data['columns']['children'] as $k=>$v) {
-			echo '<a href="'.site_url('product/category/'.$v['id']).'">'.$v['column_name'].'</a>';
-		}
 		
 		
 	}

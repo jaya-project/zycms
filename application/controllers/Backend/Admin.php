@@ -204,6 +204,10 @@ class Admin extends Admin_Controller {
 		$this->view('recycle-bin');
 	}
 	
+	public function bat_export()
+	{
+		$this->view('bat_export');
+	}
 	
 	private function get_role_menu($rid) 
 	{
