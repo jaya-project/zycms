@@ -142,7 +142,7 @@ class Download extends Admin_Controller {
 		$html = rtrim($html, ',');
 		
 		//下载
-		force_download($row['table_name'] . '_' . $cid .'.csv', $html); 
+		force_download($row['table_name'] . '@' . $cid .'.csv', iconv('UTF-8', 'GBK//IGNORE', $html)); 
 		
 	}
 }

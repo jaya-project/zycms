@@ -309,6 +309,7 @@ class Document extends Admin_Controller {
 		} else {
 			if ($data = $this->column_model->get_one($data['id'])) {
 				if ($channel = $this->channel_model->get_one($data['channel_id'])) {
+					// $table_struct = preg_replace('!s:(\d+):"(.*?)";!se',"'s:'.strlen('$2').':\"$2\";'",str_replace(' ','',$channel['table_struct']));
 					$struct = unserialize($channel['table_struct']);
 					
 					$sub_columns = $this->column_model->get_where("channel_id={$data['channel_id']} AND id!={$data['id']}");
@@ -356,9 +357,18 @@ class Document extends Admin_Controller {
 					$html[$value['fields']]['html'] = '';
 					$html[$value['fields']]['style'] = 'style="background:none!important;"';
 					$arr_value = explode(',', $value['values']);
+					$code[] = " var val = NG.article.$value[fields].split(','); NG.article.$value[fields]=[]";
 					foreach ($arr_value as $k => $v) {
 						$html[$value['fields']]['html'] .= "<input type='checkbox' ng-model='article.$value[fields].$k' ng-true-value='$v'  /> $v";
+						$code[] = <<< EOF
+							if ($.inArray('$v', val) >= 0) {
+								NG.article.$value[fields][$k] = '$v';
+							}
+							
+EOF;
 					}
+					
+					
 					break;
 					
 				case 'radio':

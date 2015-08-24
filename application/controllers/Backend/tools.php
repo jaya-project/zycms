@@ -287,11 +287,12 @@ class Tools extends Admin_Controller {
 		{
 			//获取上传后的文件信息
 			$data = $this->upload->data();
-			list($table_name, $cid) = explode('_', $data['raw_name']); 		//文件名作为表名称和栏目ID
+			list($table_name, $cid) = explode('@', $data['raw_name']); 		//文件名作为表名称和栏目ID
 			$uploaded_file_full_path = $data['full_path'];		//上传后的文件绝对路径
 			
 			//栏目名称是否存在
 			if (!($column_info = $this->column_model->get_one($cid))) {
+				@unlink($uploaded_file_full_path);
 				die(json_encode(array('code'=>403, 'message'=>'不存在的栏目,请检查文件名')));
 			}
 			
@@ -300,6 +301,7 @@ class Tools extends Admin_Controller {
 			// $table_struct = unserialize($channel_info['table_struct']);
 			// $fields = array('id') + array_column($table_struct, 'fields');
 			if ($channel_info['table_name'] != $table_name) {
+				@unlink($uploaded_file_full_path);
 				die(json_encode(array('code'=>403, 'message'=>'错误的表名')));
 			}
 			
@@ -308,31 +310,29 @@ class Tools extends Admin_Controller {
 			$handle = @fopen($uploaded_file_full_path, 'r');
 			if ($handle) {
 				$i = 0;
-				while (($buffer = fgets($handle)) !== false) {
+				while (($buffer = fgetcsv($handle)) !== false) {
 					//不是第一行才导入
 					if ($i++ != 0) {
-						if ($buffer) {
-							$content = explode(',', $buffer);
-							if (is_array($content) && sizeof($content) > 0) {
-								//插入到主表
-								$title = array_shift($content);
-								$this->archives_model->insert(array('title'=>$title, 'cid'=>$cid, 'create_time'=>time(), 'author'=>'admin', 'source'=>'原创'));
-								$id = $this->archives_model->get_insert_id();
-								//插入到副表
-								$sub_table_values = array('id'=>$id) + $content;
-								array_walk($sub_table_values, function(&$item) {
-									$item = '\'' . trim(iconv('GBK', 'UTF-8//IGNORE', $item)) . '\'';
-								});
-								$sub_table_values = join(',', $sub_table_values);
-								$sql = "INSERT INTO $table_name VALUES($sub_table_values)";
-								$this->db->query($sql);
-							}
+						if (is_array($buffer) && sizeof($buffer) > 0) {
+							//插入到主表
+							$title = array_shift($buffer);
+							$this->archives_model->insert(array('title'=>$title, 'cid'=>$cid, 'create_time'=>time(), 'author'=>'admin', 'source'=>'原创'));
+							$id = $this->archives_model->get_insert_id();
+							//插入到副表
+							$sub_table_values = array('id'=>$id) + $buffer;
+							array_walk($sub_table_values, function(&$item) {
+								$item = '\'' . trim(iconv('GBK', 'UTF-8//IGNORE', $item)) . '\'';
+							});
+							$sub_table_values = join(',', $sub_table_values);
+							$sql = "INSERT INTO $table_name VALUES($sub_table_values)";
+							$this->db->query($sql);
 						}
 					}
 				}
 				
 				fclose($handle);
 			} else {
+				@unlink($uploaded_file_full_path);
 				die(json_encode(array('code'=>403, 'message'=>'系统暂时无法打开上传文件,请稍后再试')));
 			}
 			
