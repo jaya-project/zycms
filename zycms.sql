@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-07-20 01:35:24
+-- Generation Time: 2015-08-27 01:21:40
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `zycms_admin` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `is_enable` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '是否启用(1:启用, 0:禁用)',
   `rid` int(10) unsigned NOT NULL COMMENT '角色ID'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 --
 -- 转存表中的数据 `zycms_admin`
@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS `zycms_admin` (
 INSERT INTO `zycms_admin` (`id`, `username`, `password`, `create_time`, `is_enable`, `rid`) VALUES
 (1, 'church', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-10 07:22:20', 1, 0),
 (3, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-23 14:20:43', 1, 6),
-(4, 'test3', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '2015-06-27 14:19:47', 1, 7);
+(4, 'test3', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '2015-06-27 14:19:47', 1, 7),
+(5, 'test', '45b01e3985c9c49203b3c7d38913c4bb7e639899', '2015-08-01 03:35:07', 1, 7);
 
 -- --------------------------------------------------------
 
@@ -110,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `zycms_archives` (
   `cid` int(10) unsigned NOT NULL COMMENT '分类ID',
   `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
   `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除;0,未删除)'
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='文章主表';
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='文章主表';
 
 -- --------------------------------------------------------
 
@@ -3288,7 +3289,7 @@ CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `channel_name` varchar(255) NOT NULL COMMENT '内容模型名称',
   `table_struct` text NOT NULL COMMENT '表结构(序列化)',
   `table_name` varchar(255) NOT NULL COMMENT '表名'
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='内容模型';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='内容模型';
 
 -- --------------------------------------------------------
 
@@ -3667,6 +3668,7 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `channel_id` int(10) unsigned NOT NULL COMMENT '模型ID',
   `pid` int(10) unsigned NOT NULL COMMENT '父栏目ID',
   `column_thumb` varchar(255) NOT NULL COMMENT '栏目图片',
+  `summary` text NOT NULL COMMENT '栏目摘要',
   `seo_title` varchar(255) NOT NULL COMMENT 'SEO标题',
   `seo_keywords` varchar(1024) NOT NULL COMMENT 'SEO关键词',
   `seo_description` varchar(2048) NOT NULL COMMENT 'SEO描述',
@@ -3674,7 +3676,7 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是;1,是)',
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='栏目表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='栏目表';
 
 -- --------------------------------------------------------
 
@@ -4020,7 +4022,7 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (6, '内容碎片管理', 'admin@piece_list'),
 (7, '自定义表单', 'admin@form_list,admin@form_management'),
 (8, '用户管理', 'admin@right_list,admin@role_list,admin@user_list'),
-(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push'),
+(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export'),
 (10, '系统设置管理', 'admin@base_set,admin@nav_set,admin@water_image'),
 (11, '友情链接', 'admin@flink'),
 (12, '热门搜索', 'admin@hot_search'),
@@ -4059,40 +4061,23 @@ CREATE TABLE IF NOT EXISTS `zycms_rule` (
   `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
   `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
   `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页; 2.列表; 3.详细)'
-) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8 COMMENT='规则表';
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8 COMMENT='规则表';
 
 --
 -- 转存表中的数据 `zycms_rule`
 --
 
 INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`) VALUES
-(193, 1, 'test.html', 'test/index', 1),
-(194, 1, 'test/1-page.html', 'article/category/1/page/12', 2),
-(195, 1, 'test/aid.html', 'article/detail/aid', 3),
-(196, 2, 'test2.html', 'test2/index', 1),
-(197, 2, 'test2/2-page.html', 'article/category/2/page/12', 2),
-(198, 2, 'test2/aid.html', 'article/detail/aid', 3),
-(199, 3, 'test6.html', 'test6/index', 1),
-(200, 3, 'test6/3-page.html', 'article/category/3/page/12', 2),
-(201, 3, 'test6/aid.html', 'article/detail/aid', 3),
-(202, 4, '12312.html', '12312/index', 1),
-(203, 4, '12312/4-page.html', 'article/category/4/page/12', 2),
-(204, 4, '12312/aid.html', 'article/detail/aid', 3),
-(205, 5, '432432.html', '432432/index', 1),
-(206, 5, '432432/5-page.html', 'article/category/5/page/12', 2),
-(207, 5, '432432/aid.html', 'article/detail/aid', 3),
-(208, 6, '4324324.html', '4324324/index', 1),
-(209, 6, '4324324/6-page.html', 'article/category/6/page/12', 2),
-(210, 6, '4324324/aid.html', 'article/detail/aid', 3),
-(211, 7, '5534534.html', '5534534/index', 1),
-(212, 7, '5534534/7-page.html', 'article/category/7/page/12', 2),
-(213, 7, '5534534/aid.html', 'article/detail/aid', 3),
-(214, 8, '321321.html', '321321/index', 1),
-(215, 8, '321321/8-page.html', 'article/category/8/page/12', 2),
-(216, 8, '321321/aid.html', 'article/detail/aid', 3),
-(217, 9, 'product.html', 'product/index', 1),
-(218, 9, 'product/9-page.html', 'test2/category/9/page/12', 2),
-(219, 9, 'product/aid.html', 'test2/detail/aid', 3);
+(220, 0, 'index.html', 'welcome/index', 1),
+(221, 10, '123.html', '123/index', 1),
+(222, 10, '123/10-page.html', 'product/category/10/page/12', 2),
+(223, 10, '123/aid.html', 'product/detail/aid', 3),
+(224, 11, '123.html', '123/index', 1),
+(225, 11, '123/11-page.html', 'article/category/11/page/12', 2),
+(226, 11, '123/aid.html', 'article/detail/aid', 3),
+(227, 12, 'test.html', 'test/index', 1),
+(228, 12, 'test/12-page.html', 'test2/category/12/page/12', 2),
+(229, 12, 'test/aid.html', 'test2/detail/aid', 3);
 
 -- --------------------------------------------------------
 
@@ -4114,268 +4099,57 @@ CREATE TABLE IF NOT EXISTS `zycms_sessions` (
 --
 
 INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`, `data`, `timestamp`) VALUES
-('0092b1225d6891310f008945526dafc17c736df2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435912541;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435912751),
-('010eb1c69ab62b16f439783c0efde180836c04ba', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436600940;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436601225),
-('022e60c92cf083530d211a921f134c3e8960f350', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435472384;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435472560),
-('0302abb727ad9998692c53e5df2cc4478f59003f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435559287;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435559299),
-('034d6096474489680ef17e67966f20bb3cc0652a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436342697;error_flag|i:1;code|s:4:"AKzf";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436342697),
-('057e658c880c11f07d39d556907e70fe3c7fca3d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435385352;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435385649),
-('064d89ab8b052452866c7cfa60491f8df6b72a1c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436842664;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436842887),
-('066a7dbcab91492354711984cd7eeb13e92c1e8b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435818889;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435818896),
-('089321097ee01e919b6006ab3be18d8d26658d22', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436598107;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436598107),
-('093f64b49638f587e524d0c146f2698bde87813e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436405126;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436405126),
-('0a3b2bce4cb27810b50e131101f2bf3901c9c65e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435474351;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435474369),
-('0aa2a04fe354cb512c192ccd6977b9878a7076d6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435544875;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435545097),
-('0da7d9865c98e6f32f21041c796ee4c9ce5018a8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435451475;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435451477),
-('10d684d3ae935797f5a914a9b830475e58449acf', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398815;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435398844),
-('11df33f2702ebce172f81d287272254191613594', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436586608;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436586908),
-('12096cf3c9a2e986de9710495ee5698a0d8b2b53', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436239908;error_flag|i:1;code|s:4:"gH5D";', 1436240118),
-('1259e2f1d0f830ec550b3bcfb7a650681df31536', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435657130;error_flag|i:1;code|s:4:"GSfw";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435657150),
-('12c100c0cfd566cab4d9c8fdcf5a4be1817b9e6f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435540022;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435540038),
-('132646c27ac398ba02f2a0df517f83fada88334d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435386122;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386421),
-('13ac35eea643af5152c2b5af64de2c899b648841', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435456809;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435457013),
-('1519cd2ce3c12fb9696a838c4bf9e64252e35a66', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436406775;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436406788),
-('1683c6e98e8c6a09ddfe454b6d84c147887da39e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388578;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435388822),
-('18156ab42a90e967b1bdace5a5ac6f509a69d0d3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436842344;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436842344),
-('19353ea46181b5b4bedc327b2e0da490a606f0c6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435635408;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435635408),
-('198e5598e6ef24b4743cb26a5bf34f7eacd5b718', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803585;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803829),
-('1be3c9c60ed327a6b0a8007e40bf226859a0860d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436240297;error_flag|i:1;code|s:4:"gH5D";', 1436240299),
-('1c1edca5e2f57713accb6d87754e969af91a09d7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477602;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477602),
-('1c280c85215ed57f3d553bda56cb5c26b2f80eb7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435386424;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386424),
-('1d9983ae93efc98656fd7fb1c5511832736e134c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435457707;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435458003),
-('1dc94308847f834c905c8fefe2859c314fb8cf50', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436596093;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436596338),
-('1dc973abd82771d4342d13ed255defc9acfcb137', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436342697;error_flag|i:1;code|s:4:"PFai";', 1436342791),
-('215a6d20c380ac872dafa111ee73cefda6b385fc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436598582;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436598694),
-('21bcbd6ae557727f017a55280f65b0e8a8395cda', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435482932;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435482952),
-('2245cc3451a579a4ed94ef5091a66717bf23983f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436776037;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436776037),
-('22ac79f0d0cfd0594afcb8ef104672b130bcdc1e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435461644;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435461844),
-('231380acf178c203620e322d032413b9787b34f2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435485578;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435485697),
-('242c2f99ec1cfd63d3b37cc8d873403e091fc8bc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435375259;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435375511),
-('26bebfd629524636f22fa73ca7440932caa9322a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436605585;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436605779),
-('272d98f1201306b3cc865ba3cb55f58983e399a1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435481400;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435481479),
-('27d3bc33d76309625586cf384c430490446c39e0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543980;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435544182),
-('2919e184660f7d525da18f486aff0b5c5bb477ec', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435917056;redirect|s:29:"Backend/template/get_template";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435917056),
-('29a26f0b59fa969ba719554d1239cf2ed114224b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435368473;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435368496),
-('2b74b8845876829e69870f4cc636250ac70660e8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477603;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477875),
-('2d74917eb45c617899f99f438659ba0e31014fbe', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436602257;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436602523),
-('2e9d346440b0fd0bba33d10627ef4e37b548e52b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436604782;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436604859),
-('2f82953a96e4da456a485999523a002a2c6bc3f5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479877;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435480173),
-('3021150935f88b64118ead87b2eb8e3117d8e590', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435462320;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435462595),
-('305022614b5ac76e0fc86e7c4ca16983572c68c4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436600621;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436600866),
-('3185d44b489512a358d0894d12fe505a9905ff14', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436240299;error_flag|i:1;code|s:4:"39fC";', 1436240442),
-('33f7b70e2177d9ecd881d9a678ae8d09e00736f9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435805617;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435805727),
-('3426883dbf2c55183ceeea2087a7b214df49d1e0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435806447;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435806543),
-('350b32ebb4fc0c26a98007a5989514ff6b08a689', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435808892;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435808973),
-('352ce5351db2588084c7b42489d408652174b029', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436863528;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436863535),
-('37ba1c6a8c0a9e73088c31b0239ed9c02017e865', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479245;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479245),
-('38ca925c7a8b50f375fbc46e3be90a994a81a438', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435912857;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435913115),
-('3a63b416ba4482ae09b0dd19855ce9dbf060fe69', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435463605;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435463800),
-('3a8aa0444c01a4226adf31127d81317fae2f5a51', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437018238;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437018238),
-('3c309371c1739c6c07c4c7845624a85cc6f2b581', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435470999;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435471248),
-('3d774472ed3069af34e774860e0754243bb428a0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436594072;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436594177),
-('3dc8d61f040337e6d6f3ed4df31f9ca90c182359', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435473580;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435473580),
-('3fbbb2440c07ed849b2810491141d862520485e1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435541748;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435541959),
-('4057ab85d9ed1a45f16c256e30f5cb84b2fd1fc3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436595792;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436596049),
-('40600dce64e57e9325eef5ec2d2acdab831efa15', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435462643;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435462807),
-('40e162613174e69d2b0fdc57f3c0b162aa6e2983', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435819514;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435819514),
-('43d2219ed0e3271807aa188acbbb303a6c429bfa', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436864310;redirect|s:32:"Backend/channel/get_channel_type";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436864548),
-('43dd3bd9cbd63e1f504ceb6d7a1ffec5a5e90254', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436843235;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436843517),
-('43f4a3a63ceb6a84132571dc9eb9a7eaecb940b8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436519778;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436520050),
-('44ced9a14c46775fc7b1162717661f1866e0532a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437015284;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437015558),
-('46425c8024080ab02ea87cb9778cdc7abb2439f4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435366799;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435366799),
-('466ce321e61c420a7bc0e4651b65e44ce1c3b22e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435463302;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435463576),
-('4697933091405c5b96fc448efb37b384884dea3a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436338152;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436338152),
-('479288896676a3faf47d4740327e221396fc68df', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436422043;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436422109),
-('4847458c6ebb89a1c5e207f672ff04f522fdfda3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436583024;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436583024),
-('494ebeddace09ab05f19ed4bb67ff0cccdd07582', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479245;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479544),
-('4983ba66938e9c2734b54a58c9540053fc8f8ccd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543679;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543977),
-('49a8ee75abaacb4e0ab92ff9c19cd32360a08177', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435917015;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435917038),
-('4b62b367734fa73885ef487327e0fa37633d0e49', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435461976;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435462257),
-('4dd578fef2855c9c1b7ccea790bd5ae30573d797', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436422934;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436423212),
-('4dfa448fb7c654940c74cb9cbf06216677de6350', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436776037;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436776297),
-('4eb2d08f600357d9feab09f17ad073860a50a857', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437014234;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437014490),
-('4efaecca44c447b2468b5a76a33d6ba78ee4c10f', '192.168.0.82', '', 0, '__ci_last_regenerate|i:1435910895;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435910987),
-('531bfd2d77ae344161ff0f5564579838d3d762a9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804251;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804511),
-('556488baf599bd20f48a14721634cb4f18846ae2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435816069;', 1435816239),
-('569d4cc2eaac9cefbd154228713aa3aac5897dd9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435917005;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435917005),
-('5796119a37afb621d1a1d0d6c302b1ddb833d071', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435473892;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435473932),
-('57b6d3e921cac2be37b74f63a878142388aa4263', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545205;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435545461),
-('5b0be73c5590591425566d33ccfd51b9607d3098', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545832;error_flag|i:1;code|s:4:"ucRT";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435546131),
-('5b206e88510bf3f1c90b5d151c6433e29f1fc8ac', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435460618;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435460918),
-('5b6005d30857cebfdb29388d5d48068bc50191d8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435460919;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435461190),
-('5c7413d93964a251072cc782761c8f94f9acad12', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435389051;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435389345),
-('5c763c7b72e6a12d942b2acd126609d827219b32', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398845;redirect|s:17:"admin/column_list";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435398845),
-('5d24f0ba3fe2491a3160eba3b1abc9d93b8fe156', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435914033;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435914308),
-('5da8d98b7279860ec2163e11ec629e3b53902ee2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436574672;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436574672),
-('5e41f0acad4e731ef177b598d4c7357c4e92b200', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435546133;error_flag|i:1;code|s:4:"ucRT";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435546133),
-('5e6e0332a078e689ae245b8968eccca0cc2b9fe6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435376451;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435376685),
-('5f571763cfd0336909b760a711fa9888a10bf6d9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436843548;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436843772),
-('6447951fd9cea36eaa70a8e2ba77cd99f544c7cd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436338974;error_flag|i:1;code|s:4:"AKzf";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436338975),
-('66745f7a22debb5e6efc8fee146693f665eeccd7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435481764;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435481764),
-('66c7404ac18380a29b9dc3d7194f7515ac348447', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435455383;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435455514),
-('67adb982560e57f7a495207ab98fc68fed80fcd3', '192.168.0.82', '', 0, '__ci_last_regenerate|i:1435911931;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435911970),
-('67fbc1000609af19327e7d33acd7ada770544bf5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398889;redirect|s:17:"admin/member_list";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435398889),
-('6817a8bb5e914456a5296b8f60d9e8d4d36de41a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435471353;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435471371),
-('68ba858f3b163fdbe122b5a946cfcd11970e5406', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435365821;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435365837),
-('6916439d44e577dbcb7acbda276a87d03fbb77d4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477221;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477297),
-('6ad91d41e06b404e9b0f5f58911b0a1dabf58591', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435390442;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435390698),
-('6b3daa18138c5310718b06f26b3eab14299553f5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435370522;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435370813),
-('6c678ec37dc077aa386b519ff5ad569877ac7696', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435834248;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435834249),
-('6c7bb628cbd1c323d4b65d0549d85a4d2b92bee5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435635409;', 1435635409),
-('6ef67fc7aa138b61d0d3a24c334d97e40f8c8aa6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435399638;redirect|s:13:"admin/welcome";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435399638),
-('6fc79e54a8f1fdc223450b239d4d554755b03693', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543374;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543374),
-('70be8944a95d5bc8879c5902c21daa1c4a8d95d4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803937;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804212),
-('71015ead30dc4e7a5841f6e03e9a7f174d231864', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435545507;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435545755),
-('711a8c9a6442519f82d0e6a9115f01ad671f5ae7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435917056;redirect|s:19:"Backend/nav/get_all";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435917056),
-('71262bdd6d312f5a92a85cdf4e593f5131222f39', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435365001;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435365011),
-('71ce7458e817c92725cafd99831326202a61234c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436519438;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436519732),
-('71e548921b1a5e756e13b8843afbaa58867bf14a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435644516;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435644529),
-('76f5e2e9abdfbb3b7b1f62efe8093baacb65211e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435802916;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803137),
-('775e22a228b39cc751cc2a41ba46d93b620238b8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436843857;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436843930),
-('77ec27bde93a4925b5e270ff3876a76c3bdf5755', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436341717;error_flag|i:1;code|s:4:"AKzf";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436341802),
-('78c77b330eec9d4d3137dfafd8aa54d805b558e2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435913711;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435914001),
-('78e1dd41a3dbfb6ca80215c572e5019b5db15321', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435479572;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435479863),
-('79ec1b8457b34edfa6481dd2c99fe973ec6d61b8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437018238;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437018277),
-('7a553bb2576332d3b5fd08f785913b5f5f8cb9e7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435917056;redirect|s:27:"Backend/nav/get_specify_nav";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435917056),
-('7c06187a82cd65ac6d5d6a7cf34ec9bc7fff3f36', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435384745;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435384942),
-('7d1649f76f91999a38fce2eca5b81e506861581e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435803284;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435803583),
-('7fc25f151f7f746d4da8796fd91976116d3a3b06', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435542455;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435542740),
-('802ec5662a3498715552c0b3e72ef9a512f4f14b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435806112;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435806195),
-('81c34b95e5f31b42bf8b1b93a17b13df66149953', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435385806;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386039),
-('822a0870fb174d66cd9a864a1ad4ff6cd7dd8612', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435646574;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435646832),
-('839e28fe69a8f605893b31cfd92d06ce0851fc06', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436579692;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436579973),
-('83e162a7264550bc1fafcff2b9b6249cdd31868c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435451033;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435451197),
-('83e4cff09016c3d14c02e0c232ad43949122f3ef', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435469872;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435469873),
-('848bf9f5098a0f824a3c82a5a9e082d09c9137ba', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436425185;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436425277),
-('870edddcfee7bcbd5d6d136b3edb9cdcd2913353', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435484471;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435484750),
-('8713136f6f7ea02f3417efd56d0c17531b382e0e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436605584;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436605584),
-('891e07368c6c2d01884742619140722eb74d7557', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436575006;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436575283),
-('89339c9d2426447406140c86ead76110294f8dc7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436519438;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436519438),
-('89d16e42856ee5f59d2501301671159dc94990ac', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435914646;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435914646),
-('8b1a3007e8d81810f5e14d6c82870712c0ea7a81', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436522060;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436522333),
-('8b9181202b59b8125aad9cd01df93803ae66485a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436599763;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436599965),
-('8c5041f0f17c4e033ead6d25f73260bcf9b5fe7d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435816086;', 1435816347),
-('8e426da4293d6305412913bf322faf8e18e36df7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435460128;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435460146),
-('909758c585f65844da04e3c6f2c551615a055605', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435370106;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435370129),
-('95b419fb830ffdb27daeecab119805d2d3e723a4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435542761;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543060),
-('96e983cf6bebfd5fc5b7398dd231e94d454f2ce3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436583024;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436583149),
-('975b274b263a323ac04ad44eb3c6f4ecd7bd87e6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435480178;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435480365),
-('980b1742a032ffebc21c3e87b66af9052ae21045', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435542130;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435542429),
-('983e21f884e533f689d9e699a6b79128cf257a8a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436341405;error_flag|i:1;code|s:4:"AKzf";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436341669),
-('999b0b074e9b8a4ebcd16ee1792540d192c59473', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436749876;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436750101),
-('9a99917e482cbc1c683e2057c94bf030139d1b68', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435808869;', 1435808869),
-('9ae57603a585fde82c1c21926bf38d393c6b7970', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435916013;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435916013),
-('9bb6c3d8c0be0121c0fd9881cbf965a9fce1af33', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435389359;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435389462),
-('9c03620bdff6e390ff4611d43518f16aef6a2453', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435458595;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435458793),
-('9d10dd698be39c8eea91894df5a8354571b9e3dd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435815494;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435815494),
-('9d8d96ca44cc2320ee99dbaaca6fae700722cf04', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435646245;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435646530),
-('9ebaed0a7777368f79cdd5bbbf3c8b120f79382e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435644075;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435644101),
-('a20e87514407777611f461c3943799ad646cce8f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435459351;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435459496),
-('a289f0181096b211d0f7e26ffc57467f27feb318', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435387622;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435387653),
-('a29420ac71b01d62e2e1517fe3e942c3ec3d353f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435390441;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435390442),
-('a299aa1f907de45ca481d8103148ff0872b1e362', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435546134;error_flag|i:1;code|s:4:"ucRT";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435546207),
-('a328cb74a0319206c0e75d143da45d57048c7a80', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435541441;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435541724),
-('a403577575bc0a5dcac68cda1659a37c21a19000', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436516309;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436516320),
-('a5c2e18ad6040dfdb9e4a2882fe28e901a1d1e4d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435480570;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435480614),
-('a7cfc42b49f7c6dcd6c23462ec9d8eff52fdb1d6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435384367;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435384523),
-('a8cc93099f466f042a4dc33b0d1fd1ccc363c9d0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398852;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435399090),
-('ab15c35259cca34b42858d46b67b6e61d1f586ae', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435817187;', 1435817452),
-('abd4ed8de4021243971d8aa32328563686f06143', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804251;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804251),
-('ad2bd74320bc50148b9345e2bcb7a93d27baa4c5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435482586;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435482876),
-('ae2a41e5af7484180484d624496355f657f70914', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436594891;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436595191),
-('aeee4b0622f4d39c0547fb8a7bcec26932801fb6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435472706;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435472878),
-('af884c38a0f582ffe94458e278111efccf90055b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435470586;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435470786),
-('aff66821fae8271b4eec1636ce7083a2a7d10ffa', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435455995;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435455998),
-('b00417050a5d02a9c65dc3590f6e8b01409afd82', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435820300;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435820411),
-('b09fec7329be6ea97a6e8c3b0f4ea8c93c56ea16', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435365328;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435365579),
-('b24f1daa853246fa3e9015ccb7c76d0038f9fcea', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436863870;', 1436864061),
-('b3585f46d10e63ca315939e27c38a2a290b32501', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435572430;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435572447),
-('b3bdca9a97713f3d7db88a19b7f839f55566b071', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437014230;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1437014230),
-('b4733ae7f005dc023e76ce2481a9b20c9d6d642e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477603;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435477603),
-('b4ad55547a10f9d9a5b5bcbc02a70435bb7408c4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436522455;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436522714),
-('b68c095257789329a391ef3d821f010f94645e8c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436338152;error_flag|i:1;code|s:4:"AKzf";admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436338199),
-('b6df55b0b0c97a9626df1aefb3626d28e04216f1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435396716;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435396976),
-('b7460739843bae34426ece944ab5ac9fa989066d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435390116;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435390330),
-('b7716af6b4e88920da399939ad619d74edd7fc07', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435817498;', 1435817796),
-('b83f1bad43dbbc1e0ce9d65c31ce6a43ed73e540', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398135;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435398136),
-('bb053bd9d2ae2f00345b55970fd8863e068fdd46', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435471858;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435471895),
-('bc7072df548fa5260dda5276f0060a433f8864e5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436522756;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436522938),
-('bd8acbb7977ac53a17d058c545ce0cfdd6b3f815', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543073;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543372),
-('bdf3b89b5a30ef948671d25754e8cade87be65a1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435651887;error_flag|i:1;code|s:4:"yNwc";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435652051),
-('becc6040bea994c48356408184880539ca5042fb', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436522060;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436522060),
-('bf15576c0b3a0011118c168073e3c7b56e9eb74d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436586237;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436586498),
-('bf68088171ba59416dffd00b15f99204e0d25997', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436406050;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436406215),
-('c0126fcdc17e08421868f0e607bd8a19dc66888c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436427001;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436427062),
-('c1b2bf8ef98911ac735f82e98973e1f3a686a0a5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435831080;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435831084),
-('c2751b0e85c017c327bbe9ef8821063d20f7a4a0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436842344;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436842639),
-('c2cb1422e2ab031ef974fe504f7af4725bc797e6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436841881;', 1436842044),
-('c3a62fc592e4f80c31fe0496da71af6b7e4678ae', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437014230;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1437014230),
-('c40412d71dabdd6f6558cd25137e182d74e43626', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435822603;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435822604),
-('c484a4d842dd00a0458c856db6415c33a3c8cb3a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435370952;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435371152),
-('c497f101228c6929f5769f31f68fc7cc1d26e23e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436586909;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436586995),
-('c5bf51f2eae82ca3312abe8967b5610d06f675fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437356001;error_flag|i:1;code|s:4:"4Zmn";admin|a:3:{s:2:"id";N;s:3:"rid";N;s:8:"username";N;}', 1437356113),
-('c6e3b7a23e6b356fa30df2ae6451797a8461e779', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435817856;', 1435817923),
-('c951f85b05a1b5d05474f21d17fcd7f58d24071d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435544557;error_flag|i:1;code|s:4:"SNAI";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435544820),
-('caa4ab6abaec0f78e8294ca71ba86c5fab819108', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435387318;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435387602),
-('cab1e73f9d3a8b74fb98203867ed01838a0e03f5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435398467;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435398468),
-('cac35d63b60312191eabec60e9feb70896fdb5c2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435477921;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435478212),
-('cbd94740b9f382fb81bced2f5924e00f641a5ad9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435914345;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435914614),
-('cc4d49b6a93bde193dfe99d53f402608d54d8848', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435830475;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435830547),
-('cec885be4fc554e13a4151e04a60e5cb235d608e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436594398;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436594439),
-('d25deffcc086775b23e611bd3f8b49848dba7c85', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436608366;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436608666),
-('d3deb780bf65b5281e46a0791790899caa1794e9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437356001;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1437356001),
-('d534ca38aef566846c77eb18f1b95b6cc4fc453c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388846;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435388846),
-('d53f17dec6249579e0658086d66ebb00d4e37903', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436424393;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436424603),
-('d5891250392dfd7b317cb6e4fd726a272702391a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435804552;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435804845),
-('d5f9824420febb04085728be1645ef11f432c7a2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436593184;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436593238),
-('d624542ab65532c252ccb47415f99f9d38c01511', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436595483;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436595747),
-('d6a0f749b68016d06267f43ba26c8575b815f1ba', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435543374;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435543674),
-('d7f43944e345e59ab71b21e0b79a02cb827b6d5e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436426698;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436426962),
-('d850f796a7ccdd4f3d36a0f362f6b9b20f144be5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436606204;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436606204),
-('d94101d9c3c01ee044a3e3e34a370588051b0610', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435482082;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435482373),
-('d9cce23bd1f4635e9ed90ca6babab397d6006491', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435388847;', 1435388847),
-('da04486af136ddd1b8d4273aba09bafd374958ca', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435461251;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435461536),
-('dacdfcbf45f9fbac32e1944357584a6927f9cbd9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436841881;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436841881),
-('dd473c04797e6eb2015c44a6da963fbbceace72e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435386783;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386925),
-('de5ec9be468998e28f830b5ea8f8440fd44d85ef', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435367519;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435367716),
-('df10f074e3507e909190a1176b9766c95bfd6e5b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435366311;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435366312),
-('e04d5d95a43c7a4bf1638551b91c2d0d7f3f82f6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435374567;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435374607),
-('e09bc87c26843b766e7fcfba43ef37d7b775de3e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435798907;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435798908),
-('e16700e5fe481897ad65e49523293166e672e433', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435390441;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435390441),
-('e1b861e89729c715a276fa40ec5c4f4bbe65d0f0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435371918;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435371919),
-('e26473d92c3a6ae5475db0361e2ed19ac185b15c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435368840;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435368984),
-('e2b11ce3db553789caa12b363d793a84e2dd97f8', '192.168.0.82', '', 0, '__ci_last_regenerate|i:1435915350;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435915423),
-('e40956894f022eb7131511ca28a1e68ed8ad3b21', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435539719;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435540018),
-('e53ac65025f17921f61bf3cb417e104034d48243', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436523276;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436523476),
-('e7f14300d2091efae705f6d8eb3472890489fcc6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435368073;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435368074),
-('e8c29d1d06b7f146a81b04d7ecdf104d6a8d2faf', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435475445;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435475447),
-('e99560a51a9e78a8a92be80edff5e5d87e24e3c1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436426697;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436426697),
-('eadd156cef0b4597df2c270491acd0c4e65386ed', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436405126;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436405206),
-('ec5ebbc5beaadb502f8a7d3c1ac60ab86f76785d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436749875;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436749875),
-('ec9c193898870586e1f4e348f1c2a164726be071', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436421036;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436421036),
-('ece5af0b2c06f0cf179c493fd78ceb4c781a32a4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435913375;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435913640),
-('edf795116240649bb6e932d50c1b612d767a1c7d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436597166;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436597458),
-('eea2130d3bdee064396fb86bdb4ae2a2542fa8c4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435383870;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435384071),
-('f1fc368c1c152596d9ef0086d5b37141ec4008b9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436421036;error_flag|i:1;code|s:4:"TZFD";admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436421320),
-('f23df6082e8d2b0f1a932d6b263caadc8cb0ef90', '192.168.0.82', '', 0, '__ci_last_regenerate|i:1435910590;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435910890),
-('f299202e3e321cbcd6dd7863bc22e8a85844d020', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435369564;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435369619),
-('f2a93c64c0f04d494a59f063d3d4b52443b58ec5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436605899;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436606167),
-('f37de928fe31b09ee214237e3bc283b2b346e295', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436863528;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1436863528),
-('f3cdee63a3e414e4a3c4832711d9501a63fc1471', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436519135;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436519435),
-('f528cc72d7ed86f761dc6ecfedfe15357a89f092', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436583335;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436583342),
-('f5fa97ab5d999d5cf9bc835e3e53df1598ae8ffe', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436574672;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436574740),
-('f655ac3cb2da138430c7f175dd397fc9bc27ae50', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436776514;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436776584),
-('f85d635631e090979395284adace833f17e38841', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435915042;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1435915042),
-('f97c4447491e1eba725aa0144f843babc0cf155c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435455690;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435455718),
-('f989578b48110ea9783a3cad6fd34b6631cb42d9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436575310;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436575315),
-('fa2377d79196d790e25e95a9a62fac530dfbcb5a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436519778;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436519778),
-('fab1be032585e4bb1c946fd2febb0691feeed70a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437014549;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437014727),
-('fb7936f85b6a9c8c312d132360c89edfb7dd9e4b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436864918;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1436864923),
-('fd034dd80c357e9b3b7e743e4374c2798c9cec81', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435456490;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435456729),
-('fd8404124f100ad2be09ae9c0985cf1606a59926', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435656464;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1435656698),
-('fd9a81d7931e38fcc70f4910af385fcf99347e6c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1435386424;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1435386629);
-INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`, `data`, `timestamp`) VALUES
-('fdfb03ad6ba0af99b2aa16d697fedf88b2755b0d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1436598108;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1436598120);
+('02edf6dc66c598bce8d9796b7dc5ff6000780963', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437478150;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437478292),
+('0bca4f3ac464872b1055890c400dd2cc6b078756', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439944824;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439944986),
+('145a67307c0bc7de47e92be0f8c8fd8194010964', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439952946;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439953131),
+('182ce255757e88413369040001d69071ecede5d5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440383392;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440383411),
+('1c6e3f02c3c8e6cf62ebb7a840eb8a4a1b6ce10b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439891843;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892134),
+('208faf134c5d160aedb5a25987a5f22dabf146e3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438150193;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438150195),
+('22c0aad620c26169b9dbb26c10f968021ea4a3af', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438400265;', 1438400320),
+('24ad6d57497a315e9e9999d37b5b1e5e51807037', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439956207;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439956278),
+('29c9a4043a9d0f90910ec57072b6d8dfbc8e26c7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951072;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439951176),
+('2b1852894c2d171ca23f75608d249f3ccf89907a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149819;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149819),
+('3112fc98c1af1397e3fb387e9a89cd04590cee1d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439892145;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892151),
+('381574c4401733146c759af79afea482097438ec', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440638433;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440638477),
+('3b0093bb3cfc7a4999360e5909fa732bcca4b505', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439891355;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439891570),
+('4824933cd84404a42a8dd82b78d51c6301ee27e6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373809;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373905),
+('49e9f19488eee829a65ea47cd0a4139e45bdd95c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439950227;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950521),
+('4b79f92c972c3a0a4a49bfc1b5d104d543807769', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439949772;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950036),
+('54dbeed8b94c6f0b9203d72d46a8488c0f29b9fc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438672193;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438672221),
+('5633c517330490418ab83ad2313398fd35c77c3f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439947180;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439947283),
+('575e02e482e48545a45015dd88282520c3153ef4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437372697;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437372702),
+('588aef772eaefbac61ccebcc9095f50dcc66a059', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437478476;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437478545),
+('6777a7d3d0ca73165abf6e1d475caade012149d7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437371684;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437371697),
+('684b876eb3476a795dbad0cd0ea0b5ef3be45a20', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149155;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149164),
+('686560a91be337acbfcc638ad2feeb9dd743c851', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890925;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439891065),
+('6a85a16e627521314dcce81d3c6d95a72aea7261', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437475255;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437475293),
+('7343ee59240e0dcf2f51013cd00eafc69f3797b0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149155;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1438149155),
+('7a8f92341adc7c7c09026a42c24f721dac869afe', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373206;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373505),
+('89375eaec04e15122b68aa692ebd83eb067b6d25', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439019987;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1439019987),
+('9045147cf23c375f86a68988f39304136ec471a1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438830728;admin|a:3:{s:2:"id";N;s:3:"rid";N;s:8:"username";N;}', 1438830728),
+('916e687fcf01d59fd698b44d8378c9661910df8a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438830144;admin|a:3:{s:2:"id";N;s:3:"rid";N;s:8:"username";N;}', 1438830390),
+('940136076263f9130acfc0bc63c618e7381293a2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438399653;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438399929),
+('990ffd30301cbc9743fd555b35b685d6cc2aee04', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438420407;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1438420409),
+('a0053e338006e24e1afa736e8e446faddebaaf60', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437447617;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437447813),
+('a26f07d6fd186921a2501f7f47060ef0d9f4235e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890312;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439890573),
+('a64798152b3f6a79da6d9b402a1eda98ac1b8542', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439892452;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892566),
+('a776dcb3a581e68350f9a99cb0e382c27e6b6030', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440378214;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440378222),
+('a9a3f47ce45042fb2f31304e5297e857f9579edc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951592;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439951838),
+('aab02411ca2f7d5e1d4de7976161c91c3cbe98c3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439889505;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439889516),
+('ab765072f269bf2a71bd720992ab53ea67024158', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890005;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439890303),
+('b6772c9f46c73ef5067114d79718568a20151f60', '192.168.0.101', '', 0, '__ci_last_regenerate|i:1438400037;admin|a:3:{s:2:"id";s:1:"5";s:3:"rid";s:1:"7";s:8:"username";s:4:"test";}', 1438400256),
+('b99bc81ff9c45de17bbb69cbe69e8ccb206c7d4d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951929;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439952152),
+('bac75e432be61671381d8e7a760a4c9cfdc184c9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439952611;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439952711),
+('bf5097b8897e24f86957fb5a0ed96f6644b1a80f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440549123;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1440549123),
+('c8239bb57249b557eb1ed9e5c27c33fad86225e1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440549123;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440549292),
+('cec2ae3f83d0936f0aef46bcac3c648e6fe88689', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437372074;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437372136),
+('d557d50d6dee0ba0428a587297d06382600f69ea', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440377779;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440377986),
+('e90f9d0ac042c2774a46f895fcdae65dbfb23e9b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439945675;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439945693),
+('eeb55bebb4e2667ec42ee248647a9d786d77300d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373508;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373794),
+('ef3dd59a2c6d7f1cf665a50d2c023abf533bb435', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440638433;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1440638433),
+('f873b9c0dc48d93c769d0d40dc132011647b2976', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149819;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149905),
+('f95a996123c536408eaec8ce5cb6967309f0a871', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439945271;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439945271),
+('fd228fc0d6f2ad523b122635d178a45ac6db81fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439950606;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950776);
 
 --
 -- Indexes for dumped tables
@@ -4546,7 +4320,7 @@ ALTER TABLE `zycms_ad`
 -- AUTO_INCREMENT for table `zycms_admin`
 --
 ALTER TABLE `zycms_admin`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',AUTO_INCREMENT=5;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `zycms_ad_position`
 --
@@ -4556,7 +4330,7 @@ ALTER TABLE `zycms_ad_position`
 -- AUTO_INCREMENT for table `zycms_archives`
 --
 ALTER TABLE `zycms_archives`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=15;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT for table `zycms_areas`
 --
@@ -4566,7 +4340,7 @@ ALTER TABLE `zycms_areas`
 -- AUTO_INCREMENT for table `zycms_channel`
 --
 ALTER TABLE `zycms_channel`
-  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=18;
+  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `zycms_cities`
 --
@@ -4576,7 +4350,7 @@ ALTER TABLE `zycms_cities`
 -- AUTO_INCREMENT for table `zycms_column`
 --
 ALTER TABLE `zycms_column`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=10;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `zycms_feedback`
 --
@@ -4651,7 +4425,7 @@ ALTER TABLE `zycms_role`
 -- AUTO_INCREMENT for table `zycms_rule`
 --
 ALTER TABLE `zycms_rule`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=220;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=230;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -72,6 +72,17 @@
 	
 	<tr>
       <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>栏目摘要</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<input type="text" name="" id="" ng-model="column.summary" placeholder="栏目摘要" /> 
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	
+	<tr>
+      <td>&nbsp;</td>
       <td align="right"><span class="red"></span>SEO标题</td>
       <td>&nbsp;</td>
       <td class="okinput k1">
