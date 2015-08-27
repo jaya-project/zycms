@@ -75,7 +75,7 @@
       <td align="right"><span class="red"></span>栏目摘要</td>
       <td>&nbsp;</td>
       <td class="okinput k1">
-		<input type="text" name="" id="" ng-model="column.summary" placeholder="栏目摘要" /> 
+		<textarea name="" id="" ng-model="column.summary" placeholder="栏目摘要" cols="40" rows="3"></textarea> 
 	  </td>
       <td>&nbsp;</td>
     </tr>
