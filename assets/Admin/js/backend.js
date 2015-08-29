@@ -205,6 +205,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 					generate({'text':result.message, "type":'success'});
 					NG.column = {};
 					List.getAllColumn(NG);
+					NG.is_delete = 0;
 					
 				} else {
 					generate({"text":result.message, "type":"error"});

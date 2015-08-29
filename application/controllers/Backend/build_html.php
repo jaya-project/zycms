@@ -198,6 +198,14 @@ class Build_html extends Admin_Controller {
 			$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
 			
 			$this->build($temp);
+			
+			if ($i == 1) {
+				$path_info = explode('/', $temp['destination_rule']);
+				$temp['destination_rule'] = '/' . $path_info[0] . '/index.html';
+				$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
+				
+				$this->build($temp);
+			}
 		}
 		
 		
