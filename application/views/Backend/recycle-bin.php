@@ -49,6 +49,7 @@
 	
 	<div>
 		<button ng-click="batDelete()">批量删除</button>
+		<button ng-click="clean()">清空回收站</button>
 		<button ng-click="restoreDocument(2)">还原所选</button>
 		<button ng-click="restoreDocument(3)">还原所有</button>
 	</div>

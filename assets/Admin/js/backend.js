@@ -158,7 +158,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 	
 	NG.showModifyUI = function(index) {
 		NG.modifingField = true;
-		NG.oldField = NG.modelArray[index];
+		NG.oldField = $.extend({}, NG.modelArray[index]);
 		NG.modifyIndex = index;
 	}
 	
@@ -584,6 +584,19 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 			}
 		}
 		
+	}
+	
+	NG.clean = function() {
+		if (window.confirm('真的要清空回收站吗?清空后不可恢复!')) {
+			$http.post("/Backend/document/clean").success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+					NG.getAllArticle();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
 	}
 	
 	NG.batDelete = function() {

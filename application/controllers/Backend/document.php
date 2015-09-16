@@ -63,6 +63,24 @@ class Document extends Admin_Controller {
 		die(json_encode($response_data));
 	}
 	
+	/**
+	 *  清空回收站
+	 */
+	public function clean()
+	{
+		$is_deleted_articles = $this->archives_model->get_where("is_delete=1");
+		$ids = array_column($is_deleted_articles, 'id');
+		
+		foreach ($ids as $id) {
+			$table_name = $this->get_additional_table($id);
+			$this->archives_model->delete($id);
+			$this->db->where("id=$id")->delete($table_name);
+		}
+		
+		die(json_encode(array('code' => 200, 'message' => '清空回收站成功')));
+		
+	}
+	
 	public function bat_delete()
 	{
 		$data = $this->input->stream();
