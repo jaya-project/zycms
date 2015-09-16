@@ -24,7 +24,7 @@
               <td ng-bind="d.channel_id"></td>
               <td ng-bind="d.channel_name"></td>
               <td ng-bind="d.table_name"></td>
-              <td><a ng-click="deleteModel(d.channel_id)" href="javascript:void(0)">删除</a></td>
+              <td><a ng-click="modifyModel(d.channel_id)" href="javascript:void(0)">修改</a> <a ng-click="deleteModel(d.channel_id)" href="javascript:void(0)">删除</a></td>
             </tr>
   </tbody>
             <tfoot id="ResultTfoot" style="">

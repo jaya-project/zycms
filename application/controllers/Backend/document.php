@@ -357,11 +357,11 @@ class Document extends Admin_Controller {
 					$html[$value['fields']]['html'] = '';
 					$html[$value['fields']]['style'] = 'style="background:none!important;"';
 					$arr_value = explode(',', $value['values']);
-					$code[] = " var val = NG.article.$value[fields].split(','); NG.article.$value[fields]=[]";
+					$code[] = " if (typeof NG.article.$value[fields] != 'undefined') { var val = NG.article.$value[fields].split(','); } NG.article.$value[fields]=[]";
 					foreach ($arr_value as $k => $v) {
 						$html[$value['fields']]['html'] .= "<input type='checkbox' ng-model='article.$value[fields].$k' ng-true-value='$v'  /> $v";
 						$code[] = <<< EOF
-							if ($.inArray('$v', val) >= 0) {
+							if (typeof val != 'undefined' && $.inArray('$v', val) >= 0) {
 								NG.article.$value[fields][$k] = '$v';
 							}
 							

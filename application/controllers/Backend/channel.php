@@ -99,6 +99,123 @@ class Channel extends Admin_Controller {
 		
 	}
 	
+	/**
+	 *  获取内容模型结构
+	 *  
+	 */
+	public function get_model_struct()
+	{
+		$data = $this->input->stream();
+		
+		if (empty($data['channelId'])) {
+			die(json_encode(array('code'=>403, 'message'=>'不存在的模型ID')));
+		}
+		
+		$row = $this->channel_model->get_one($data['channelId']);
+		$row['table_struct'] = unserialize($row['table_struct']);
+		
+		die(json_encode(array('code'=>200, 'message'=>'获取成功', 'data'=>$row)));
+	}
+	
+	/**
+	 *  删除内容模型字段
+	 *  
+	 */
+	public function delete_channel_field()
+	{
+		$data = $this->input->stream();
+		//删除结构中的字段
+		$channel = $this->channel_model->get_one($data['channel_id']);
+		$table_struct = unserialize($channel['table_struct']);
+		
+		foreach ($table_struct as $key=>$value) {
+			if ($value['fields'] == $data['field']) {
+				unset($table_struct[$key]);
+			}
+		}
+		
+		$table_struct = array_values($table_struct);
+		if ($this->channel_model->update($data['channel_id'], array('table_struct'=>serialize($table_struct))) && $this->dbforge->drop_column($channel['table_name'], $data['field'])) {
+			die(json_encode(array('code'=>200, 'message'=>'删除字段成功')));
+		} else {
+			die(json_encode(array('code'=>403, 'message'=>'删除字段失败')));
+		}
+		
+	}
+	
+	/**
+	 *  添加内容模型字段
+	 */
+	public function add_channel_fields()
+	{
+		$data = $this->input->stream();
+		$channel = $this->channel_model->get_one($data['channel_id']);
+		$table_struct = unserialize($channel['table_struct']);
+		
+		$existed_fields = array_column($table_struct, 'fields');
+		$new_fields = array_column($data['new_fields'], 'fields');
+		
+		//检测添加的字段是否已经存在
+		if (array_intersect($existed_fields, $new_fields)) {
+			die(json_encode(array('code'=>403, 'message'=>'添加的字段中有已经存在的字段')));
+		}
+		
+		//拼凑添加字段
+		$columns = array();
+		foreach ($data['new_fields'] as $new_field) {
+			$columns[$new_field['fields']] = $this->_get_struct_arr_by_type($new_field['channel_type']);
+		}
+		
+		$table_struct = array_merge($table_struct, $data['new_fields']);
+		
+		if ($this->channel_model->update($data['channel_id'], array('table_struct'=>serialize($table_struct))) && $this->dbforge->add_column($channel['table_name'], $columns)) {
+			die(json_encode(array('code'=>200, 'message'=>'添加字段成功')));
+		} else {
+			die(json_encode(array('code'=>403, 'message'=>'添加字段失败')));
+		}
+	}
+	
+	/**
+	 *  修改内容模型字段
+	 */
+	public function modify_channel_field()
+	{
+		$data = $this->input->stream();
+		$channel = $this->channel_model->get_one($data['channel_id']);
+		$table_struct = unserialize($channel['table_struct']);
+		
+		$existed_fields = array_column($table_struct, 'fields');
+		if (in_array($data['old_field']['fields'], 
+					array_diff($existed_fields, array($data['be_modified']['fields']))
+					)
+			) {
+			die(json_encode(array('code'=>403, 'message'=>'修改的字段中有已经存在的字段')));
+		}
+		
+		//更新结构
+		foreach ($table_struct as $key=>$row) {
+			if ($row['fields'] == $data['be_modified']['fields']) {
+				$table_struct[$key] = $data['old_field'];
+			}
+		}
+		
+		//组装欲更新字段数组
+		$columns[$data['be_modified']['fields']] = array_merge(
+			array(
+				'name' => $data['old_field']['fields'],
+				'comment' => $data['old_field']['label_fields']
+			),
+			$this->_get_struct_arr_by_type($data['old_field']['channel_type'])
+		);
+		
+		if ($this->channel_model->update($data['channel_id'], array('table_struct'=>serialize($table_struct))) && $this->dbforge->modify_column($channel['table_name'], $columns)) {
+			die(json_encode(array('code'=>200, 'message'=>'编辑字段成功')));
+		} else {
+			die(json_encode(array('code'=>403, 'message'=>'编辑字段失败')));
+		}
+		
+	}
+	
 	
 	/**
 	 *  添加内容模型
@@ -188,6 +305,29 @@ class Channel extends Admin_Controller {
 		}
 		
 		
+	}
+	
+	private function _get_struct_arr_by_type($type)
+	{
+		$struct = array();
+		switch ($type) {
+			case 'text':
+			case 'checkbox':
+			case 'radio':
+			case 'select':
+			case 'file':
+			case 'image':
+			case 'multiple-image':
+				$struct['type'] = 'VARCHAR';
+				$struct['constraint'] = '255';
+				break;
+			case 'textarea':
+			case 'htmltext':
+				$struct['type'] = 'TEXT';
+				break;
+		}
+		
+		return $struct;
 	}
 	
 	

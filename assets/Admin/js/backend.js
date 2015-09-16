@@ -40,7 +40,7 @@ Module.directive('ckEditor', function() {
   };
 });
 
-Module.controller('modelCtrl', function($scope, $http, sConfig) {
+Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compile) {
 	var NG = $scope;
 	
 	var isEdit = $('#channelId').val() ? true : false;
@@ -63,6 +63,128 @@ Module.controller('modelCtrl', function($scope, $http, sConfig) {
 		});
 	}
 	
+	NG.modifyModel = function(channelId) {
+		NG.addingField = false;
+		NG.modifingField = false;
+		template.getTemplate('channel-modify', NG, function(result) {
+			NG.modifyModelCallback(result);
+			
+			NG.showModelStruct(channelId);
+		})
+	}
+	
+	NG.modifyModelCallback = function(content) {
+		$('#container').remove();
+		var content = $compile(content)(NG);
+		$(content).appendTo('.content');
+		dialog({
+			'title' : '修改模型',
+			'content' : $('#container'),
+			'id' : 'container'
+			
+		}).show();
+	}
+	
+	NG.showModelStruct = function(channelId) {
+		var data = {channelId:channelId};
+		$http.post("/Backend/channel/get_model_struct", data).success(function(result) {
+			if(result.code == 200) {
+				NG.channelId = result.data.channel_id;
+				NG.modelArray = result.data.table_struct;
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.deleteFields = function(channelId, field) {
+		if (window.confirm('你确定要删除该字段吗? 删除后会丢失该字段的数据')) {
+			var data = {channel_id:channelId, field:field};
+			$http.post("/Backend/channel/delete_channel_field", data).success(function(result) {
+				if(result.code == 200) {
+					generate({"text":result.message, "type":"success"});
+					dialog({id:'container'}).remove();
+					NG.getModel();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
+	}
+	
+	NG.cancelAdd = function() {
+		NG.addingField = false;
+	}
+	
+	NG.showAddUI = function() {
+		NG.newFields = [{'fields':'', 'label_fields':'', 'values':'', 'channel_type':'text'}];
+		NG.addingField = true;
+	}
+	
+	NG.addFieldRow = function() {
+		NG.newFields.push({'fields':'', 'label_fields':'', 'values':'', 'channel_type':'text'})
+	}
+	
+	NG.deleteFieldRow = function(index) {
+		NG.newFields.splice(index, 1);
+	}
+	
+	NG.addField = function(channelId) {
+		
+		var newFields = [];
+		for (var i in NG.newFields) {
+			if (typeof NG.newFields[i].fields != 'undefined' && NG.newFields[i].fields != '') {
+				newFields.push(NG.newFields[i]);
+			}
+		}
+		
+		if (newFields.length <= 0) {
+			generate({'text':'请至少填写一个字段', 'type':'error'});
+			return;
+		}
+		
+		var data = {"new_fields":newFields, "channel_id":channelId};
+		
+		$http.post("/Backend/channel/add_channel_fields", data).success(function(result) {
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+				dialog({'id':'container'}).remove();
+				NG.getModel();
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.showModifyUI = function(index) {
+		NG.modifingField = true;
+		NG.oldField = NG.modelArray[index];
+		NG.modifyIndex = index;
+	}
+	
+	NG.cancelModify = function() {
+		NG.modifingField = false;
+	}
+	
+	NG.modifyField = function(channelId) {
+		if (window.confirm('你真的要更改字段吗?已经添加的数据可能会受到影响')) {
+			if (typeof NG.oldField.fields == 'undefined' || NG.oldField.fields == '') {
+				generate({'text':'字段名不能为空', 'type':'error'});
+				return;
+			}
+			
+			var data = {"channel_id":channelId, "old_field":NG.oldField, "be_modified":NG.modelArray[NG.modifyIndex]};
+			$http.post("/Backend/channel/modify_channel_field", data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+					dialog({'id':'container'}).remove();
+					NG.getModel();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
+	}
 	
 	NG.deleteModel = function(channelId) {
 		if (window.confirm('你真的要删除吗?')) {
