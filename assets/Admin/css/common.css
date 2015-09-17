@@ -1217,3 +1217,26 @@ td .fee{
 .current-page {
 	cursor:default;
 }
+
+#mask { 
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:100;
+	background:#000;
+	opacity:0.5;
+}
+
+#noticeBox { 
+	width:500px; 
+	height:500px;
+	position:fixed;
+	top:10px;
+	left:50%;
+	margin-left:-250px;
+	z-index:101;
+	background:#fff;
+	border:1px solid #000;
+}

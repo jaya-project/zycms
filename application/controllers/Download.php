@@ -123,8 +123,7 @@ class Download extends Admin_Controller {
 	
 	public function columnTemplate($cid)
 	{
-		//加载下载辅助函数
-		$this->load->helper('download');
+		$objPHPExcel = new PHPExcel();
 		
 		//获取表结构数据
 		$this->db->select('ch.table_struct, ch.table_name');
@@ -133,16 +132,41 @@ class Download extends Admin_Controller {
 		$this->db->where("c.id=$cid");
 		$row = $this->db->get()->row_array();
 		$table_struct_arr = unserialize($row['table_struct']);
+		array_unshift($table_struct_arr, array('label_fields'=>'标题'));
+		
+		$objPHPExcel->getProperties()->setCreator("church")
+									 ->setLastModifiedBy("church")
+									 ->setTitle('模板')
+									 ->setSubject('模板')
+									 ->setDescription('模板')
+									 ->setKeywords('模板');
+		
+		$sheetObject = $objPHPExcel->setActiveSheetIndex(0);
 		
 		//组装数据
-		$html = '产品名或文章标题,';
-		foreach ($table_struct_arr as $value) {
-			$html .= "$value[label_fields],";
-		}
-		$html = rtrim($html, ',');
 		
-		//下载
-		force_download($row['table_name'] . '@' . $cid .'.csv', iconv('UTF-8', 'GBK//IGNORE', $html)); 
+		$columnChar = ord('A');
+		foreach ($table_struct_arr as $value) {
+			$sheetObject->setCellValue(chr($columnChar) . 1, $value['label_fields']);
+			$columnChar++;
+		}
+		
+        // Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$row['table_name']. '@' . $cid .'.xls"');
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+		// If you're serving to IE over SSL, then the following may be needed
+		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+		exit;
 		
 	}
+	
+	
 }

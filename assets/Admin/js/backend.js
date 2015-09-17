@@ -40,6 +40,7 @@ Module.directive('ckEditor', function() {
   };
 });
 
+
 Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compile) {
 	var NG = $scope;
 	
@@ -707,19 +708,58 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 	
 })
 
-Module.controller('exportCtrl', function($http, $scope, upload, List, $compile) {
+Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) {
 	var NG = $scope;
 	
 	NG.$watch('files', function () {
-       upload.uploadFile('/Backend/tools/bat_export', NG.files, NG, function(NG, data) {
-		   if (data.code == 200) {
-			   generate({'text':data.message, 'type':'success'});
-		   } else {
-			   generate({'text':data.message, 'type':'error'});
-		   }
-		   
-	   });
+		if (NG.files) {
+			NG.maskAndNoticeBoxShow();
+			Upload.upload({
+				url: '/Backend/tools/bat_export',
+				file: NG.files
+			}).success(function (data, status, headers, config) {
+				console.log(data);
+				if (data.code == 200) {
+				   generate({'text':data.message, 'type':'success'});
+			   } else if (data.code == 201) {
+					$('<span>'+data.message+'</span>').appendTo('#noticeBox');
+				   NG.exportSub(data.data);
+				  
+			   } else {
+				   generate({"text":data.message, "type":"error"});
+				   NG.maskHide();
+			   }
+			});
+		}
+		
+		
     });
+	
+	NG.maskAndNoticeBoxShow = function() {
+		$('<div id="mask"></div>').appendTo('body');
+		$('<div id="noticeBox"></div>').appendTo('body');
+	}
+	
+	NG.maskHide = function() {
+		$('#mask').remove();
+		$('#noticeBox').remove();
+	}
+	
+
+	
+	NG.exportSub = function(data) {
+		$http.post("/Backend/tools/import_company_each_time", data).success(function(result) {
+			if(result.code == 200) {
+				NG.maskHide();
+				generate({'text':result.message, 'type':'success'});
+			} else if (result.code == 201) {
+				NG.exportSub(result.data);
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
 	
 	NG.downloadTemplate = function() {
 		if (typeof NG.search.cid == 'undefined') {

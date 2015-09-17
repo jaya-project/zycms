@@ -10,6 +10,8 @@ class Tools extends Admin_Controller {
 	
 	const QRCODE_DIRECTORY = './uploads/qrcode/';
 	
+	const IMPORTLENGTH = 30;
+	
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
@@ -278,7 +280,7 @@ class Tools extends Admin_Controller {
 		
 		$config['upload_path'] = './uploads/files/';
 		
-		$config['allowed_types'] = 'csv';
+		$config['allowed_types'] = 'csv|xls|xlsx';
 		$config['max_size'] = '10240';
 		
 		$this->load->library('upload', $config);
@@ -298,43 +300,35 @@ class Tools extends Admin_Controller {
 			
 			//检查表名称是否被修改
 			$channel_info = $this->channel_model->get_one($column_info['channel_id']);
-			// $table_struct = unserialize($channel_info['table_struct']);
-			// $fields = array('id') + array_column($table_struct, 'fields');
 			if ($channel_info['table_name'] != $table_name) {
 				@unlink($uploaded_file_full_path);
 				die(json_encode(array('code'=>403, 'message'=>'错误的表名')));
 			}
 			
-			//若存在,开始导入
-			$table_name = $this->db->dbprefix($table_name);
-			$handle = @fopen($uploaded_file_full_path, 'r');
-			if ($handle) {
-				$i = 0;
-				while (($buffer = fgetcsv($handle)) !== false) {
-					//不是第一行才导入
-					if ($i++ != 0) {
-						if (is_array($buffer) && sizeof($buffer) > 0) {
-							//插入到主表
-							$title = array_shift($buffer);
-							$this->archives_model->insert(array('title'=>$title, 'cid'=>$cid, 'create_time'=>time(), 'author'=>'admin', 'source'=>'原创'));
-							$id = $this->archives_model->get_insert_id();
-							//插入到副表
-							$sub_table_values = array('id'=>$id) + $buffer;
-							array_walk($sub_table_values, function(&$item) {
-								$item = '\'' . trim(iconv('GBK', 'UTF-8//IGNORE', $item)) . '\'';
-							});
-							$sub_table_values = join(',', $sub_table_values);
-							$sql = "INSERT INTO $table_name VALUES($sub_table_values)";
-							$this->db->query($sql);
-						}
-					}
+			//To read xls file
+			$PHPReader = new PHPExcel_Reader_Excel2007();
+			if (!$PHPReader->canRead($uploaded_file_full_path)) {
+				$PHPReader = new PHPExcel_Reader_Excel5();
+				if (!$PHPReader->canRead($uploaded_file_full_path)) {
+					$this->code = self::FAILED;
+					$this->message = '程序无法读取该excel文件';
+					die;
 				}
-				
-				fclose($handle);
-			} else {
-				@unlink($uploaded_file_full_path);
-				die(json_encode(array('code'=>403, 'message'=>'系统暂时无法打开上传文件,请稍后再试')));
 			}
+			$PHPExcel = $PHPReader->load($uploaded_file_full_path);
+			$sheetNames = $PHPExcel->getSheetNames();
+			
+			//count rows and cols, position to a specify sheet
+			$name = $sheetNames[0];
+			$currentSheet = $PHPExcel->getSheetByName($name);
+			$allColumn = $currentSheet->getHighestColumn();
+			$allRow = $currentSheet->getHighestRow();
+			
+			if ($allRow > self::IMPORTLENGTH) {
+				$this->import_company_each_time($data['full_path'], 1, self::IMPORTLENGTH, $allRow, $allColumn, $table_name, $cid, $channel_info['table_struct']);
+			} else {
+				$this->import_company_each_time($data['full_path'], 1, self::IMPORTLENGTH, $allRow, $allColumn, $table_name, $cid, $channel_info['table_struct']);
+			}			
 			
 			
 			@unlink($uploaded_file_full_path);
@@ -344,6 +338,143 @@ class Tools extends Admin_Controller {
 		{
 			die(json_encode(array('code'=>403, 'message'=>$this->upload->display_errors())));
 		}
+	}
+	
+	/**
+	 *  分批次导入数据
+	 */
+	public function import_company_each_time($import_file='', $page=1, $length=50, $allRow=50, $allColumn='A', $table_name='', $cid=0, $table_struct='')
+	{
+		$data = $this->input->stream();
+		if (!empty($data)) {
+			$import_file 	= 	$data['import_file'];
+			$page 			= 	$data['page'];
+			$length 		= 	$data['length'];
+			$allRow 		= 	$data['allRow'];
+			$allColumn 		= 	$data['allColumn'];
+			$table_name 	= 	$data['table_name'];
+			$cid 			= 	$data['cid'];
+			$table_struct 	= 	serialize($data['table_struct']);
+		}
+		
+		$start = (($page - 1) * $length ) + 1;
+		$end = $start + $length;
+		$message = '';
+		
+		if ($allRow > $end || ($start < $allRow && $end > $allRow)) {
+			
+			//To read xls file
+			$PHPReader = new PHPExcel_Reader_Excel2007();
+			if (!$PHPReader->canRead($import_file)) {
+				$PHPReader = new PHPExcel_Reader_Excel5();
+				if (!$PHPReader->canRead($import_file)) {
+					$this->code = self::FAILED;
+					$this->message = '程序无法读取该excel文件';
+					die;
+				}
+			}
+
+			$PHPExcel = $PHPReader->load($import_file);
+			$sheetNames = $PHPExcel->getSheetNames();
+			
+			//count rows and cols, position to a specify sheet
+			$name = $sheetNames[0];
+			$currentSheet = $PHPExcel->getSheetByName($name);
+			
+			//read content
+			$table_struct = unserialize($table_struct);
+			$keys = array_column($table_struct, 'fields');
+			array_unshift($keys, 'id');
+			$insert_data = array();
+			
+			for ($currentRow = $start; $currentRow <= $end; $currentRow++) {
+				if ($currentRow == 1) {
+					continue;
+				}
+				for ($currentColumn = 'A'; $currentColumn <= $allColumn; $currentColumn++) {
+					if ($currentColumn == 'H') {
+						$val = $this->excel_time($currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue());
+					} else {
+						$val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue();
+					}
+					
+					//$objExcel[$name][$currentRow - 1][ord($currentColumn) - 65] = $val;
+					$val = empty($val) ? '' : $val;
+					$insert_data[$currentRow][] = $val;
+				}
+				
+				$content = $insert_data[$currentRow];
+				
+				$main_table_data = array(
+					'title' => $content[0],
+					'create_time' => time(),
+					'cid' => $cid,
+					'author' => 'admin',
+				);
+				
+				
+				
+				if ($this->db->insert('archives', $main_table_data)) {
+					$id = $this->db->insert_id();
+					array_shift($content);
+					array_unshift($content, $id);
+					$this->db->insert($table_name, array_combine($keys, $content));
+				} else {
+					$message .= "第 $page 批第 $currentRow 行失败";
+				}
+				
+				
+					
+			}
+			
+			$code = 201;
+			if ($page == 1) {
+				$total = ceil($allRow / self::IMPORTLENGTH);
+				$message .= "导入文件较大, 正在分批次导入 <br />";
+				$message .= "共 $total 批 <br />";
+			}
+			$message .= "第 $page 批导入完成, 进行下一批导入 <br />";
+			$page++;
+			$data = array(
+					'import_file' 	=> 	$import_file,
+					'page' 			=>	$page,
+					'length'		=>	self::IMPORTLENGTH,
+					'allRow'		=>	$allRow,
+					'allColumn'		=>	$allColumn,
+					'table_name'	=> 	$table_name,
+					'cid'			=>	$cid,
+					'table_struct'	=>	$table_struct
+				);
+			
+		} else {
+			$code = 200;
+			$message = '导入完成';
+			$data = '';
+		}
+		
+		die(json_encode(array('code'=>$code, 'message'=>$message, 'data'=>$data)));
+	}
+	
+	private function excel_time($date, $time = false)
+	{
+		if (function_exists('GregorianToJD')){
+			if (is_numeric( $date )) {
+			$jd = GregorianToJD( 1, 1, 1970 );
+			$gregorian = JDToGregorian( $jd + intval ( $date ) - 25569 );
+			$date = explode( '/', $gregorian );
+			$date_str = str_pad( $date [2], 4, '0', STR_PAD_LEFT )
+			."-". str_pad( $date [0], 2, '0', STR_PAD_LEFT )
+			."-". str_pad( $date [1], 2, '0', STR_PAD_LEFT )
+			. ($time ? " 00:00:00" : '');
+			return $date_str;
+			}
+		} else{
+			$date=$date>25568?$date+1:25569;
+			/*There was a bug if Converting date before 1-1-1970 (tstamp 0)*/
+			$ofs=(70 * 365 + 17+2) * 86400;
+			$date = date("Y-m-d",($date * 86400) - $ofs).($time ? " 00:00:00" : '');
+		}
+		return $date;
 	}
 	
 }
