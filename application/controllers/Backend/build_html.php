@@ -54,20 +54,9 @@ class Build_html extends Admin_Controller {
 	
 	public function build_index_html()
 	{
-		// Load the routes.php file.
-		if (file_exists(APPPATH.'config/routes.php'))
-		{
-			include(APPPATH.'config/routes.php');
-		}
-
-		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
-		{
-			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
-		}
 		
-		$index_controller_method = $route['default_controller'] . '/index';
 		
-		$this->build(array('destination_rule'=>'index.html', 'source_rule'=>$index_controller_method));
+		$this->build(array('destination_rule'=>'index.html', 'source_rule'=>$this->get_default_controller_method()));
 		
 		if (file_exists('./index.html')) {
 			die(json_encode(array('code'=>200, 'message'=>'生成成功')));
@@ -90,6 +79,8 @@ class Build_html extends Admin_Controller {
 		$this->db->join('rule as r', 'c.id=r.cid', 'left');
 		
 		$columns = $this->db->get()->result_array();
+		
+		$this->build(array('destination_rule'=>'index.html', 'source_rule'=>$this->get_default_controller_method()));
 		
 		$this->asyn_build_html($columns);
 		
@@ -363,5 +354,22 @@ class Build_html extends Admin_Controller {
 		$row = $this->db->get()->row_array();
 		return $row['table_name'];
 	}
-	
+		
+	private function get_default_controller_method()
+	{
+		// Load the routes.php file.
+		if (file_exists(APPPATH.'config/routes.php'))
+		{
+			include(APPPATH.'config/routes.php');
+		}
+
+		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
+		{
+			include(APPPATH.'config/'.ENVIRONMENT.'/routes.php');
+		}
+		
+		$index_controller_method = $route['default_controller'] . '/index';
+		
+		return $index_controller_method;
+	}
 }
