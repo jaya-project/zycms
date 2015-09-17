@@ -91,18 +91,40 @@ class Build_html extends Admin_Controller {
 		
 		$columns = $this->db->get()->result_array();
 		
+		$this->asyn_build_html($columns);
 		
-		foreach ($columns as $k=>$v) {
-			if ($v['type'] == self::LISTPAGE) {
-				$this->build_list($v);
-			} else if ($v['type'] == self::DETAILPAGE) {
-				$this->build_detail($v);
-			} else {
-				$this->build_single($v);
+	}
+	
+	/**
+	 *  异步生成静态页面
+	 */
+	public function asyn_build_html($columns = '', $key = 0)
+	{
+		$data = $this->input->stream();
+		if ($data) {
+			$columns 	= 	$data['columns'];
+			$key		=	$data['key'];
+		}
+		$v = $columns[$key];
+		if ($v['type'] == self::LISTPAGE) {
+			$this->build_list($v);
+		} else if ($v['type'] == self::DETAILPAGE) {
+			$this->build_detail($v);
+		} else {
+			$this->build_single($v);
+		}
+		$key++;
+		
+		if ($key >= sizeof($columns)) {
+			die(json_encode(array('code'=>200, 'message'=>"生成成功")));
+		} else {
+			$message = '';
+			if ($key == 1) {
+				$message = '共 ' . sizeof($columns) . '批<br />';
 			}
+			die(json_encode(array('code'=>201, 'message'=>"$message 第 $key 批生成成功<br />", 'data'=>array('columns'=>$columns, 'key'=>$key))));
 		}
 		
-		die(json_encode(array('code'=>200, 'message' => '更新成功')));
 	}
 	
 	/**

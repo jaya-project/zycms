@@ -737,7 +737,7 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 	
 	NG.maskAndNoticeBoxShow = function() {
 		$('<div id="mask"></div>').appendTo('body');
-		$('<div id="noticeBox"></div>').appendTo('body');
+		$('<div id="noticeBox"><span>正在上传文件,请稍候...</span></div>').appendTo('body');
 	}
 	
 	NG.maskHide = function() {
@@ -2981,14 +2981,43 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	}
 	
 	NG.buildHtml = function() {
+		NG.maskAndNoticeBoxShow();
 		$http.post('/Backend/build_html/build_html').success(function(result) {
 				
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
+			} else if (result.code == 201) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.asynBuildHtml(result.data);
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
+	}
+	
+	NG.asynBuildHtml = function(data) {
+		$http.post('/Backend/build_html/asyn_build_html', data).success(function(result) {
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.maskHide();
+			} else if (result.code == 201) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.asynBuildHtml(result.data);
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.maskAndNoticeBoxShow = function() {
+		$('<div id="mask"></div>').appendTo('body');
+		$('<div id="noticeBox"><span>正在生成,请稍候...<br /></span></div>').appendTo('body');
+	}
+	
+	NG.maskHide = function() {
+		$('#mask').remove();
+		$('#noticeBox').remove();
 	}
 	
 	NG.saveRule = function() {

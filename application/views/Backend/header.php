@@ -22,6 +22,7 @@
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/dialog-plus-my.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/artDialog.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/iframeTools.js')?>"></script>
+	<script type="text/javascript" src="<?=base_url('assets/Admin/js/stinger.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/ckeditor/ckeditor.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/ckeditor/config.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/ckfinder/ckfinder.js')?>"></script>

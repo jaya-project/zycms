@@ -9,7 +9,7 @@
 
   <div>
 	<button ng-click="addRule();">添加规则</button>
-	<button ng-click="buildRule();">根据栏目一键生成规则</button>
+	<button ng-click="buildRule();" id="build_button" style="display:none;">根据栏目一键生成规则</button>
 	<button ng-click="buildIndex();">生成首页</button>
   </div>
 
