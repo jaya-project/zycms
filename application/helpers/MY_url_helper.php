@@ -14,7 +14,7 @@ function build_url($param, $cid, $type=2)
 	
 	$rule = array_shift($rule);
 	
-	if (ENVIRONMENT == 'production' || ENVIRONMENT == 'testing') {
+	if (ZYCMSHTML == 'open') {
 		if ($type == 2) {
 			return '/'.str_replace('page', $param, $rule['destination_rule']);
 		} else if ($type == 3) {
