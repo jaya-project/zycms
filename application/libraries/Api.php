@@ -179,8 +179,10 @@ class Api
 		if (empty($table_name)) {
 			return FALSE;
 		} else {
+			//延迟发布的不查出来
+			$current_timestamp = time();
 			
-			$where = 'is_delete=0 AND ';
+			$where = "is_delete=0 AND ($current_timestamp - ac.delay_time) >= 0 AND ";
 			// $where = empty($flag) ? '' : "FIND_IN_SET(ac.recommend_type, '$flag') AND ";
 			if (!empty($flag)) {
 				$where .= '(';
@@ -217,15 +219,17 @@ class Api
 				}
 			}
 			
+			$archives_table = $this->CI->db->dbprefix('archives');
+			$table_name = $this->CI->db->dbprefix($table_name);
+			$sql = "SELECT * FROM $archives_table AS ac 
+					 LEFT JOIN $table_name AS a 
+					 ON ac.id=a.id  
+					 WHERE $where 
+					 ORDER BY $order_str 
+					 LIMIT " . ($page - 1) * $page_length . "
+					 , " . $page_length;
 			
-			$this->CI->db->select('*');
-			$this->CI->db->from('archives as ac');
-			$this->CI->db->join($table_name." as a", 'ac.id=a.id', 'left');
-			$this->CI->db->order_by($order_str);
-			$this->CI->db->limit($page_length, ($page-1)*$page_length);
-			$this->CI->db->where($where);
-			
-			return $this->CI->db->get()->result_array();
+			return $this->CI->db->query($sql)->result_array();
 		}
 	}
 	
@@ -256,8 +260,10 @@ class Api
 		if (empty($table_name)) {
 			return FALSE;
 		} else {
+			//延迟发布的不查出来
+			$current_timestamp = time();
 			
-			$where = 'is_delete=0 AND ';
+			$where = "is_delete=0 AND ($current_timestamp - ac.delay_time) >= 0 AND ";
 			// $where = empty($flag) ? '' : "FIND_IN_SET(ac.recommend_type, '$flag') AND ";
 			if (!empty($flag)) {
 				$where .= '(';
@@ -285,17 +291,16 @@ class Api
 				$where .= ")";
 			}
 			
+			$archives_table = $this->CI->db->dbprefix('archives');
+			$table_name = $this->CI->db->dbprefix($table_name);
+			$sql = "SELECT * FROM $archives_table AS ac 
+					 LEFT JOIN $table_name AS a 
+					 ON ac.id=a.id  
+					 WHERE $where 
+					 LIMIT " . ($page - 1) * $page_length . "
+					 , " . $page_length;
 			
-			
-			
-			$this->CI->db->select('*');
-			$this->CI->db->from('archives as ac');
-			$this->CI->db->join($table_name." as a", 'ac.id=a.id', 'left');
-			
-			$this->CI->db->order_by('ac.sort asc');
-			$this->CI->db->where($where);
-			
-			$total_count = $this->CI->db->get()->num_rows();
+			$total_count = $this->CI->db->query($sql)->num_rows();
 			
 			$total_pages = ceil($total_count / $page_length);
 			
@@ -328,6 +333,37 @@ class Api
 		
 		return array_merge($archive, $row);
 		
+	}
+	
+	/**
+	 *  根据标签获取文章列表
+	 *  
+	 *  @param string $tag 文章标签 $tag = '电脑,内存';
+	 */
+	public function get_articles_by_tag($tag = '', $order_arr = array())
+	{
+		empty($tag) ? (die('标签不能为空')) : '';
+		$tags = explode(',', $tag);
+		
+		$current_timestamp = time();
+		$where = "is_delete=0 AND ($current_timestamp - delay_time) >= 0 AND (";
+		foreach ($tags as $v) {
+			$v = trim($v);
+			$where .= " FIND_IN_SET('$v', tag) OR ";
+		}
+		$where = rtrim($where, 'OR ') . ')';
+		
+		//组装排序语句
+		$order_str = 'sort asc';
+		if (is_array($order_arr) && !empty($order_arr)) {
+			$order_str = "{$order_arr['field']} $order_arr[way]";
+		}
+		$archives_table = $this->CI->db->dbprefix('archives');
+		$sql = "SELECT * FROM $archives_table
+				 WHERE $where 
+				 ORDER BY $order_str";
+		
+		return $this->CI->db->query($sql)->result_array();
 	}
 	
 	/**

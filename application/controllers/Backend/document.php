@@ -143,8 +143,8 @@ class Document extends Admin_Controller {
 									'recommend_type'	=>	(isset($data['recommend_type']) && !empty($data['recommend_type'])) ? join(',', $data['recommend_type']) : '',
 									'cid'				=>	$data['cid'],
 									'is_delete'			=> 	0,
-									'sub_column' 		=>	(isset($data['sub_column']) && !empty($data['sub_column'])) ? join(',', $data['sub_column']) : ''
-									
+									'sub_column' 		=>	(isset($data['sub_column']) && !empty($data['sub_column'])) ? join(',', $data['sub_column']) : '',
+									'delay_time'		=>	(isset($data['delay_time']) && !empty($data['delay_time'])) ? strtotime($data['delay_time']) : 0
 								);
 		
 		$sub_archives_data_struct = array_diff_key($data, $archives_data_struct);
@@ -298,6 +298,7 @@ class Document extends Admin_Controller {
 				$main['recommend_type'] = array_combine(array_values($main['recommend_type']), array_values($main['recommend_type']));
 			}
 			$main['create_time'] = date('Y-m-d H:i:s', $main['create_time']);
+			$main['delay_time'] = empty($main['delay_time']) ? 0 : date('Y-m-d', $main['delay_time']);
 			$data = array_merge($additional, $main);
 			$response_data['code'] = 200;
 			$response_data['message'] = '获取成功';

@@ -143,6 +143,14 @@
       <td>&nbsp;</td>
     </tr>
 	
+	<tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>是否延迟发布</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1" style="background:None!important;"><input type="checkbox" value="1" ng-true-value="1" ng-false-value="0" ng-model="delayRelease" /><quick-datepicker ng-model='article.delay_time' ng-hide="delayRelease==0" placeholder="点击设置时间" date-format="M/d/yyyy"></quick-datepicker></td>
+      <td>&nbsp;</td>
+    </tr>
+	
 	
    
   </table>

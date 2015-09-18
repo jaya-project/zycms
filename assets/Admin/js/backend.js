@@ -775,8 +775,9 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 
 Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile) {
 	var NG = $scope;
+	NG.delayRelease = 0;
 	
-	NG.article = {'sort':0, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':''};
+	NG.article = {'sort':0, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':'', 'delay_time':0};
 	
 	NG.documentId = window.location.hash.substring(1);
 	
@@ -931,7 +932,9 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 						temp_obj[temp[i]] = temp[i];
 					}
 					NG.article.sub_column = temp_obj;
-					console.log(NG.article)
+					if (NG.article.delay_time != 0) {
+						NG.delayRelease = '1';
+					}
 					NG.getStruct(NG.article.cid);
 				} else {
 					generate({"text":result.message, "type":"error"});

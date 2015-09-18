@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-09-18 03:29:09
+-- Generation Time: 2015-09-18 06:29:49
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -24,8 +24,6 @@ SET time_zone = "+00:00";
 
 --
 -- 表的结构 `zycms_ad`
---
--- 创建时间： 2015-06-16 05:59:54
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_ad` (
@@ -49,8 +47,6 @@ INSERT INTO `zycms_ad` (`id`, `name`, `url`, `thumb`, `sort`, `pid`) VALUES
 
 --
 -- 表的结构 `zycms_admin`
---
--- 创建时间： 2015-06-10 03:17:21
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_admin` (
@@ -77,8 +73,6 @@ INSERT INTO `zycms_admin` (`id`, `username`, `password`, `create_time`, `is_enab
 --
 -- 表的结构 `zycms_ad_position`
 --
--- 创建时间： 2015-06-16 05:57:22
---
 
 CREATE TABLE IF NOT EXISTS `zycms_ad_position` (
   `id` int(10) unsigned NOT NULL COMMENT '广告位ID',
@@ -98,8 +92,6 @@ INSERT INTO `zycms_ad_position` (`id`, `name`, `is_enable`) VALUES
 --
 -- 表的结构 `zycms_archives`
 --
--- 创建时间： 2015-06-10 06:56:04
---
 
 CREATE TABLE IF NOT EXISTS `zycms_archives` (
   `id` int(10) unsigned NOT NULL COMMENT '文章ID',
@@ -118,16 +110,24 @@ CREATE TABLE IF NOT EXISTS `zycms_archives` (
   `recommend_type` varchar(255) NOT NULL COMMENT '推荐类型(热销,推荐等)',
   `cid` int(10) unsigned NOT NULL COMMENT '分类ID',
   `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
-  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除;0,未删除)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章主表';
+  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除;0,未删除)',
+  `delay_time` int(10) NOT NULL DEFAULT '0' COMMENT '延迟发布时间'
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='文章主表';
+
+--
+-- 转存表中的数据 `zycms_archives`
+--
+
+INSERT INTO `zycms_archives` (`id`, `title`, `sub_title`, `tag`, `thumb`, `seo_title`, `seo_keywords`, `seo_description`, `create_time`, `author`, `source`, `sort`, `click_count`, `recommend_type`, `cid`, `sub_column`, `is_delete`, `delay_time`) VALUES
+(1, '与文字一纸素心静美', '', '', '', '', '', '', 1442547067, 'admin', '原创', 0, 5, '', 19, '', 0, 1442534400),
+(2, '茶如人生', '', '文章', '', '', '', '', 1442554960, 'admin', '原创', 0, 0, '', 19, '', 0, 1442534400),
+(3, '1231231', '', '', '', '', '', '', 1442556255, 'admin', '原创', 0, 0, '', 19, '', 1, 0),
+(4, '123', '', '电脑', '', '', '', '', 1442557562, 'admin', '原创', 0, 0, '', 19, '', 1, 0);
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_areas`
---
--- 创建时间： 2015-06-27 03:38:11
--- 最后更新： 2015-06-27 03:38:19
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_areas` (
@@ -3292,9 +3292,28 @@ INSERT INTO `zycms_areas` (`id`, `areaid`, `area`, `cityid`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_channel`
+-- 表的结构 `zycms_article`
 --
--- 创建时间： 2015-06-10 06:44:07
+
+CREATE TABLE IF NOT EXISTS `zycms_article` (
+  `id` int(10) unsigned NOT NULL COMMENT 'ID',
+  `body` text COMMENT '文章内容'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `zycms_article`
+--
+
+INSERT INTO `zycms_article` (`id`, `body`) VALUES
+(1, '<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">习惯了与静谧面对，习惯了趴在窗台上看晨曦和黄昏，静逸的笔墨，在我心里无比的清彻与清醒。与墨缠绵，与墨阑珊，拂抹红尘的书卷，于字里行间里揣一卷笔墨安遣，将缱绻折叠，凭窗垂钓，音韵伴卷，推开心窗，笔墨情怀，于音乐与<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">文字</a>里看到最真实的封面。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">文字是<a href="http://shengming.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">生命</a>里最柔<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">美的</a>和弦，晓窗赋笺，<a href="http://ye.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">夜</a>静幽帘，心与文字游弋在笔墨的浩瀚。携一袭素笺，沐一枚缱绻，氤氲添香，笔墨轻鬟，寄语墨解，音乐是<a href="http://rensheng.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">人生</a>中最温暖的陪伴。墨畔香倾，紫轩黛眉，心字为墨，倚窗笙歌，馨摇，缱绻墨色，拈一抹微笑，品一盏茶香，倾听笔墨声响，于字里行间吟唱高山流水，与墨呢喃芬芳。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">与文弹落，曲韵赋盏，品茗吟笺，泼墨听弦。书，字里行间，卷，文之飘洒墨颜；诗，缱绻豪迈，词，莲之惬意赋笺。墨，渲湿旷远，染，墨之云舟袅烟；韵，色之画染，律，琼之金珠云涧。韵律非凡，琴音入耳，声声慢，沉浸于韵律之间；文字温润款款，曲韵一腕赋弦；倚轩台，听曲阑干，颤颤柔心似天籁，醉潇潇，弹落琴弦，书卷心旷，不夜天。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">椅窗玲珑，笔墨玉漏，一纸闲抒楣闲悠；醉墨霓裳，笔笺盈袖，浅黛微妆屏前首。轻挽素笺，把一脉心思付与温婉如花的文字中，赋一曲红尘，把盏柔肠，以文澜<a href="http://meng.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">梦</a>，黯然潇湘，笔墨寒渚，对影墨窗，素弦凭兰，笔墨思量。欲笺思墨，<a href="http://ye.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">长夜</a>未央，霓裳不悔，落字游荡。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">夜月静的无言，魂梦依稀，墨笺余韵，笔端生情，<a href="http://zhijian.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">指尖</a>轻舞着文字的浪漫，将至真至纯的情怀敞向墨色之中，捧一杯浓香，踩一曳墨韵的步履，掬墨香一瓣，用文字折叠成美丽的缱绻，墨染于<a href="http://www.sanwen.net/suibi/suiyue/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">岁月</a>的赋笺。笔墨痴笑于落笔，素心幽幽，锦瑟言欢，尘缘轻叹散落笔端，半纸浅墨，一曲随伴，琴弦赋墨念缱绻；回首笔端，细看缱绻，笔墨抛向荧屏前。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">墨香，轻轻落在笔端，划过眉间，缱绻。曲韵，舞动了心里的念想，捻一枚素暖，轻轻揉进于墨香。文字犹如夜月的<a href="http://www.sanwen.net/shige/xue/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">雪</a>花，有暗香盈袖，可否，约文字品一杯浓香，听一曲歌谣，研一池墨香，展一尺素笺，把字里行间的心梦，融于墨色一体。心，掬笔墨幽香，墨，落笔，续话长，轻吟墨雅，浅唱芳华，静逸清宁时光下。<span style="position: relative; left: -100000px;">(&nbsp;<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">文章</a><a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">阅读</a>网：www.sanwen.net )</span></p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">喜欢坐在文字里，静静的思笺，让思绪的笔墨在指尖上淡淡飘香，任<a href="http://linghun.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">灵魂</a>于温婉中，也一如既往的诉说着点点滴滴的情愫。喜欢听着音乐，品着浓香，在文字里品读<a href="http://xinling.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">心灵</a>的悸动，于一根网线，隔着千涯的距离，在字里行间里穿越，文字里总会有一种深深的<a href="http://zuowen.sanwen.net/z/10671-gandong" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">感动</a>，穿越时空，把文字落在心底最柔软的地方。醉一场笔墨的<a href="http://tianya.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">天涯</a>隔远，月下凝眸，笔墨浸染，聆听踏风走远，遗一枕笔墨幽梦，伴我似水望穿。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">美丽的夜景，是无言的文字，一行墨迹，一卷书香，承载着墨海深长；一杯浓香，一曲音韵，婉约了一帘梦乡。静逸雕刻着点滴的墨言，是相惜的墨香，酝酿在时光的墨韵里。把笔笺的芬芳，融进于心灵之窗，在四季的轮回中，倾泻于一份真情与温馨。一帘缱绻，一卷诗行，与笔墨沉香，歌一曲文字，品一缕墨香，醉了笔墨，相握于手心里最温馨的暖语。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">静静的...寻笔墨馨香，在文字的间隙里不期而遇。<a href="http://www.sanwen.net/rizhi/xinqing/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">心情</a>于文字的雅致中，飘荡心间，如含香的花瓣轻舞飞扬，一脉书香，翻阅，喜悦舒畅。穿越文字的眼眸，踩文字的韵律，让音乐与文字的意念，在瞬间，成为温润心田的美丽风景。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">捻笔墨馨香，沐静逸<a href="http://yueliang.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">月光</a>，沁目悦心，点亮了静逸纯白的墨行。如可，愿做文字中的一枝荷，与文字里的一片云一起游荡。轻墨蹙，盈袖舞，字里行间归何处？最是落墨点滴暮，字里行间人非故。弦已覆，曲韵度，天涯咫尺笔墨赋。手执缱绻韵曲谱，笔墨相连怎堪读？<a href="http://chuntian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">春</a>暖花开书香渡，锦墨留香对笺烛。椅窗影只墨迹遥，饮罢文宴苦读书。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">如若，以叶吻大地的姿态去亲吻文字的墨颜，是否，在点滴的流年里，与曲隔墨初见？如若，以蝶舞沧海的<a href="http://zhizhuo.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">执著</a>去共舞文字的狂欢，是否，在一泉水的相创里，伴墨轻拂梦帘？如若，以云随清风的淡然去追随文字的<a href="http://jimo.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">孤寂</a>，是否，在一滴水的澄澈中，共文锦字同展？墨字笺联，轻描眼底缱绻，灵犀墨藏，解墨簸流离绣凤鸾，与墨经年，伴缱绻梦醉阑珊，绮梦，陪文字蓝田日暖，锦玉生烟。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">笔墨之湄，在清婉的月色里，品读笔下韵致的墨言，字里行间，有春的清新，<a href="http://xiatian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">夏</a>的绚烂，秋的静美，<a href="http://dongtian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">冬</a>的<a href="http://chunjie.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">纯洁</a>。在多情而又大气的文字里，用热切的渴望，将文字飘逸成朦胧的轻纱，升腾在遐思的笔墨上。点睛一笔水墨丹青，在同一片星空下，与不言而喻的默契遥遥传递，<a href="http://qianshou.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">牵手</a>于文字，与音乐文字同行。风轻幽，水含烟，文字照晚，字里行间兰如簪。泛舟涧，笔墨欢，与墨浣沙，曲韵缠绕笔墨间。书墨言，写缱绻，与墨眷恋，曲亦言欢，墨亦言欢。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">与文相约，相约心灵的知己，拙笔间，写不出文字里的深意，而曲韵给了我极大的<a href="http://xiangxinziji.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">自信</a>和勇气。原来，文字舞动着笔墨的悠闲，似一朵朵文字之花。墨香晕染在字里行间，闲时，寄托在一抹灵犀之间。文字的飘香，于生命中共精彩。笔墨倾颜，曲韵翩跹，踏影墨鸾，轻语呢喃醉琴弦。拈墨嫣然，墨香流转，与墨欢。缱绻湄畔，潋滟墨缘，四季墨研，眸映墨兰，字里行间苦苦怜。望月墨叹，独饮墨盏，四季轮回对愁眠。弹指萧染，缱绻落簪，于文字里缓缓舒展。</p>\n'),
+(2, '<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">我不谙茶道，对茶更谈不上高深的研究了，偶尔受<a href="http://www.sanwen8.cn/z/pengyou/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">朋友</a>之邀品品茶，大多<a href="http://www.sanwen8.cn/z/shijian/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">时候</a>我是在<a href="http://www.sanwen8.cn/z/jiating/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">家里</a>或办公室里，独坐独饮，这个时候的<a href="http://www.sanwen8.cn/z/xiangxinziji/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">自己</a>，虽说没什么品茶的高品位，但却多了些茶中品<a href="http://www.sanwen8.cn/z/rensheng/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">人生</a>的小滋味，就是在这个时候，我才渐渐明白了茶如人生、茶道即人道的道理，品茶品出了人生的况味。不是吗？&ldquo;茶&rdquo;字的涵义不就是人在草木中吗？</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的初始如人生。炒制好茶需要在温锅中慢慢揉炒，长达数个小时，茶叶才会慢慢集聚。而若要炒制粗茶，那就简单了，把锅加热，半个小时就够了，但这样的茶饮起来索然无味。人生亦如此，每个人出生时几乎是平等的，但随着<a href="http://www.sanwen8.cn/z/shijian/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">时间</a>的推移，就像炒茶一样，就会慢慢变化，在现实<a href="http://www.sanwen8.cn/suibi/shenghuo/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">生活</a>中，&nbsp;<a href="http://www.sanwen8.cn/z/pinwei/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">品味</a>为什么高低不同，有时候不是因为你的自身问题，而是看在生活的这口锅里，你的<a href="http://www.sanwen8.cn/z/linghun/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">灵魂</a>被揉炒了多少回，这里面蕴含着很深的道理。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的经历如人生。这得先从茶和人生的起步说起，开始沏茶的时候，需要先用开水将茶壶、茶杯等淋洗一遍，这也叫&ldquo;暖壶&rdquo;，是为了放心的喝茶。人生的起步不也是这样吗？需要将大环境、小岗位都安排好了，这才便于安心地<a href="http://www.sanwen8.cn/zongjie/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">工作</a>，里面渗透着很深的&ldquo;茶道&rdquo;。然后，把茶叶放入壶中，用开水冲茶，这个时候，你定定地注视着茶壶或茶杯，就会发现，茶叶都一边飘摇着、舒展着争先恐后地想飘到最上面，密密地拥挤到一起，似乎都想争得最上一层，释放自己的芳香，可刚刚沏下的茶叶，芳香能有几何？这时的主人是不会去品茶的芳香的。后来，在同伴相互拥挤下，仅凭一点浮力的茶叶根本支撑不住了，加之经水的浸泡，增加了体重，一片片茶叶摇摇晃晃，慢慢地沉到半空，大多都沉入茶壶或杯子的底部，沉淀了的茶叶，才渐渐地释放出浓郁的芳香。由此反观我们的人生，茶壶和茶杯就如同我们人生的&ldquo;舞台&rdquo;，刚刚踏入工作的这把&ldquo;大壶&rdquo;或&ldquo;杯子&rdquo;时，都好高骛远，凭一时冲动，纷纷冲向事业的上面或前头，向尽快展示个人的能力和才华，都想往上冲，上面就会拥挤不堪，再说了，刚踏入工作岗位的人，能有多少才华值得施展？有的就会被碰的头破血流，有的在拥挤中也没法施展自己的才华，就会在竞争中败下阵来，后来，随着时间的推移，现实生活的打磨，先进思想的灌输，就会一步步地沉淀，思想就会慢慢地沉思，找准了自己的位置，展示出了独特的才华。人生的经历正如茶的经历，人们在人生这把&ldquo;大壶&rdquo;中，不停地飘荡，在不同的位置起伏，展示出每个阶段不同的才华。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的颜色如人生。沏茶的时候，茶的颜色会由浅慢慢地变深，浓到极处，煞是好看，由于茶的种类不同，大致可由浅绿、浅黄、浅红色，形成深绿、深黄、深红色，这时候赏茶色会赏心悦目，到了最好的状态，各种茶色再慢慢地由深变浅，直到很浅很淡，这就是沏茶的规律。人生也是这样，起初，无论是事业和人生都很淡然，慢慢地随着不断发展，就会有新的起色，发展到一定阶段，还会轰轰烈烈，到达事业顶峰的时候，创造出人生的辉煌。后因时势、年龄、环境、机遇等因素发生变化，就会慢慢地退步，直到最终退休，这也是人生的规律，也是人生如茶的地方。再就是在每个人的人生中也不一样，有的人在事业上是滚水沏茶，事业如茶一样浓烈，有的人是冷水沏茶慢慢浓，事业在一步一步、慢慢地向前发展，有的人是温水沏茶，说浓不浓，说淡不淡，平淡人生。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的味道如人生。我们品茶的时候，起初总是感到是苦味，再细细地品味，就会感到变为涩味，往下咽的时候，就会感到是甘味。这不正是人生的规律吗？在漫漫的人生旅途中，我们每个人起步的时候都很难，&ldquo;万事开头难&rdquo;正是说的这个道理，每个人都要品尝人生初始的苦味，后经艰苦拼搏，迎难而上，才感到苦味渐渐淡了，取而代之的是涩味，这个时候才有了希望，看到了胜利的曙光，如果畏难发愁，就会半途而废，如果急起直追，将会到达胜利的彼岸。最后品尝到的是人生的&ldquo;甘味&rdquo;，这是人生的最大收获。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">&ldquo;茶里乾坤大，壶里日月长&rdquo;。既然茶如人生，我们不妨像炒茶一样把自己的人生慢慢揉炒，像沏茶一样一步步规划好自己的人生，像观察茶的颜色一样把握好人生的规律，再像品茶的味道一样品尝人生的甘甜。通过品茶，<a href="http://www.sanwen8.cn/z/ganwu/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">感悟</a>人生的真谛。</p>\n'),
+(3, '<p>32131</p>\n'),
+(4, '<p>123</p>\n');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_channel`
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_channel` (
@@ -3302,15 +3321,19 @@ CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `channel_name` varchar(255) NOT NULL COMMENT '内容模型名称',
   `table_struct` text NOT NULL COMMENT '表结构(序列化)',
   `table_name` varchar(255) NOT NULL COMMENT '表名'
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='内容模型';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='内容模型';
+
+--
+-- 转存表中的数据 `zycms_channel`
+--
+
+INSERT INTO `zycms_channel` (`channel_id`, `channel_name`, `table_struct`, `table_name`) VALUES
+(27, '文章', 'a:1:{i:0;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:12:"文章内容";s:12:"channel_type";s:8:"htmltext";s:6:"values";s:0:"";}}', 'article');
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_cities`
---
--- 创建时间： 2015-06-27 03:37:43
--- 最后更新： 2015-06-27 03:37:53
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_cities` (
@@ -3676,8 +3699,6 @@ INSERT INTO `zycms_cities` (`id`, `cityid`, `city`, `provinceid`) VALUES
 --
 -- 表的结构 `zycms_column`
 --
--- 创建时间： 2015-06-11 07:11:37
---
 
 CREATE TABLE IF NOT EXISTS `zycms_column` (
   `id` int(10) unsigned NOT NULL COMMENT '栏目ID',
@@ -3694,14 +3715,19 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是;1,是)',
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='栏目表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='栏目表';
+
+--
+-- 转存表中的数据 `zycms_column`
+--
+
+INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `pid`, `column_thumb`, `summary`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
+(19, '文章', '', 27, 0, '', '', '', '', '', '', 0, 0, 1);
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_feedback`
---
--- 创建时间： 2015-06-18 03:25:04
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_feedback` (
@@ -3728,8 +3754,6 @@ INSERT INTO `zycms_feedback` (`id`, `user`, `company`, `contact`, `address`, `co
 --
 -- 表的结构 `zycms_flink`
 --
--- 创建时间： 2015-06-23 07:17:24
---
 
 CREATE TABLE IF NOT EXISTS `zycms_flink` (
   `id` int(10) unsigned NOT NULL COMMENT '友链ID',
@@ -3749,8 +3773,6 @@ INSERT INTO `zycms_flink` (`id`, `name`, `url`, `thumb`) VALUES
 
 --
 -- 表的结构 `zycms_forms`
---
--- 创建时间： 2015-06-17 08:05:04
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_forms` (
@@ -3773,8 +3795,6 @@ INSERT INTO `zycms_forms` (`id`, `name`, `table_name`, `table_struct`, `recevied
 --
 -- 表的结构 `zycms_hot_search`
 --
--- 创建时间： 2015-06-23 07:36:27
---
 
 CREATE TABLE IF NOT EXISTS `zycms_hot_search` (
   `id` int(10) unsigned NOT NULL COMMENT '热搜关键词ID',
@@ -3796,8 +3816,6 @@ INSERT INTO `zycms_hot_search` (`id`, `keywords`, `url`, `sort`) VALUES
 --
 -- 表的结构 `zycms_image`
 --
--- 创建时间： 2015-06-10 07:37:58
---
 
 CREATE TABLE IF NOT EXISTS `zycms_image` (
   `id` int(10) unsigned NOT NULL COMMENT 'ID',
@@ -3809,9 +3827,6 @@ CREATE TABLE IF NOT EXISTS `zycms_image` (
 --
 -- 表的结构 `zycms_keywords`
 --
--- 创建时间： 2015-09-18 02:17:02
--- 最后更新： 2015-09-18 03:26:27
---
 
 CREATE TABLE IF NOT EXISTS `zycms_keywords` (
   `id` int(10) unsigned NOT NULL,
@@ -3819,7 +3834,7 @@ CREATE TABLE IF NOT EXISTS `zycms_keywords` (
   `url` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT '关键词链接地址',
   `target` char(10) CHARACTER SET utf8 NOT NULL COMMENT '是否新窗口打开',
   `style` varchar(1024) CHARACTER SET utf8 NOT NULL COMMENT '样式'
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='文章关键词表';
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='文章关键词表';
 
 --
 -- 转存表中的数据 `zycms_keywords`
@@ -3828,7 +3843,7 @@ CREATE TABLE IF NOT EXISTS `zycms_keywords` (
 INSERT INTO `zycms_keywords` (`id`, `keyword`, `url`, `target`, `style`) VALUES
 (1, '黄昏', 'https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=%E9%BB%84%E6%98%8F&rsv_pq=d31321a800225a0c&rsv_t=555fq8ASYAL5uPRGQ1Kp21NGSw90ChcVNa%2FAgnhrkYhJkVqNafSEmrx1b1U&rsv_enter=1&rsv_n=2&rsv_sug3=1', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"0";}'),
 (3, '营销型网站', 'http://www.114my.net', '1', 'a:3:{s:8:"fontsize";i:14;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}'),
-(4, '我只是测试的', 'http://www.163.com', '0', 'a:3:{s:8:"fontsize";i:17;s:5:"color";s:7:"#6f0cf3";s:10:"fontweight";s:1:"0";}'),
+(7, '心', '/', '1', 'a:3:{s:8:"fontsize";i:14;s:5:"color";s:7:"#b6a0de";s:10:"fontweight";s:1:"1";}'),
 (5, '醉墨霓裳', 'http://www.163.com', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#07f83e";s:10:"fontweight";s:1:"1";}'),
 (6, '静逸', '/', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}');
 
@@ -3836,8 +3851,6 @@ INSERT INTO `zycms_keywords` (`id`, `keyword`, `url`, `target`, `style`) VALUES
 
 --
 -- 表的结构 `zycms_member`
---
--- 创建时间： 2015-06-26 10:06:27
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_member` (
@@ -3864,8 +3877,6 @@ INSERT INTO `zycms_member` (`id`, `true_name`, `username`, `password`, `email`, 
 
 --
 -- 表的结构 `zycms_message`
---
--- 创建时间： 2015-06-27 03:01:13
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_message` (
@@ -3895,8 +3906,6 @@ INSERT INTO `zycms_message` (`id`, `title`, `content`, `mid`, `pid`, `create_tim
 --
 -- 表的结构 `zycms_nav`
 --
--- 创建时间： 2015-06-23 09:53:15
---
 
 CREATE TABLE IF NOT EXISTS `zycms_nav` (
   `id` int(10) unsigned NOT NULL COMMENT '导航ID',
@@ -3925,8 +3934,6 @@ INSERT INTO `zycms_nav` (`id`, `pid`, `name`, `url`, `sort`, `position`, `level`
 --
 -- 表的结构 `zycms_order`
 --
--- 创建时间： 2015-06-26 10:10:01
---
 
 CREATE TABLE IF NOT EXISTS `zycms_order` (
   `order_number` int(10) unsigned NOT NULL COMMENT '订单号',
@@ -3942,8 +3949,6 @@ CREATE TABLE IF NOT EXISTS `zycms_order` (
 --
 -- 表的结构 `zycms_order_product`
 --
--- 创建时间： 2015-06-27 07:52:19
---
 
 CREATE TABLE IF NOT EXISTS `zycms_order_product` (
   `id` int(10) unsigned NOT NULL COMMENT 'ID',
@@ -3957,8 +3962,6 @@ CREATE TABLE IF NOT EXISTS `zycms_order_product` (
 
 --
 -- 表的结构 `zycms_piece`
---
--- 创建时间： 2015-06-16 09:26:59
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_piece` (
@@ -3984,9 +3987,6 @@ INSERT INTO `zycms_piece` (`id`, `name`, `content`) VALUES
 
 --
 -- 表的结构 `zycms_provinces`
---
--- 创建时间： 2015-06-27 03:36:25
--- 最后更新： 2015-06-27 03:36:33
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_provinces` (
@@ -4040,8 +4040,6 @@ INSERT INTO `zycms_provinces` (`id`, `provinceid`, `province`) VALUES
 --
 -- 表的结构 `zycms_relationship`
 --
--- 创建时间： 2015-06-19 06:26:55
---
 
 CREATE TABLE IF NOT EXISTS `zycms_relationship` (
   `roleid` int(10) unsigned NOT NULL COMMENT '角色ID',
@@ -4076,8 +4074,6 @@ INSERT INTO `zycms_relationship` (`roleid`, `rid`) VALUES
 --
 -- 表的结构 `zycms_right`
 --
--- 创建时间： 2015-06-19 03:05:30
---
 
 CREATE TABLE IF NOT EXISTS `zycms_right` (
   `id` int(10) unsigned NOT NULL COMMENT '权限ID',
@@ -4110,8 +4106,6 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 --
 -- 表的结构 `zycms_role`
 --
--- 创建时间： 2015-06-10 03:17:21
---
 
 CREATE TABLE IF NOT EXISTS `zycms_role` (
   `id` int(10) unsigned NOT NULL COMMENT '角色ID',
@@ -4130,8 +4124,6 @@ INSERT INTO `zycms_role` (`id`, `name`) VALUES
 
 --
 -- 表的结构 `zycms_rule`
---
--- 创建时间： 2015-06-26 02:32:16
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_rule` (
@@ -4162,8 +4154,6 @@ INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`
 
 --
 -- 表的结构 `zycms_sessions`
---
--- 创建时间： 2015-06-26 09:44:57
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_sessions` (
@@ -4285,6 +4275,12 @@ ALTER TABLE `zycms_archives`
 -- Indexes for table `zycms_areas`
 --
 ALTER TABLE `zycms_areas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_article`
+--
+ALTER TABLE `zycms_article`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4436,7 +4432,7 @@ ALTER TABLE `zycms_ad_position`
 -- AUTO_INCREMENT for table `zycms_archives`
 --
 ALTER TABLE `zycms_archives`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID';
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `zycms_areas`
 --
@@ -4446,7 +4442,7 @@ ALTER TABLE `zycms_areas`
 -- AUTO_INCREMENT for table `zycms_channel`
 --
 ALTER TABLE `zycms_channel`
-  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=27;
+  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `zycms_cities`
 --
@@ -4456,7 +4452,7 @@ ALTER TABLE `zycms_cities`
 -- AUTO_INCREMENT for table `zycms_column`
 --
 ALTER TABLE `zycms_column`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=19;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `zycms_feedback`
 --
@@ -4486,7 +4482,7 @@ ALTER TABLE `zycms_image`
 -- AUTO_INCREMENT for table `zycms_keywords`
 --
 ALTER TABLE `zycms_keywords`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `zycms_member`
 --
