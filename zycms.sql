@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-08-27 01:21:40
+-- Generation Time: 2015-09-18 03:29:09
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -24,6 +24,8 @@ SET time_zone = "+00:00";
 
 --
 -- 表的结构 `zycms_ad`
+--
+-- 创建时间： 2015-06-16 05:59:54
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_ad` (
@@ -47,6 +49,8 @@ INSERT INTO `zycms_ad` (`id`, `name`, `url`, `thumb`, `sort`, `pid`) VALUES
 
 --
 -- 表的结构 `zycms_admin`
+--
+-- 创建时间： 2015-06-10 03:17:21
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_admin` (
@@ -73,6 +77,8 @@ INSERT INTO `zycms_admin` (`id`, `username`, `password`, `create_time`, `is_enab
 --
 -- 表的结构 `zycms_ad_position`
 --
+-- 创建时间： 2015-06-16 05:57:22
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_ad_position` (
   `id` int(10) unsigned NOT NULL COMMENT '广告位ID',
@@ -91,6 +97,8 @@ INSERT INTO `zycms_ad_position` (`id`, `name`, `is_enable`) VALUES
 
 --
 -- 表的结构 `zycms_archives`
+--
+-- 创建时间： 2015-06-10 06:56:04
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_archives` (
@@ -111,12 +119,15 @@ CREATE TABLE IF NOT EXISTS `zycms_archives` (
   `cid` int(10) unsigned NOT NULL COMMENT '分类ID',
   `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
   `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除;0,未删除)'
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='文章主表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章主表';
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_areas`
+--
+-- 创建时间： 2015-06-27 03:38:11
+-- 最后更新： 2015-06-27 03:38:19
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_areas` (
@@ -3283,18 +3294,23 @@ INSERT INTO `zycms_areas` (`id`, `areaid`, `area`, `cityid`) VALUES
 --
 -- 表的结构 `zycms_channel`
 --
+-- 创建时间： 2015-06-10 06:44:07
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `channel_id` int(10) unsigned NOT NULL COMMENT '内容模型ID',
   `channel_name` varchar(255) NOT NULL COMMENT '内容模型名称',
   `table_struct` text NOT NULL COMMENT '表结构(序列化)',
   `table_name` varchar(255) NOT NULL COMMENT '表名'
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='内容模型';
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='内容模型';
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_cities`
+--
+-- 创建时间： 2015-06-27 03:37:43
+-- 最后更新： 2015-06-27 03:37:53
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_cities` (
@@ -3660,6 +3676,8 @@ INSERT INTO `zycms_cities` (`id`, `cityid`, `city`, `provinceid`) VALUES
 --
 -- 表的结构 `zycms_column`
 --
+-- 创建时间： 2015-06-11 07:11:37
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_column` (
   `id` int(10) unsigned NOT NULL COMMENT '栏目ID',
@@ -3676,12 +3694,14 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是;1,是)',
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='栏目表';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='栏目表';
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_feedback`
+--
+-- 创建时间： 2015-06-18 03:25:04
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_feedback` (
@@ -3708,6 +3728,8 @@ INSERT INTO `zycms_feedback` (`id`, `user`, `company`, `contact`, `address`, `co
 --
 -- 表的结构 `zycms_flink`
 --
+-- 创建时间： 2015-06-23 07:17:24
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_flink` (
   `id` int(10) unsigned NOT NULL COMMENT '友链ID',
@@ -3727,6 +3749,8 @@ INSERT INTO `zycms_flink` (`id`, `name`, `url`, `thumb`) VALUES
 
 --
 -- 表的结构 `zycms_forms`
+--
+-- 创建时间： 2015-06-17 08:05:04
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_forms` (
@@ -3749,6 +3773,8 @@ INSERT INTO `zycms_forms` (`id`, `name`, `table_name`, `table_struct`, `recevied
 --
 -- 表的结构 `zycms_hot_search`
 --
+-- 创建时间： 2015-06-23 07:36:27
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_hot_search` (
   `id` int(10) unsigned NOT NULL COMMENT '热搜关键词ID',
@@ -3770,6 +3796,8 @@ INSERT INTO `zycms_hot_search` (`id`, `keywords`, `url`, `sort`) VALUES
 --
 -- 表的结构 `zycms_image`
 --
+-- 创建时间： 2015-06-10 07:37:58
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_image` (
   `id` int(10) unsigned NOT NULL COMMENT 'ID',
@@ -3779,7 +3807,37 @@ CREATE TABLE IF NOT EXISTS `zycms_image` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `zycms_keywords`
+--
+-- 创建时间： 2015-09-18 02:17:02
+-- 最后更新： 2015-09-18 03:26:27
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_keywords` (
+  `id` int(10) unsigned NOT NULL,
+  `keyword` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT '关键词',
+  `url` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT '关键词链接地址',
+  `target` char(10) CHARACTER SET utf8 NOT NULL COMMENT '是否新窗口打开',
+  `style` varchar(1024) CHARACTER SET utf8 NOT NULL COMMENT '样式'
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='文章关键词表';
+
+--
+-- 转存表中的数据 `zycms_keywords`
+--
+
+INSERT INTO `zycms_keywords` (`id`, `keyword`, `url`, `target`, `style`) VALUES
+(1, '黄昏', 'https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=%E9%BB%84%E6%98%8F&rsv_pq=d31321a800225a0c&rsv_t=555fq8ASYAL5uPRGQ1Kp21NGSw90ChcVNa%2FAgnhrkYhJkVqNafSEmrx1b1U&rsv_enter=1&rsv_n=2&rsv_sug3=1', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"0";}'),
+(3, '营销型网站', 'http://www.114my.net', '1', 'a:3:{s:8:"fontsize";i:14;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}'),
+(4, '我只是测试的', 'http://www.163.com', '0', 'a:3:{s:8:"fontsize";i:17;s:5:"color";s:7:"#6f0cf3";s:10:"fontweight";s:1:"0";}'),
+(5, '醉墨霓裳', 'http://www.163.com', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#07f83e";s:10:"fontweight";s:1:"1";}'),
+(6, '静逸', '/', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `zycms_member`
+--
+-- 创建时间： 2015-06-26 10:06:27
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_member` (
@@ -3806,6 +3864,8 @@ INSERT INTO `zycms_member` (`id`, `true_name`, `username`, `password`, `email`, 
 
 --
 -- 表的结构 `zycms_message`
+--
+-- 创建时间： 2015-06-27 03:01:13
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_message` (
@@ -3835,6 +3895,8 @@ INSERT INTO `zycms_message` (`id`, `title`, `content`, `mid`, `pid`, `create_tim
 --
 -- 表的结构 `zycms_nav`
 --
+-- 创建时间： 2015-06-23 09:53:15
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_nav` (
   `id` int(10) unsigned NOT NULL COMMENT '导航ID',
@@ -3863,6 +3925,8 @@ INSERT INTO `zycms_nav` (`id`, `pid`, `name`, `url`, `sort`, `position`, `level`
 --
 -- 表的结构 `zycms_order`
 --
+-- 创建时间： 2015-06-26 10:10:01
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_order` (
   `order_number` int(10) unsigned NOT NULL COMMENT '订单号',
@@ -3878,6 +3942,8 @@ CREATE TABLE IF NOT EXISTS `zycms_order` (
 --
 -- 表的结构 `zycms_order_product`
 --
+-- 创建时间： 2015-06-27 07:52:19
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_order_product` (
   `id` int(10) unsigned NOT NULL COMMENT 'ID',
@@ -3891,6 +3957,8 @@ CREATE TABLE IF NOT EXISTS `zycms_order_product` (
 
 --
 -- 表的结构 `zycms_piece`
+--
+-- 创建时间： 2015-06-16 09:26:59
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_piece` (
@@ -3916,6 +3984,9 @@ INSERT INTO `zycms_piece` (`id`, `name`, `content`) VALUES
 
 --
 -- 表的结构 `zycms_provinces`
+--
+-- 创建时间： 2015-06-27 03:36:25
+-- 最后更新： 2015-06-27 03:36:33
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_provinces` (
@@ -3969,6 +4040,8 @@ INSERT INTO `zycms_provinces` (`id`, `provinceid`, `province`) VALUES
 --
 -- 表的结构 `zycms_relationship`
 --
+-- 创建时间： 2015-06-19 06:26:55
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_relationship` (
   `roleid` int(10) unsigned NOT NULL COMMENT '角色ID',
@@ -4003,6 +4076,8 @@ INSERT INTO `zycms_relationship` (`roleid`, `rid`) VALUES
 --
 -- 表的结构 `zycms_right`
 --
+-- 创建时间： 2015-06-19 03:05:30
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_right` (
   `id` int(10) unsigned NOT NULL COMMENT '权限ID',
@@ -4025,7 +4100,7 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export'),
 (10, '系统设置管理', 'admin@base_set,admin@nav_set,admin@water_image'),
 (11, '友情链接', 'admin@flink'),
-(12, '热门搜索', 'admin@hot_search'),
+(12, '关键词管理', 'admin@hot_search,admin@keywords'),
 (13, '生成静态', 'admin@build_html'),
 (15, '回收站', 'admin@recycle_bin'),
 (16, '会员管理', 'admin@member_list,admin@order_list,admin@message_list');
@@ -4034,6 +4109,8 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 
 --
 -- 表的结构 `zycms_role`
+--
+-- 创建时间： 2015-06-10 03:17:21
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_role` (
@@ -4054,6 +4131,8 @@ INSERT INTO `zycms_role` (`id`, `name`) VALUES
 --
 -- 表的结构 `zycms_rule`
 --
+-- 创建时间： 2015-06-26 02:32:16
+--
 
 CREATE TABLE IF NOT EXISTS `zycms_rule` (
   `id` int(10) unsigned NOT NULL COMMENT 'ID',
@@ -4061,28 +4140,30 @@ CREATE TABLE IF NOT EXISTS `zycms_rule` (
   `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
   `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
   `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页; 2.列表; 3.详细)'
-) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8 COMMENT='规则表';
+) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8 COMMENT='规则表';
 
 --
 -- 转存表中的数据 `zycms_rule`
 --
 
 INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`) VALUES
-(220, 0, 'index.html', 'welcome/index', 1),
-(221, 10, '123.html', '123/index', 1),
-(222, 10, '123/10-page.html', 'product/category/10/page/12', 2),
-(223, 10, '123/aid.html', 'product/detail/aid', 3),
-(224, 11, '123.html', '123/index', 1),
-(225, 11, '123/11-page.html', 'article/category/11/page/12', 2),
-(226, 11, '123/aid.html', 'article/detail/aid', 3),
-(227, 12, 'test.html', 'test/index', 1),
-(228, 12, 'test/12-page.html', 'test2/category/12/page/12', 2),
-(229, 12, 'test/aid.html', 'test2/detail/aid', 3);
+(251, 0, 'index.html', 'welcome/index', 1),
+(252, 16, 'test.html', 'test/index', 1),
+(253, 16, 'test/16-page.html', 'test/category/16/page/12', 2),
+(254, 16, 'test/aid.html', 'test/detail/aid', 3),
+(255, 17, 'test3.html', 'test3/index', 1),
+(256, 17, 'test3/17-page.html', 'article/category/17/page/12', 2),
+(257, 17, 'test3/aid.html', 'article/detail/aid', 3),
+(258, 18, 'qiye.html', 'qiye/index', 1),
+(259, 18, 'qiye/18-page.html', 'company/category/18/page/12', 2),
+(260, 18, 'qiye/aid.html', 'company/detail/aid', 3);
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `zycms_sessions`
+--
+-- 创建时间： 2015-06-26 09:44:57
 --
 
 CREATE TABLE IF NOT EXISTS `zycms_sessions` (
@@ -4099,57 +4180,76 @@ CREATE TABLE IF NOT EXISTS `zycms_sessions` (
 --
 
 INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`, `data`, `timestamp`) VALUES
-('02edf6dc66c598bce8d9796b7dc5ff6000780963', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437478150;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437478292),
-('0bca4f3ac464872b1055890c400dd2cc6b078756', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439944824;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439944986),
-('145a67307c0bc7de47e92be0f8c8fd8194010964', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439952946;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439953131),
-('182ce255757e88413369040001d69071ecede5d5', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440383392;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440383411),
-('1c6e3f02c3c8e6cf62ebb7a840eb8a4a1b6ce10b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439891843;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892134),
-('208faf134c5d160aedb5a25987a5f22dabf146e3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438150193;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438150195),
-('22c0aad620c26169b9dbb26c10f968021ea4a3af', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438400265;', 1438400320),
-('24ad6d57497a315e9e9999d37b5b1e5e51807037', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439956207;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439956278),
-('29c9a4043a9d0f90910ec57072b6d8dfbc8e26c7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951072;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439951176),
-('2b1852894c2d171ca23f75608d249f3ccf89907a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149819;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149819),
-('3112fc98c1af1397e3fb387e9a89cd04590cee1d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439892145;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892151),
-('381574c4401733146c759af79afea482097438ec', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440638433;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440638477),
-('3b0093bb3cfc7a4999360e5909fa732bcca4b505', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439891355;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439891570),
-('4824933cd84404a42a8dd82b78d51c6301ee27e6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373809;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373905),
-('49e9f19488eee829a65ea47cd0a4139e45bdd95c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439950227;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950521),
-('4b79f92c972c3a0a4a49bfc1b5d104d543807769', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439949772;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950036),
-('54dbeed8b94c6f0b9203d72d46a8488c0f29b9fc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438672193;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438672221),
-('5633c517330490418ab83ad2313398fd35c77c3f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439947180;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439947283),
-('575e02e482e48545a45015dd88282520c3153ef4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437372697;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437372702),
-('588aef772eaefbac61ccebcc9095f50dcc66a059', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437478476;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437478545),
-('6777a7d3d0ca73165abf6e1d475caade012149d7', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437371684;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437371697),
-('684b876eb3476a795dbad0cd0ea0b5ef3be45a20', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149155;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149164),
-('686560a91be337acbfcc638ad2feeb9dd743c851', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890925;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439891065),
-('6a85a16e627521314dcce81d3c6d95a72aea7261', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437475255;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1437475293),
-('7343ee59240e0dcf2f51013cd00eafc69f3797b0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149155;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1438149155),
-('7a8f92341adc7c7c09026a42c24f721dac869afe', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373206;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373505),
-('89375eaec04e15122b68aa692ebd83eb067b6d25', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439019987;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1439019987),
-('9045147cf23c375f86a68988f39304136ec471a1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438830728;admin|a:3:{s:2:"id";N;s:3:"rid";N;s:8:"username";N;}', 1438830728),
-('916e687fcf01d59fd698b44d8378c9661910df8a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438830144;admin|a:3:{s:2:"id";N;s:3:"rid";N;s:8:"username";N;}', 1438830390),
-('940136076263f9130acfc0bc63c618e7381293a2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438399653;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438399929),
-('990ffd30301cbc9743fd555b35b685d6cc2aee04', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438420407;redirect|s:11:"admin/index";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1438420409),
-('a0053e338006e24e1afa736e8e446faddebaaf60', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437447617;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437447813),
-('a26f07d6fd186921a2501f7f47060ef0d9f4235e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890312;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439890573),
-('a64798152b3f6a79da6d9b402a1eda98ac1b8542', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439892452;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439892566),
-('a776dcb3a581e68350f9a99cb0e382c27e6b6030', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440378214;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440378222),
-('a9a3f47ce45042fb2f31304e5297e857f9579edc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951592;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439951838),
-('aab02411ca2f7d5e1d4de7976161c91c3cbe98c3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439889505;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439889516),
-('ab765072f269bf2a71bd720992ab53ea67024158', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439890005;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439890303),
-('b6772c9f46c73ef5067114d79718568a20151f60', '192.168.0.101', '', 0, '__ci_last_regenerate|i:1438400037;admin|a:3:{s:2:"id";s:1:"5";s:3:"rid";s:1:"7";s:8:"username";s:4:"test";}', 1438400256),
-('b99bc81ff9c45de17bbb69cbe69e8ccb206c7d4d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439951929;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439952152),
-('bac75e432be61671381d8e7a760a4c9cfdc184c9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439952611;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439952711),
-('bf5097b8897e24f86957fb5a0ed96f6644b1a80f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440549123;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1440549123),
-('c8239bb57249b557eb1ed9e5c27c33fad86225e1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440549123;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440549292),
-('cec2ae3f83d0936f0aef46bcac3c648e6fe88689', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437372074;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437372136),
-('d557d50d6dee0ba0428a587297d06382600f69ea', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440377779;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1440377986),
-('e90f9d0ac042c2774a46f895fcdae65dbfb23e9b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439945675;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439945693),
-('eeb55bebb4e2667ec42ee248647a9d786d77300d', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1437373508;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1437373794),
-('ef3dd59a2c6d7f1cf665a50d2c023abf533bb435', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1440638433;redirect|s:5:"admin";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1440638433),
-('f873b9c0dc48d93c769d0d40dc132011647b2976', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1438149819;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1438149905),
-('f95a996123c536408eaec8ce5cb6967309f0a871', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439945271;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439945271),
-('fd228fc0d6f2ad523b122635d178a45ac6db81fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1439950606;admin|a:3:{s:2:"id";s:1:"3";s:3:"rid";s:1:"6";s:8:"username";s:5:"admin";}', 1439950776);
+('0117f560cf037a2507772ae91a40f2175258c2bc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442373745;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373990),
+('021a6eb809792a9e4c8ab7166e0bd4363996e5fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452076;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452379),
+('03a9889f1e47832ae8ed53b202aec367b97df75e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442451434;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442451704),
+('0a58b2ee88363b549443a1c3af6bbd54f58a71fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442394694;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442394704),
+('0c62f2e2731e9a69b94dff11d703c4e07b32cc2b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442365795;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366055),
+('0cf5bc77645a548eaef397f8ea3912b0ab522eb4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442373243;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373243),
+('11be3e69b8579e3f0672e6db7b312045e94a6684', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367218;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442367429),
+('2340718a219a08cf56668083c78faf8d0be8b32b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442382851;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442382852),
+('2366702c739b27977d6b83e4b0154eee2516d9ae', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397006;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397305),
+('28987f20984d752f8df81c1e7d734c394035f3de', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('2ab67abe19aa06479ab04ccaf0e1b38180623cbb', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454454;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454748),
+('395b0c2c7b0623fb43a3af59231935162370ddb9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398505;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398512),
+('3997e8e2bd7cc801fc2cd31ed02962bae0f6f74a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452684;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452788),
+('3ea37783ee1ea49d225ea320eaf983e28283de10', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442371277;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442371291),
+('4383fa099c8345d0039c73dd505476388897d83c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442384868;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385132),
+('44019ae485ff839dd32a5b7d47ed524013e77678', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372086;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442372385),
+('469514423e7fe65579076a4ddbe2550a2fba5af3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454760;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442455013),
+('4b6f5b0a892b0b88f53184f5a26354660b06a5e1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396342;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396608),
+('4dea38195ec883dabe93a675e85763f632c4d012', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442385581;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385699),
+('4ebfd65af94f43601513e1d3fcf7d65d633ed12b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372547;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442372551),
+('523ef41b21908953137347f36220ea3ed9776de4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372930;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373156),
+('57f4ca9823c383216ded7a8c8e542e3999cd4733', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397378;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397635),
+('5b00c07544e4b48c5f196bb6c22ba4d56dff80e3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396033;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396243),
+('5cf43292712fdbbf77617c529d3514bde093668b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442366458;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366570),
+('5ef6f5882fef4376a0b45e662f6a8310e110ed90', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442365174;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442365461),
+('6301cd85e56f7e1a873113c564ca2729e70789da', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442394356;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442394356),
+('72235e49f050aff73a135a2d07a05b40aa6107f6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398179;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398489),
+('72ba644c7b71e0c6df1a928aa356ed2f29f8353f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369651;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369907),
+('779f9979ad4e906f0a55c6fee071c43aceb31235', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397690;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397798),
+('7d75c652f61c1f887b51bf55cf1aa99ee385ec59', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396701;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396995),
+('86c19de3ac437acf9d0aff18ca9565cf4f538406', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442381852;redirect|s:18:"admin/channel_list";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1442381853),
+('88ffb2e5e6916b310bc9e11225542659d969c100', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442385276;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385576),
+('927bf932d710a304181255133922bc9ebb8593a3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367536;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442367830),
+('95e9ae7ccaf611c7ed1a2432a9ed3e2d261d81e2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442387149;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442387149),
+('96a2b39ed6d95ba698530e5105d846be549a7da2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442451773;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452075),
+('97ef6c587f749d8df7f206210dffb3611d7da583', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367852;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442368132),
+('9c6de858ca8e8a5393c967bf05c908c2dc29a38e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442363817;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442363973),
+('a01d90f6d9ab93fa14e09da5632f51566f1637ed', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442455182;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442455193),
+('a6ab0f97fc17df8b8c68bdae8f85074934689fe3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442387646;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442387646),
+('aab3d81e9ff24bfdb4c5c35d2c10d9694c5bce68', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('afc7d1062f8e86a1c2fb33a4524621ef04de11e8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442390210;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442390236),
+('b1bd5278ce4490720b6662a75ba5de8a18c00bd9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('b40da5a03edd4650884260f8d85515164f42cbf2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442386168;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442386267),
+('b4fd07f8b7243d54c3d25dd48d489d622fb92b4b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369995;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370292),
+('b7ff11787c6c692d6fa312275db750c16e4c97e9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452379;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452683),
+('bfe3403befd11dbf0638d447e452da380d404294', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442366150;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366439),
+('c05bde0c158d54bdb8bbf13abc8b32a081144dd1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('c1fbcfee205f6c4dba7ad656c4d6a796ac3de620', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('c59d92128179dbdcdc627b834671e1d2d669bf4f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442374075;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442374128),
+('c77f03716055b43732c27e052a4ac071e5264da0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442364809;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442364977),
+('ce66f398c36a63384dbe1ad5b81816dcd220f92e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370301;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370350),
+('d14c8d949a1abd8b8f5855be07c98d24e3ddee24', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442453760;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454028),
+('d188460ed988b4e8fd705863ffc2f5a3f54ba62c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('d1978be882c4038510506443ef701232f22bb23f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370964;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442371115),
+('d26347a7989d3b5ff168645e396631de5368f69a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369022;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369287),
+('d35cbb159bb41107fc75bca446af912ec3899351', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442453389;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442453580),
+('d4458535b99c80d4744de4a7e270d57e517c61fa', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454149;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454345),
+('d4f97e5fd0a7c02d41865c132cd33ea83127de3f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442386553;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442386681),
+('d76a88c99215da459a3c7ac6f26ea2c451e46194', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('d88281b2a59a46fcb98e208e68cd72b13ae3deeb', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370635;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370917),
+('e4fa744eef86c565ac828f29f041eeb79bb5b127', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398490;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('e5ae941897cb3af82617615bc5d7e16e7ddd4fd1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395702;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395997),
+('ecda56ae600ed72ed72a54cf0aa243797f7591de', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442384420;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442384563),
+('ee5cd9954e3b5d48ed409945d70cf36ecc165915', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('ef855ce04164a631485fd28fcbcf01d2def3d288', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442364128;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442364370),
+('f0cb29d53018072de8b515749e688507c54143b4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442389797;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442389797),
+('f11d3b3fff65578a0b608c418a08a6921352f404', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395009;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395308),
+('f51e9cd38f3ec193cc7d8d8ac7c017745cd225b6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
+('fa130c926db79f7fb5adfa5192d6e5c4cc0e351a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395328;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395593),
+('fcf7046175ad12d9077ac50573d3ae1be51b3e42', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369336;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369389);
 
 --
 -- Indexes for dumped tables
@@ -4233,6 +4333,12 @@ ALTER TABLE `zycms_hot_search`
 -- Indexes for table `zycms_image`
 --
 ALTER TABLE `zycms_image`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_keywords`
+--
+ALTER TABLE `zycms_keywords`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4330,7 +4436,7 @@ ALTER TABLE `zycms_ad_position`
 -- AUTO_INCREMENT for table `zycms_archives`
 --
 ALTER TABLE `zycms_archives`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=36;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID';
 --
 -- AUTO_INCREMENT for table `zycms_areas`
 --
@@ -4340,7 +4446,7 @@ ALTER TABLE `zycms_areas`
 -- AUTO_INCREMENT for table `zycms_channel`
 --
 ALTER TABLE `zycms_channel`
-  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=23;
+  MODIFY `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内容模型ID',AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT for table `zycms_cities`
 --
@@ -4350,7 +4456,7 @@ ALTER TABLE `zycms_cities`
 -- AUTO_INCREMENT for table `zycms_column`
 --
 ALTER TABLE `zycms_column`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=16;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `zycms_feedback`
 --
@@ -4376,6 +4482,11 @@ ALTER TABLE `zycms_hot_search`
 --
 ALTER TABLE `zycms_image`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+--
+-- AUTO_INCREMENT for table `zycms_keywords`
+--
+ALTER TABLE `zycms_keywords`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `zycms_member`
 --
@@ -4425,7 +4536,7 @@ ALTER TABLE `zycms_role`
 -- AUTO_INCREMENT for table `zycms_rule`
 --
 ALTER TABLE `zycms_rule`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=230;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=261;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

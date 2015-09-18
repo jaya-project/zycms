@@ -3039,6 +3039,147 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	NG.getRule();
 })
 
+Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
+	var NG = $scope;
+	NG.modelArray = [{}];
+	NG.keyword = {target:1, url: '/', style:{fontsize: 14, color:'#ff0000', fontweight:'1'}};
+	NG.isEdit = false;
+	
+	NG.showAddUI = function() {
+		NG.keyword = {target:1, url: '/', style:{fontsize: 14, color:'#ff0000', fontweight:'1'}};
+		NG.isEdit = false;
+		template.getTemplate('keywords-add', NG, function(content) {
+			NG.showAddUICallback(content);
+		});
+		
+	}
+	
+	NG.showAddUICallback = function(content) {
+		$('.ui-popup').remove();
+		$('#saveHotSearch').remove();
+		var content = $compile(content)(NG);
+		$(content).appendTo('.content');
+		dialog({
+			'title' : '添加文章关键词',
+			'content' : $('#saveHotSearch'),
+			'id' : 'saveHotSearch'
+			
+		}).show();
+	}
+	
+	NG.preview = function() {
+		var keyword = NG.keyword;
+		var target = ' target="'+(keyword.target==1?'_blank':'_self')+'"';
+		var style = ' style="font-size:'+keyword.style.fontsize+'px; color:'+keyword.style.color+'; font-weight:' + (keyword.style.fontweight==1?'bold':'normal') +'"';
+		var _html = '';
+		_html = '<a href="'+keyword.url+'" '+target+style+'>'+keyword.keyword+'</a>';
+		$('#fontPreview').html(_html);
+	}
+	
+	NG.addContent = function() {
+		var data = NG.keyword;
+		if (typeof data.keyword == 'undefined' || data.keyword == '') {
+			generate({'text':'关键词不能为空', 'type':'error'});
+			return;
+		}
+		
+		if (typeof data.url == 'undefined' || data.url == '') {
+			generate({'text':'必须是合法的url', 'type':'error'});
+			return;
+		}
+		
+		$http.post('/Backend/keywords/add_content', data).success(function(result) {
+			
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+				dialog({'id':'saveHotSearch'}).remove();
+				NG.getAllContent();
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.showModifyUI = function(id) {
+		NG.isEdit = true;
+		NG.getSpecifyKeyword(id);
+		
+	}
+	
+	NG.modifyContent = function(id) {
+		var data = NG.keyword;
+		if (typeof data.keyword == 'undefined' || data.keyword == '') {
+			generate({'text':'关键词不能为空', 'type':'error'});
+			return;
+		}
+		
+		if (typeof data.url == 'undefined' || data.url == '') {
+			generate({'text':'必须是合法的url', 'type':'error'});
+			return;
+		}
+		
+		
+		$http.post('/Backend/keywords/edit', data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+					dialog({'id':'saveHotSearch'}).remove();
+					NG.getAllContent();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+	}
+	
+	NG.getSpecifyKeyword = function(id) {
+		var data = {id:id};
+		$http.post('/Backend/keywords/get_specify_keyword', data).success(function(result) {
+				if(result.code == 200 ) {
+					NG.keyword = result.data;
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			}).then(function() {
+				$http.post("/Backend/template/get_template", {template:'keywords-add'}).success(function(result) {
+					if(result.code == 200 ) {
+						NG.showAddUICallback(result.data);
+					} else {
+						generate({"text":result.message, "type":"error"});
+					}
+				}).then(function() {
+					NG.preview();
+				});
+				
+			});
+	}
+	
+	NG.deleteContent = function(id) {
+		if (window.confirm('你确定要删除吗?')) {
+			var data = {id:id};
+			$http.post('/Backend/keywords/delete', data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+					NG.getAllContent();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
+	}
+	
+	NG.getAllContent = function() {
+		$http.post('/Backend/keywords/get_all').success(function(result) {
+			
+			if(result.code == 200 ) {
+				NG.data = result.data;
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getAllContent();
+});
+
 Module.controller('qrcodeCtrl', function($scope, $http) {
 	var NG = $scope;
 	

@@ -164,6 +164,11 @@ class Admin extends Admin_Controller {
 		$this->view('hot-search');
 	}
 	
+	public function keywords()
+	{
+		$this->view('keywords');
+	}
+	
 	public function nav_set()
 	{
 		$this->view('nav-list');

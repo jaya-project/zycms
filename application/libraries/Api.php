@@ -13,7 +13,7 @@ class Api
 	public function __construct() {
 		$this->CI = & get_instance();
 		$this->CI->load->database();
-		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model', 'rule_model'));
+		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model', 'rule_model', 'keywords_model'));
 		$this->CI->load->helper(array('array'));
 		$this->CI->load->library(array('MyCategory'));
 	}
@@ -385,6 +385,31 @@ class Api
 		
 	}
 	
+	/**
+	 *  文章内容关键词替换
+	 *  
+	 *  @param string $content 文章内容
+	 */
+	public function keywords_replace($content) 
+	{
+		//获取替换关键词列表
+		$keywords = $this->CI->keywords_model->get_all();
+		array_walk($keywords, function(&$keyword) {
+			$keyword['style'] = unserialize($keyword['style']);
+		});
+		
+		reset($keywords);
+		//进行替换
+		foreach ($keywords as $keyword) {
+			//combine tag
+			$style = $keyword['style'];
+			$tag = "<a href='$keyword[url]' target='$keyword[target]' style='font-size:$style[fontsize]px; font-weight:$style[fontweight]; color:$style[color];'>$keyword[keyword]</a>";
+			$content = str_replace($keyword['keyword'], $tag, $content);
+		}
+		
+		return $content;
+	}
+	
 	
 	/**
 	 *  获取面包屑导航
@@ -453,6 +478,7 @@ class Api
 	}
 	
 	
+	
 	/**
 	 *  根据栏目ID获取表名
 	 *  
@@ -467,4 +493,6 @@ class Api
 		$row = $this->CI->db->get()->row_array();
 		return $row['table_name'];
 	}
+	
+	
 }

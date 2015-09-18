@@ -100,9 +100,10 @@ $config['backend'] = array(
 														),
 									),
 									array(
-										'title' => '热门搜索',
+										'title' => '关键词管理',
 										'sub_menu' => array(
 															'/admin/hot_search' => '热门搜索关键词',
+															'/admin/keywords' => '文章关键词管理',
 														),
 									),
 									
@@ -124,6 +125,7 @@ $config['backend'] = array(
 														),
 									),
 									
+									/*
 									array(
 										'title' => '会员管理',
 										'sub_menu' => array(
@@ -132,5 +134,6 @@ $config['backend'] = array(
 															'/admin/message_list' => '消息列表'
 														),
 									),
+									*/
 								),
 					);
