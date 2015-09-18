@@ -115,6 +115,7 @@ $config['backend'] = array(
 															'/admin/qr_code' => '二维码生成器',
 															'/admin/auto_push' => '百度主动推送',
 															'/admin/bat_export' => '文章批量导入',
+															'/admin/black_list' => '黑名单设置',
 														),
 									),
 									

@@ -272,6 +272,33 @@ class Tools extends Admin_Controller {
 		}
 	}
 	
+	/**
+	 *  获取黑名单
+	 */
+	public function get_black_list()
+	{
+		$black_list = include (APPPATH . '/config/black_list.php') ;
+		
+		die(json_encode(array('code'=>200, 'message'=>'获取成功', 'data'=>join("\n", $black_list))));
+	}
+	
+	/**
+	 *  保存黑名单
+	 */
+	public function save_black_list()
+	{
+		$data = $this->input->stream();
+		$black_list = explode("\n", $data['blackList']);
+		
+		$black_list = array_filter($black_list, function($item) {
+							return ip2long($item) !== false;
+					  });
+		
+		file_put_contents(APPPATH . '/config/black_list.php', '<?php return ' . var_export($black_list, true) . ';');
+		
+		die(json_encode(array('code'=>200, 'message'=>'保存成功')));
+	}
+	
 	public function bat_export()
 	{
 		if (!is_dir('./uploads/files/')) {

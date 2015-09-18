@@ -13,16 +13,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 //在调用ajax操作后自动输出
-$hook['post_controller'] = array(
-                                'class'		=> 'Auto_push',
-                                'function'	=> 'push',
-                                'filename'	=> 'AutoPush.php',
-                                'filepath'	=> 'hooks/postController',
-                                );
-						
-$hook['app_post_controller'] = array(
-                                'class'		=> 'Auto_p',
-                                'function'	=> 'push',
-                                'filename'	=> 'AutoP.php',
-                                'filepath'	=> 'hooks/postController',
-                                );
+$hook['pre_system'] = array(
+							'class'    => 'Dog',
+							'function' => 'checkIP',
+							'filename' => 'dog.php',
+							'filepath' => 'hooks',
+							);

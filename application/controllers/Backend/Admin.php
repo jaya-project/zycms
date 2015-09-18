@@ -204,6 +204,11 @@ class Admin extends Admin_Controller {
 		$this->view('auto-push');
 	}
 	
+	public function black_list()
+	{
+		$this->view('black-list');
+	}
+	
 	public function recycle_bin()
 	{
 		$this->view('recycle-bin');

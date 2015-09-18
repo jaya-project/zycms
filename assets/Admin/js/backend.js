@@ -992,6 +992,34 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	
 })
 
+Module.controller('blackListCtrl', function($scope, $http) {
+	var NG = $scope;
+	
+	NG.saveContent = function() {
+		var data = {blackList:NG.blackList};
+		$http.post('/Backend/tools/save_black_list', data).success(function(result) {
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+				NG.getContent();
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getContent = function() {
+		$http.post('/Backend/tools/get_black_list').success(function(result) {
+			if(result.code == 200 ) {
+				NG.blackList = result.data;
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getContent();
+});
+
 Module.controller('searchEngineCtrl', function($scope, $http) {
 	var NG = $scope;
 	
