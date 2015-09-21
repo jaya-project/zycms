@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-09-21 02:56:43
+-- Generation Time: 2015-09-21 08:23:55
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `tzycms`
+-- Database: `zycms`
 --
 
 -- --------------------------------------------------------
@@ -34,14 +34,6 @@ CREATE TABLE IF NOT EXISTS `zycms_ad` (
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `pid` int(10) unsigned NOT NULL COMMENT '广告位ID'
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='广告表';
-
---
--- 转存表中的数据 `zycms_ad`
---
-
-INSERT INTO `zycms_ad` (`id`, `name`, `url`, `thumb`, `sort`, `pid`) VALUES
-(2, '首页广告一', 'http://www.baidu.com', '/uploads/2015/06/16/2015_06_16_1434445774.jpg', 1, 1),
-(3, '首页广告二', '', '/uploads/2015/06/16/2015_06_16_1434445854.jpg', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -80,12 +72,32 @@ CREATE TABLE IF NOT EXISTS `zycms_ad_position` (
   `is_enable` tinyint(3) unsigned NOT NULL COMMENT '是否开启'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='广告位表';
 
+-- --------------------------------------------------------
+
 --
--- 转存表中的数据 `zycms_ad_position`
+-- 表的结构 `zycms_archives`
 --
 
-INSERT INTO `zycms_ad_position` (`id`, `name`, `is_enable`) VALUES
-(1, '首页幻灯片', 1);
+CREATE TABLE IF NOT EXISTS `zycms_archives` (
+  `id` int(10) unsigned NOT NULL COMMENT '文章ID',
+  `title` varchar(1024) NOT NULL COMMENT '文章标题',
+  `sub_title` varchar(1024) NOT NULL COMMENT '文章副标题',
+  `tag` varchar(1024) NOT NULL COMMENT '标签',
+  `thumb` varchar(1024) NOT NULL COMMENT '缩略图',
+  `seo_title` varchar(1024) NOT NULL COMMENT 'SEO标题',
+  `seo_keywords` varchar(1024) NOT NULL COMMENT 'SEO关键词',
+  `seo_description` varchar(2048) NOT NULL COMMENT 'SEO描述',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `author` varchar(255) NOT NULL COMMENT '文章作者',
+  `source` varchar(1024) NOT NULL COMMENT '文章来源',
+  `sort` int(10) unsigned NOT NULL COMMENT '排序',
+  `click_count` int(10) unsigned NOT NULL COMMENT '点击次数',
+  `recommend_type` varchar(255) NOT NULL COMMENT '推荐类型(热销,推荐等)',
+  `cid` int(10) unsigned NOT NULL COMMENT '分类ID',
+  `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
+  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除 0,未删除)',
+  `delay_time` int(10) NOT NULL DEFAULT '0' COMMENT '延迟发布时间'
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='文章主表';
 
 -- --------------------------------------------------------
 
@@ -3255,17 +3267,6 @@ INSERT INTO `zycms_areas` (`id`, `areaid`, `area`, `cityid`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_article`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_article` (
-  `id` int(10) unsigned NOT NULL COMMENT 'ID',
-  `body` text COMMENT '文章内容'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `zycms_channel`
 --
 
@@ -3643,27 +3644,25 @@ INSERT INTO `zycms_cities` (`id`, `cityid`, `city`, `provinceid`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_feedback`
+-- 表的结构 `zycms_column`
 --
 
-CREATE TABLE IF NOT EXISTS `zycms_feedback` (
-  `id` int(10) unsigned NOT NULL COMMENT 'ID',
-  `user` varchar(255) DEFAULT NULL COMMENT '姓名',
-  `company` varchar(255) DEFAULT NULL COMMENT '公司',
-  `contact` varchar(255) DEFAULT NULL COMMENT '联系方式',
-  `address` varchar(255) DEFAULT NULL COMMENT '联系地址',
-  `content` text COMMENT '留言内容'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `zycms_feedback`
---
-
-INSERT INTO `zycms_feedback` (`id`, `user`, `company`, `contact`, `address`, `content`) VALUES
-(1, '姓名', '公司', '联系方式', '联系地址', '留言内容'),
-(2, '齐庆', '朝阳网络', '13800138000', '旗峰路', '测试内容'),
-(3, '123', '123', '123', '123', '123'),
-(4, '123', '123', '123', '12312', '123123');
+CREATE TABLE IF NOT EXISTS `zycms_column` (
+  `id` int(10) unsigned NOT NULL COMMENT '栏目ID',
+  `column_name` varchar(255) NOT NULL COMMENT '栏目名称',
+  `english_name` varchar(255) NOT NULL COMMENT '栏目英文名',
+  `channel_id` int(10) unsigned NOT NULL COMMENT '模型ID',
+  `pid` int(10) unsigned NOT NULL COMMENT '父栏目ID',
+  `column_thumb` varchar(255) NOT NULL COMMENT '栏目图片',
+  `summary` text NOT NULL COMMENT '栏目摘要',
+  `seo_title` varchar(255) NOT NULL COMMENT 'SEO标题',
+  `seo_keywords` varchar(1024) NOT NULL COMMENT 'SEO关键词',
+  `seo_description` varchar(2048) NOT NULL COMMENT 'SEO描述',
+  `content` text NOT NULL COMMENT '栏目内容',
+  `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是 1,是)',
+  `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
+  `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='栏目表';
 
 -- --------------------------------------------------------
 
@@ -3712,14 +3711,6 @@ CREATE TABLE IF NOT EXISTS `zycms_hot_search` (
   `sort` int(10) unsigned NOT NULL COMMENT '排序'
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='热搜关键词表';
 
---
--- 转存表中的数据 `zycms_hot_search`
---
-
-INSERT INTO `zycms_hot_search` (`id`, `keywords`, `url`, `sort`) VALUES
-(1, 'ipad', 'http://www.baidu.com', 1),
-(2, 'ipone', 'http://www.sina.com.cn', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -3744,6 +3735,79 @@ CREATE TABLE IF NOT EXISTS `zycms_keywords` (
   `target` char(10) CHARACTER SET utf8 NOT NULL COMMENT '是否新窗口打开',
   `style` varchar(1024) CHARACTER SET utf8 NOT NULL COMMENT '样式'
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='文章关键词表';
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_member`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_member` (
+  `id` int(10) unsigned NOT NULL COMMENT '会员ID',
+  `true_name` varchar(255) NOT NULL COMMENT '会员真实姓名',
+  `username` varchar(255) NOT NULL COMMENT '用户名',
+  `password` varchar(255) NOT NULL COMMENT '用户密码',
+  `email` varchar(255) NOT NULL COMMENT '邮箱地址',
+  `address` varchar(1024) NOT NULL COMMENT '详细地址',
+  `mobile` varchar(11) NOT NULL COMMENT '手机号码',
+  `phone` varchar(20) NOT NULL COMMENT '移动电话',
+  `sex` tinyint(3) unsigned NOT NULL COMMENT '性别(1,男 2,女)'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='会员表';
+
+--
+-- 转存表中的数据 `zycms_member`
+--
+
+INSERT INTO `zycms_member` (`id`, `true_name`, `username`, `password`, `email`, `address`, `mobile`, `phone`, `sex`) VALUES
+(4, '齐庆', 'church', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'qongchina@163.com', '两英镇供销大厦', '13240606064', '', 1),
+(5, '测试', 'test', '01d667d1bbfe11814bebf80584ebf15032d9544c', 'a421588@qq.com', '', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_message`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_message` (
+  `id` int(10) unsigned NOT NULL COMMENT '留言ID',
+  `title` varchar(255) NOT NULL COMMENT '留言标题',
+  `content` text NOT NULL COMMENT '留言内容',
+  `mid` int(10) unsigned NOT NULL COMMENT '所属会员(若为0属于系统)',
+  `pid` int(10) unsigned NOT NULL COMMENT '若为0, 则为新留言  若为留言ID, 则为回复',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `level` tinyint(3) unsigned NOT NULL COMMENT '消息层级'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='留言表';
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_nav`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_nav` (
+  `id` int(10) unsigned NOT NULL COMMENT '导航ID',
+  `pid` int(10) unsigned NOT NULL COMMENT '导航父ID',
+  `name` varchar(255) NOT NULL COMMENT '导航名称',
+  `url` varchar(255) NOT NULL COMMENT '导航地址',
+  `sort` int(10) unsigned NOT NULL COMMENT '排序',
+  `position` tinyint(3) unsigned NOT NULL COMMENT '导航位置(1, 顶部导航 2, 尾部导航)',
+  `level` int(10) unsigned NOT NULL COMMENT '导航级别'
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='导航表';
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_order`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_order` (
+  `order_number` int(10) unsigned NOT NULL COMMENT '订单号',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `state` tinyint(3) unsigned NOT NULL COMMENT '订单状态(0, 未处理  1, 已处理)',
+  `total` float NOT NULL COMMENT '订单总价',
+  `mid` int(10) unsigned NOT NULL COMMENT '会员ID',
+  `note` text NOT NULL COMMENT '订单备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- --------------------------------------------------------
 
@@ -3867,7 +3931,7 @@ CREATE TABLE IF NOT EXISTS `zycms_right` (
   `id` int(10) unsigned NOT NULL COMMENT '权限ID',
   `name` varchar(255) NOT NULL COMMENT '权限名称',
   `resource` varchar(1024) NOT NULL COMMENT '权限资源'
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='权限表';
 
 --
 -- 转存表中的数据 `zycms_right`
@@ -3887,7 +3951,8 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (12, '关键词管理', 'admin@hot_search,admin@keywords'),
 (13, '生成静态', 'admin@build_html'),
 (15, '回收站', 'admin@recycle_bin'),
-(16, '会员管理', 'admin@member_list,admin@order_list,admin@message_list');
+(16, '会员管理', 'admin@member_list,admin@order_list,admin@message_list'),
+(17, '通用模板管理', 'admin@templates');
 
 -- --------------------------------------------------------
 
@@ -3911,17 +3976,16 @@ INSERT INTO `zycms_role` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_sessions`
+-- 表的结构 `zycms_rule`
 --
 
-CREATE TABLE IF NOT EXISTS `zycms_sessions` (
-  `id` varchar(40) NOT NULL DEFAULT '0',
-  `ip_address` varchar(16) NOT NULL DEFAULT '0',
-  `user_agent` varchar(50) NOT NULL,
-  `last_activity` int(10) unsigned NOT NULL DEFAULT '0',
-  `data` text NOT NULL,
-  `timestamp` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `zycms_rule` (
+  `id` int(10) unsigned NOT NULL COMMENT 'ID',
+  `cid` int(10) unsigned NOT NULL COMMENT '栏目ID',
+  `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
+  `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
+  `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页  2.列表 3.详细)'
+) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8 COMMENT='规则表';
 
 --
 -- Indexes for dumped tables
@@ -3947,15 +4011,16 @@ ALTER TABLE `zycms_ad_position`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `zycms_archives`
+--
+ALTER TABLE `zycms_archives`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cid` (`cid`);
+
+--
 -- Indexes for table `zycms_areas`
 --
 ALTER TABLE `zycms_areas`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `zycms_article`
---
-ALTER TABLE `zycms_article`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3971,9 +4036,9 @@ ALTER TABLE `zycms_cities`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `zycms_feedback`
+-- Indexes for table `zycms_column`
 --
-ALTER TABLE `zycms_feedback`
+ALTER TABLE `zycms_column`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4005,6 +4070,30 @@ ALTER TABLE `zycms_image`
 --
 ALTER TABLE `zycms_keywords`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_member`
+--
+ALTER TABLE `zycms_member`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_message`
+--
+ALTER TABLE `zycms_message`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_nav`
+--
+ALTER TABLE `zycms_nav`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_order`
+--
+ALTER TABLE `zycms_order`
+  ADD PRIMARY KEY (`order_number`);
 
 --
 -- Indexes for table `zycms_order_product`
@@ -4043,9 +4132,9 @@ ALTER TABLE `zycms_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `zycms_sessions`
+-- Indexes for table `zycms_rule`
 --
-ALTER TABLE `zycms_sessions`
+ALTER TABLE `zycms_rule`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4068,6 +4157,11 @@ ALTER TABLE `zycms_admin`
 ALTER TABLE `zycms_ad_position`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '广告位ID',AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `zycms_archives`
+--
+ALTER TABLE `zycms_archives`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT for table `zycms_areas`
 --
 ALTER TABLE `zycms_areas`
@@ -4083,10 +4177,10 @@ ALTER TABLE `zycms_channel`
 ALTER TABLE `zycms_cities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=346;
 --
--- AUTO_INCREMENT for table `zycms_feedback`
+-- AUTO_INCREMENT for table `zycms_column`
 --
-ALTER TABLE `zycms_feedback`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=5;
+ALTER TABLE `zycms_column`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `zycms_flink`
 --
@@ -4113,6 +4207,26 @@ ALTER TABLE `zycms_image`
 ALTER TABLE `zycms_keywords`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
+-- AUTO_INCREMENT for table `zycms_member`
+--
+ALTER TABLE `zycms_member`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '会员ID',AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `zycms_message`
+--
+ALTER TABLE `zycms_message`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '留言ID';
+--
+-- AUTO_INCREMENT for table `zycms_nav`
+--
+ALTER TABLE `zycms_nav`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '导航ID',AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `zycms_order`
+--
+ALTER TABLE `zycms_order`
+  MODIFY `order_number` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单号';
+--
 -- AUTO_INCREMENT for table `zycms_order_product`
 --
 ALTER TABLE `zycms_order_product`
@@ -4131,12 +4245,17 @@ ALTER TABLE `zycms_provinces`
 -- AUTO_INCREMENT for table `zycms_right`
 --
 ALTER TABLE `zycms_right`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '权限ID',AUTO_INCREMENT=17;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '权限ID',AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `zycms_role`
 --
 ALTER TABLE `zycms_role`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '角色ID',AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `zycms_rule`
+--
+ALTER TABLE `zycms_rule`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=261;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
