@@ -2867,6 +2867,81 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 	List.getAllForms(NG);
 })
 
+Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
+    var NG = $scope;
+    NG.getData = function() {
+		$http.post('/Backend/templates/get_templates').success(function(result) {
+				if(result.code == 200 ) {
+                    NG.data = result.data;
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+    }
+
+	NG.showEditorUI = function(filename) {
+        var data = {"template":'template-edit'};
+        $http.post("/Backend/template/get_template", data).success(function(result) {
+            if(result.code == 200 ) {
+                return result;
+            } else {
+                generate({"text":result.message, "type":"error"});
+            }
+        }).then(function(data) {
+            var content = $compile(data.data.data)(NG);
+            $(content).appendTo('.content');
+            dialog({
+                'title' : '编辑模板',
+                'content' : $('#editTemplate'),
+                'id' : 'editTemplate'
+                
+            }).show();
+
+        }).then(function() {
+            var data = {filename:filename};
+            NG.filename = filename;
+            $http.post('/Backend/templates/get_template_content', data).success(function(result) {
+                if(result.code == 200 ) {
+                    return result;
+                } else {
+                    generate({"text":result.message, "type":"error"});
+                }
+            }).then(function(content) {
+                editAreaLoader.setValue('template', content.data.data);
+            });
+        });
+	}
+	
+    NG.saveTemplate = function() {
+        var data = {content:editAreaLoader.getValue('template'), filename:NG.filename};
+        $http.post('/Backend/templates/save_template', data).success(function(result) {
+            if(result.code == 200 ) {
+                dialog({id:'editTemplate'}).remove();
+                editAreaLoader.delete_instance('template');
+                window.location.reload();
+            } else {
+                generate({"text":result.message, "type":"error"});
+            }
+        });
+    }
+
+	NG.deleteTemplate = function(filename) {
+		if (window.confirm('你确定要删除该模板吗?删除后不可恢复')) {
+			var data = {"filename":filename};
+			$http.post('/Backend/templates/delete_templates', data).success(function(result) {
+				if(result.code == 200 ) {
+					generate({"text":result.message, "type":"success"});
+                    NG.getData();
+				} else {
+					generate({"text":result.message, "type":"error"});
+				}
+			});
+		}
+	}
+
+    NG.getData();
+});
+
 Module.controller('databaseCtrl', function($scope, $http, List) {
 	var NG = $scope;
 	

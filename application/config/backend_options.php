@@ -125,6 +125,13 @@ $config['backend'] = array(
 															'/admin/build_html' => '生成静态'
 														),
 									),
+
+                                    array(
+                                        'title' => '通用模板管理',
+                                        'sub_menu' => array(
+                                                            '/admin/templates' => '模板管理'
+                                                        ),
+                                    ),
 									
 									/*
 									array(

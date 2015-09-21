@@ -138,6 +138,11 @@ class Admin extends Admin_Controller {
 	{
 		$this->view('qr-code');
 	}
+
+    public function templates()
+    {
+        $this->view('templates');
+    }
 	
 	public function role_list()
 	{
