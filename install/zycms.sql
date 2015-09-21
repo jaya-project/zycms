@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-09-18 06:29:49
+-- Generation Time: 2015-09-21 02:55:02
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `zycms`
+-- Database: `tzycms`
 --
 
 -- --------------------------------------------------------
@@ -86,43 +86,6 @@ CREATE TABLE IF NOT EXISTS `zycms_ad_position` (
 
 INSERT INTO `zycms_ad_position` (`id`, `name`, `is_enable`) VALUES
 (1, '首页幻灯片', 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `zycms_archives`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_archives` (
-  `id` int(10) unsigned NOT NULL COMMENT '文章ID',
-  `title` varchar(1024) NOT NULL COMMENT '文章标题',
-  `sub_title` varchar(1024) NOT NULL COMMENT '文章副标题',
-  `tag` varchar(1024) NOT NULL COMMENT '标签',
-  `thumb` varchar(1024) NOT NULL COMMENT '缩略图',
-  `seo_title` varchar(1024) NOT NULL COMMENT 'SEO标题',
-  `seo_keywords` varchar(1024) NOT NULL COMMENT 'SEO关键词',
-  `seo_description` varchar(2048) NOT NULL COMMENT 'SEO描述',
-  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
-  `author` varchar(255) NOT NULL COMMENT '文章作者',
-  `source` varchar(1024) NOT NULL COMMENT '文章来源',
-  `sort` int(10) unsigned NOT NULL COMMENT '排序',
-  `click_count` int(10) unsigned NOT NULL COMMENT '点击次数',
-  `recommend_type` varchar(255) NOT NULL COMMENT '推荐类型(热销,推荐等)',
-  `cid` int(10) unsigned NOT NULL COMMENT '分类ID',
-  `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
-  `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除;0,未删除)',
-  `delay_time` int(10) NOT NULL DEFAULT '0' COMMENT '延迟发布时间'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='文章主表';
-
---
--- 转存表中的数据 `zycms_archives`
---
-
-INSERT INTO `zycms_archives` (`id`, `title`, `sub_title`, `tag`, `thumb`, `seo_title`, `seo_keywords`, `seo_description`, `create_time`, `author`, `source`, `sort`, `click_count`, `recommend_type`, `cid`, `sub_column`, `is_delete`, `delay_time`) VALUES
-(1, '与文字一纸素心静美', '', '', '', '', '', '', 1442547067, 'admin', '原创', 0, 5, '', 19, '', 0, 1442534400),
-(2, '茶如人生', '', '文章', '', '', '', '', 1442554960, 'admin', '原创', 0, 0, '', 19, '', 0, 1442534400),
-(3, '1231231', '', '', '', '', '', '', 1442556255, 'admin', '原创', 0, 0, '', 19, '', 1, 0),
-(4, '123', '', '电脑', '', '', '', '', 1442557562, 'admin', '原创', 0, 0, '', 19, '', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -3300,16 +3263,6 @@ CREATE TABLE IF NOT EXISTS `zycms_article` (
   `body` text COMMENT '文章内容'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 转存表中的数据 `zycms_article`
---
-
-INSERT INTO `zycms_article` (`id`, `body`) VALUES
-(1, '<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">习惯了与静谧面对，习惯了趴在窗台上看晨曦和黄昏，静逸的笔墨，在我心里无比的清彻与清醒。与墨缠绵，与墨阑珊，拂抹红尘的书卷，于字里行间里揣一卷笔墨安遣，将缱绻折叠，凭窗垂钓，音韵伴卷，推开心窗，笔墨情怀，于音乐与<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">文字</a>里看到最真实的封面。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">文字是<a href="http://shengming.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">生命</a>里最柔<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">美的</a>和弦，晓窗赋笺，<a href="http://ye.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">夜</a>静幽帘，心与文字游弋在笔墨的浩瀚。携一袭素笺，沐一枚缱绻，氤氲添香，笔墨轻鬟，寄语墨解，音乐是<a href="http://rensheng.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">人生</a>中最温暖的陪伴。墨畔香倾，紫轩黛眉，心字为墨，倚窗笙歌，馨摇，缱绻墨色，拈一抹微笑，品一盏茶香，倾听笔墨声响，于字里行间吟唱高山流水，与墨呢喃芬芳。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">与文弹落，曲韵赋盏，品茗吟笺，泼墨听弦。书，字里行间，卷，文之飘洒墨颜；诗，缱绻豪迈，词，莲之惬意赋笺。墨，渲湿旷远，染，墨之云舟袅烟；韵，色之画染，律，琼之金珠云涧。韵律非凡，琴音入耳，声声慢，沉浸于韵律之间；文字温润款款，曲韵一腕赋弦；倚轩台，听曲阑干，颤颤柔心似天籁，醉潇潇，弹落琴弦，书卷心旷，不夜天。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">椅窗玲珑，笔墨玉漏，一纸闲抒楣闲悠；醉墨霓裳，笔笺盈袖，浅黛微妆屏前首。轻挽素笺，把一脉心思付与温婉如花的文字中，赋一曲红尘，把盏柔肠，以文澜<a href="http://meng.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">梦</a>，黯然潇湘，笔墨寒渚，对影墨窗，素弦凭兰，笔墨思量。欲笺思墨，<a href="http://ye.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">长夜</a>未央，霓裳不悔，落字游荡。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">夜月静的无言，魂梦依稀，墨笺余韵，笔端生情，<a href="http://zhijian.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">指尖</a>轻舞着文字的浪漫，将至真至纯的情怀敞向墨色之中，捧一杯浓香，踩一曳墨韵的步履，掬墨香一瓣，用文字折叠成美丽的缱绻，墨染于<a href="http://www.sanwen.net/suibi/suiyue/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">岁月</a>的赋笺。笔墨痴笑于落笔，素心幽幽，锦瑟言欢，尘缘轻叹散落笔端，半纸浅墨，一曲随伴，琴弦赋墨念缱绻；回首笔端，细看缱绻，笔墨抛向荧屏前。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">墨香，轻轻落在笔端，划过眉间，缱绻。曲韵，舞动了心里的念想，捻一枚素暖，轻轻揉进于墨香。文字犹如夜月的<a href="http://www.sanwen.net/shige/xue/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">雪</a>花，有暗香盈袖，可否，约文字品一杯浓香，听一曲歌谣，研一池墨香，展一尺素笺，把字里行间的心梦，融于墨色一体。心，掬笔墨幽香，墨，落笔，续话长，轻吟墨雅，浅唱芳华，静逸清宁时光下。<span style="position: relative; left: -100000px;">(&nbsp;<a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">文章</a><a href="http://www.sanwen.net/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">阅读</a>网：www.sanwen.net )</span></p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">喜欢坐在文字里，静静的思笺，让思绪的笔墨在指尖上淡淡飘香，任<a href="http://linghun.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">灵魂</a>于温婉中，也一如既往的诉说着点点滴滴的情愫。喜欢听着音乐，品着浓香，在文字里品读<a href="http://xinling.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">心灵</a>的悸动，于一根网线，隔着千涯的距离，在字里行间里穿越，文字里总会有一种深深的<a href="http://zuowen.sanwen.net/z/10671-gandong" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">感动</a>，穿越时空，把文字落在心底最柔软的地方。醉一场笔墨的<a href="http://tianya.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">天涯</a>隔远，月下凝眸，笔墨浸染，聆听踏风走远，遗一枕笔墨幽梦，伴我似水望穿。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">美丽的夜景，是无言的文字，一行墨迹，一卷书香，承载着墨海深长；一杯浓香，一曲音韵，婉约了一帘梦乡。静逸雕刻着点滴的墨言，是相惜的墨香，酝酿在时光的墨韵里。把笔笺的芬芳，融进于心灵之窗，在四季的轮回中，倾泻于一份真情与温馨。一帘缱绻，一卷诗行，与笔墨沉香，歌一曲文字，品一缕墨香，醉了笔墨，相握于手心里最温馨的暖语。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">静静的...寻笔墨馨香，在文字的间隙里不期而遇。<a href="http://www.sanwen.net/rizhi/xinqing/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">心情</a>于文字的雅致中，飘荡心间，如含香的花瓣轻舞飞扬，一脉书香，翻阅，喜悦舒畅。穿越文字的眼眸，踩文字的韵律，让音乐与文字的意念，在瞬间，成为温润心田的美丽风景。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">捻笔墨馨香，沐静逸<a href="http://yueliang.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">月光</a>，沁目悦心，点亮了静逸纯白的墨行。如可，愿做文字中的一枝荷，与文字里的一片云一起游荡。轻墨蹙，盈袖舞，字里行间归何处？最是落墨点滴暮，字里行间人非故。弦已覆，曲韵度，天涯咫尺笔墨赋。手执缱绻韵曲谱，笔墨相连怎堪读？<a href="http://chuntian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">春</a>暖花开书香渡，锦墨留香对笺烛。椅窗影只墨迹遥，饮罢文宴苦读书。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">如若，以叶吻大地的姿态去亲吻文字的墨颜，是否，在点滴的流年里，与曲隔墨初见？如若，以蝶舞沧海的<a href="http://zhizhuo.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">执著</a>去共舞文字的狂欢，是否，在一泉水的相创里，伴墨轻拂梦帘？如若，以云随清风的淡然去追随文字的<a href="http://jimo.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">孤寂</a>，是否，在一滴水的澄澈中，共文锦字同展？墨字笺联，轻描眼底缱绻，灵犀墨藏，解墨簸流离绣凤鸾，与墨经年，伴缱绻梦醉阑珊，绮梦，陪文字蓝田日暖，锦玉生烟。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">笔墨之湄，在清婉的月色里，品读笔下韵致的墨言，字里行间，有春的清新，<a href="http://xiatian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">夏</a>的绚烂，秋的静美，<a href="http://dongtian.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">冬</a>的<a href="http://chunjie.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">纯洁</a>。在多情而又大气的文字里，用热切的渴望，将文字飘逸成朦胧的轻纱，升腾在遐思的笔墨上。点睛一笔水墨丹青，在同一片星空下，与不言而喻的默契遥遥传递，<a href="http://qianshou.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">牵手</a>于文字，与音乐文字同行。风轻幽，水含烟，文字照晚，字里行间兰如簪。泛舟涧，笔墨欢，与墨浣沙，曲韵缠绕笔墨间。书墨言，写缱绻，与墨眷恋，曲亦言欢，墨亦言欢。</p>\n\n<p style="margin: 0px 0px 1.5em; padding: 0px; text-indent: 2em; font-size: 15px; color: rgb(0, 0, 0); font-family: arial, ''Microsoft Yahei'', sans-serif; line-height: 28px;">与文相约，相约心灵的知己，拙笔间，写不出文字里的深意，而曲韵给了我极大的<a href="http://xiangxinziji.sanwen8.cn/" style="text-decoration: none; color: rgb(68, 68, 68);" target="_blank">自信</a>和勇气。原来，文字舞动着笔墨的悠闲，似一朵朵文字之花。墨香晕染在字里行间，闲时，寄托在一抹灵犀之间。文字的飘香，于生命中共精彩。笔墨倾颜，曲韵翩跹，踏影墨鸾，轻语呢喃醉琴弦。拈墨嫣然，墨香流转，与墨欢。缱绻湄畔，潋滟墨缘，四季墨研，眸映墨兰，字里行间苦苦怜。望月墨叹，独饮墨盏，四季轮回对愁眠。弹指萧染，缱绻落簪，于文字里缓缓舒展。</p>\n'),
-(2, '<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">我不谙茶道，对茶更谈不上高深的研究了，偶尔受<a href="http://www.sanwen8.cn/z/pengyou/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">朋友</a>之邀品品茶，大多<a href="http://www.sanwen8.cn/z/shijian/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">时候</a>我是在<a href="http://www.sanwen8.cn/z/jiating/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">家里</a>或办公室里，独坐独饮，这个时候的<a href="http://www.sanwen8.cn/z/xiangxinziji/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">自己</a>，虽说没什么品茶的高品位，但却多了些茶中品<a href="http://www.sanwen8.cn/z/rensheng/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">人生</a>的小滋味，就是在这个时候，我才渐渐明白了茶如人生、茶道即人道的道理，品茶品出了人生的况味。不是吗？&ldquo;茶&rdquo;字的涵义不就是人在草木中吗？</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的初始如人生。炒制好茶需要在温锅中慢慢揉炒，长达数个小时，茶叶才会慢慢集聚。而若要炒制粗茶，那就简单了，把锅加热，半个小时就够了，但这样的茶饮起来索然无味。人生亦如此，每个人出生时几乎是平等的，但随着<a href="http://www.sanwen8.cn/z/shijian/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">时间</a>的推移，就像炒茶一样，就会慢慢变化，在现实<a href="http://www.sanwen8.cn/suibi/shenghuo/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">生活</a>中，&nbsp;<a href="http://www.sanwen8.cn/z/pinwei/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">品味</a>为什么高低不同，有时候不是因为你的自身问题，而是看在生活的这口锅里，你的<a href="http://www.sanwen8.cn/z/linghun/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">灵魂</a>被揉炒了多少回，这里面蕴含着很深的道理。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的经历如人生。这得先从茶和人生的起步说起，开始沏茶的时候，需要先用开水将茶壶、茶杯等淋洗一遍，这也叫&ldquo;暖壶&rdquo;，是为了放心的喝茶。人生的起步不也是这样吗？需要将大环境、小岗位都安排好了，这才便于安心地<a href="http://www.sanwen8.cn/zongjie/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">工作</a>，里面渗透着很深的&ldquo;茶道&rdquo;。然后，把茶叶放入壶中，用开水冲茶，这个时候，你定定地注视着茶壶或茶杯，就会发现，茶叶都一边飘摇着、舒展着争先恐后地想飘到最上面，密密地拥挤到一起，似乎都想争得最上一层，释放自己的芳香，可刚刚沏下的茶叶，芳香能有几何？这时的主人是不会去品茶的芳香的。后来，在同伴相互拥挤下，仅凭一点浮力的茶叶根本支撑不住了，加之经水的浸泡，增加了体重，一片片茶叶摇摇晃晃，慢慢地沉到半空，大多都沉入茶壶或杯子的底部，沉淀了的茶叶，才渐渐地释放出浓郁的芳香。由此反观我们的人生，茶壶和茶杯就如同我们人生的&ldquo;舞台&rdquo;，刚刚踏入工作的这把&ldquo;大壶&rdquo;或&ldquo;杯子&rdquo;时，都好高骛远，凭一时冲动，纷纷冲向事业的上面或前头，向尽快展示个人的能力和才华，都想往上冲，上面就会拥挤不堪，再说了，刚踏入工作岗位的人，能有多少才华值得施展？有的就会被碰的头破血流，有的在拥挤中也没法施展自己的才华，就会在竞争中败下阵来，后来，随着时间的推移，现实生活的打磨，先进思想的灌输，就会一步步地沉淀，思想就会慢慢地沉思，找准了自己的位置，展示出了独特的才华。人生的经历正如茶的经历，人们在人生这把&ldquo;大壶&rdquo;中，不停地飘荡，在不同的位置起伏，展示出每个阶段不同的才华。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的颜色如人生。沏茶的时候，茶的颜色会由浅慢慢地变深，浓到极处，煞是好看，由于茶的种类不同，大致可由浅绿、浅黄、浅红色，形成深绿、深黄、深红色，这时候赏茶色会赏心悦目，到了最好的状态，各种茶色再慢慢地由深变浅，直到很浅很淡，这就是沏茶的规律。人生也是这样，起初，无论是事业和人生都很淡然，慢慢地随着不断发展，就会有新的起色，发展到一定阶段，还会轰轰烈烈，到达事业顶峰的时候，创造出人生的辉煌。后因时势、年龄、环境、机遇等因素发生变化，就会慢慢地退步，直到最终退休，这也是人生的规律，也是人生如茶的地方。再就是在每个人的人生中也不一样，有的人在事业上是滚水沏茶，事业如茶一样浓烈，有的人是冷水沏茶慢慢浓，事业在一步一步、慢慢地向前发展，有的人是温水沏茶，说浓不浓，说淡不淡，平淡人生。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">茶的味道如人生。我们品茶的时候，起初总是感到是苦味，再细细地品味，就会感到变为涩味，往下咽的时候，就会感到是甘味。这不正是人生的规律吗？在漫漫的人生旅途中，我们每个人起步的时候都很难，&ldquo;万事开头难&rdquo;正是说的这个道理，每个人都要品尝人生初始的苦味，后经艰苦拼搏，迎难而上，才感到苦味渐渐淡了，取而代之的是涩味，这个时候才有了希望，看到了胜利的曙光，如果畏难发愁，就会半途而废，如果急起直追，将会到达胜利的彼岸。最后品尝到的是人生的&ldquo;甘味&rdquo;，这是人生的最大收获。</p>\n\n<p style="margin: 0px 0px 1em; padding: 0px; text-indent: 2em; color: rgb(68, 68, 68); font-family: Simsun; font-size: 14px; line-height: 28px;">&ldquo;茶里乾坤大，壶里日月长&rdquo;。既然茶如人生，我们不妨像炒茶一样把自己的人生慢慢揉炒，像沏茶一样一步步规划好自己的人生，像观察茶的颜色一样把握好人生的规律，再像品茶的味道一样品尝人生的甘甜。通过品茶，<a href="http://www.sanwen8.cn/z/ganwu/" style="color: rgb(68, 68, 68); text-decoration: none;" target="_blank">感悟</a>人生的真谛。</p>\n'),
-(3, '<p>32131</p>\n'),
-(4, '<p>123</p>\n');
-
 -- --------------------------------------------------------
 
 --
@@ -3322,13 +3275,6 @@ CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `table_struct` text NOT NULL COMMENT '表结构(序列化)',
   `table_name` varchar(255) NOT NULL COMMENT '表名'
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='内容模型';
-
---
--- 转存表中的数据 `zycms_channel`
---
-
-INSERT INTO `zycms_channel` (`channel_id`, `channel_name`, `table_struct`, `table_name`) VALUES
-(27, '文章', 'a:1:{i:0;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:12:"文章内容";s:12:"channel_type";s:8:"htmltext";s:6:"values";s:0:"";}}', 'article');
 
 -- --------------------------------------------------------
 
@@ -3697,36 +3643,6 @@ INSERT INTO `zycms_cities` (`id`, `cityid`, `city`, `provinceid`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_column`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_column` (
-  `id` int(10) unsigned NOT NULL COMMENT '栏目ID',
-  `column_name` varchar(255) NOT NULL COMMENT '栏目名称',
-  `english_name` varchar(255) NOT NULL COMMENT '栏目英文名',
-  `channel_id` int(10) unsigned NOT NULL COMMENT '模型ID',
-  `pid` int(10) unsigned NOT NULL COMMENT '父栏目ID',
-  `column_thumb` varchar(255) NOT NULL COMMENT '栏目图片',
-  `summary` text NOT NULL COMMENT '栏目摘要',
-  `seo_title` varchar(255) NOT NULL COMMENT 'SEO标题',
-  `seo_keywords` varchar(1024) NOT NULL COMMENT 'SEO关键词',
-  `seo_description` varchar(2048) NOT NULL COMMENT 'SEO描述',
-  `content` text NOT NULL COMMENT '栏目内容',
-  `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是;1,是)',
-  `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
-  `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='栏目表';
-
---
--- 转存表中的数据 `zycms_column`
---
-
-INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `pid`, `column_thumb`, `summary`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
-(19, '文章', '', 27, 0, '', '', '', '', '', '', 0, 0, 1);
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `zycms_feedback`
 --
 
@@ -3783,13 +3699,6 @@ CREATE TABLE IF NOT EXISTS `zycms_forms` (
   `recevied` varchar(255) NOT NULL COMMENT '接收邮箱'
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='自定义表单表';
 
---
--- 转存表中的数据 `zycms_forms`
---
-
-INSERT INTO `zycms_forms` (`id`, `name`, `table_name`, `table_struct`, `recevied`) VALUES
-(4, '在线留言', 'feedback', 'a:5:{i:0;a:3:{s:6:"fields";s:4:"user";s:12:"label_fields";s:6:"姓名";s:9:"form_type";s:4:"text";}i:1;a:4:{s:6:"fields";s:7:"company";s:12:"label_fields";s:6:"公司";s:9:"form_type";s:4:"text";s:6:"values";s:0:"";}i:2;a:4:{s:6:"fields";s:7:"contact";s:12:"label_fields";s:12:"联系方式";s:9:"form_type";s:4:"text";s:6:"values";s:0:"";}i:3;a:4:{s:6:"fields";s:7:"address";s:12:"label_fields";s:12:"联系地址";s:9:"form_type";s:4:"text";s:6:"values";s:0:"";}i:4;a:4:{s:6:"fields";s:7:"content";s:12:"label_fields";s:12:"留言内容";s:9:"form_type";s:8:"textarea";s:6:"values";s:0:"";}}', '770290355@qq.com');
-
 -- --------------------------------------------------------
 
 --
@@ -3836,114 +3745,6 @@ CREATE TABLE IF NOT EXISTS `zycms_keywords` (
   `style` varchar(1024) CHARACTER SET utf8 NOT NULL COMMENT '样式'
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='文章关键词表';
 
---
--- 转存表中的数据 `zycms_keywords`
---
-
-INSERT INTO `zycms_keywords` (`id`, `keyword`, `url`, `target`, `style`) VALUES
-(1, '黄昏', 'https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=%E9%BB%84%E6%98%8F&rsv_pq=d31321a800225a0c&rsv_t=555fq8ASYAL5uPRGQ1Kp21NGSw90ChcVNa%2FAgnhrkYhJkVqNafSEmrx1b1U&rsv_enter=1&rsv_n=2&rsv_sug3=1', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"0";}'),
-(3, '营销型网站', 'http://www.114my.net', '1', 'a:3:{s:8:"fontsize";i:14;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}'),
-(7, '心', '/', '1', 'a:3:{s:8:"fontsize";i:14;s:5:"color";s:7:"#b6a0de";s:10:"fontweight";s:1:"1";}'),
-(5, '醉墨霓裳', 'http://www.163.com', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#07f83e";s:10:"fontweight";s:1:"1";}'),
-(6, '静逸', '/', '1', 'a:3:{s:8:"fontsize";i:16;s:5:"color";s:7:"#ff0000";s:10:"fontweight";s:1:"1";}');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `zycms_member`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_member` (
-  `id` int(10) unsigned NOT NULL COMMENT '会员ID',
-  `true_name` varchar(255) NOT NULL COMMENT '会员真实姓名',
-  `username` varchar(255) NOT NULL COMMENT '用户名',
-  `password` varchar(255) NOT NULL COMMENT '用户密码',
-  `email` varchar(255) NOT NULL COMMENT '邮箱地址',
-  `address` varchar(1024) NOT NULL COMMENT '详细地址',
-  `mobile` varchar(11) NOT NULL COMMENT '手机号码',
-  `phone` varchar(20) NOT NULL COMMENT '移动电话',
-  `sex` tinyint(3) unsigned NOT NULL COMMENT '性别(1,男;2,女)'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='会员表';
-
---
--- 转存表中的数据 `zycms_member`
---
-
-INSERT INTO `zycms_member` (`id`, `true_name`, `username`, `password`, `email`, `address`, `mobile`, `phone`, `sex`) VALUES
-(4, '齐庆', 'church', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'qongchina@163.com', '两英镇供销大厦', '13240606064', '', 1),
-(5, '测试', 'test', '01d667d1bbfe11814bebf80584ebf15032d9544c', 'a421588@qq.com', '', '', '', 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `zycms_message`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_message` (
-  `id` int(10) unsigned NOT NULL COMMENT '留言ID',
-  `title` varchar(255) NOT NULL COMMENT '留言标题',
-  `content` text NOT NULL COMMENT '留言内容',
-  `mid` int(10) unsigned NOT NULL COMMENT '所属会员(若为0属于系统)',
-  `pid` int(10) unsigned NOT NULL COMMENT '若为0, 则为新留言; 若为留言ID, 则为回复',
-  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
-  `level` tinyint(3) unsigned NOT NULL COMMENT '消息层级'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='留言表';
-
---
--- 转存表中的数据 `zycms_message`
---
-
-INSERT INTO `zycms_message` (`id`, `title`, `content`, `mid`, `pid`, `create_time`, `level`) VALUES
-(1, '123', '123', 0, 0, 1435545908, 1),
-(2, '我是在回复自己', '我是在回复自己', 0, 1, 1435545927, 2),
-(3, '我是齐庆', '你们网站好烂 ', 4, 0, 1435804642, 1),
-(4, 'fuck', 'fuck', 0, 3, 1435804670, 2),
-(5, '我在回复系统消息', '我在回复系统消息', 4, 1, 1435804739, 2),
-(6, '我在回复church', '我在回复church', 5, 5, 1435804805, 3);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `zycms_nav`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_nav` (
-  `id` int(10) unsigned NOT NULL COMMENT '导航ID',
-  `pid` int(10) unsigned NOT NULL COMMENT '导航父ID',
-  `name` varchar(255) NOT NULL COMMENT '导航名称',
-  `url` varchar(255) NOT NULL COMMENT '导航地址',
-  `sort` int(10) unsigned NOT NULL COMMENT '排序',
-  `position` tinyint(3) unsigned NOT NULL COMMENT '导航位置(1, 顶部导航; 2, 尾部导航)',
-  `level` int(10) unsigned NOT NULL COMMENT '导航级别'
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='导航表';
-
---
--- 转存表中的数据 `zycms_nav`
---
-
-INSERT INTO `zycms_nav` (`id`, `pid`, `name`, `url`, `sort`, `position`, `level`) VALUES
-(2, 0, '首页', '/', 1, 1, 1),
-(5, 0, '首页', '/', 1, 2, 1),
-(7, 0, '产品中心', '/product/index', 2, 1, 1),
-(8, 0, '新闻中心', '/news/index', 3, 1, 1),
-(9, 7, '电子产品', '/product/category/1', 2, 1, 2),
-(10, 7, '最新产品', '/product/new', 1, 1, 2);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `zycms_order`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_order` (
-  `order_number` int(10) unsigned NOT NULL COMMENT '订单号',
-  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
-  `state` tinyint(3) unsigned NOT NULL COMMENT '订单状态(0, 未处理; 1, 已处理)',
-  `total` float NOT NULL COMMENT '订单总价',
-  `mid` int(10) unsigned NOT NULL COMMENT '会员ID',
-  `note` text NOT NULL COMMENT '订单备注'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
-
 -- --------------------------------------------------------
 
 --
@@ -3969,19 +3770,6 @@ CREATE TABLE IF NOT EXISTS `zycms_piece` (
   `name` varchar(255) NOT NULL COMMENT '碎片名称',
   `content` text NOT NULL COMMENT '碎片内容'
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='内容碎片表';
-
---
--- 转存表中的数据 `zycms_piece`
---
-
-INSERT INTO `zycms_piece` (`id`, `name`, `content`) VALUES
-(2, '12321321312321', '<p>我是一只小鸭子</p>\n'),
-(3, '1232131', '<p>1232131</p>\n'),
-(4, '123', '<dl>\n	<dt>123</dt>\n	<dd>123&nbsp;</dd>\n</dl>\n'),
-(5, '1231231', '<p>3213213</p>\n\n<p>dsadasdasdas</p>\n'),
-(6, '123', ''),
-(7, '32131', '123213'),
-(8, '123', '');
 
 -- --------------------------------------------------------
 
@@ -4093,7 +3881,7 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (6, '内容碎片管理', 'admin@piece_list'),
 (7, '自定义表单', 'admin@form_list,admin@form_management'),
 (8, '用户管理', 'admin@right_list,admin@role_list,admin@user_list'),
-(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export'),
+(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export,admin@black_list'),
 (10, '系统设置管理', 'admin@base_set,admin@nav_set,admin@water_image'),
 (11, '友情链接', 'admin@flink'),
 (12, '关键词管理', 'admin@hot_search,admin@keywords'),
@@ -4123,36 +3911,6 @@ INSERT INTO `zycms_role` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zycms_rule`
---
-
-CREATE TABLE IF NOT EXISTS `zycms_rule` (
-  `id` int(10) unsigned NOT NULL COMMENT 'ID',
-  `cid` int(10) unsigned NOT NULL COMMENT '栏目ID',
-  `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
-  `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
-  `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页; 2.列表; 3.详细)'
-) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8 COMMENT='规则表';
-
---
--- 转存表中的数据 `zycms_rule`
---
-
-INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`) VALUES
-(251, 0, 'index.html', 'welcome/index', 1),
-(252, 16, 'test.html', 'test/index', 1),
-(253, 16, 'test/16-page.html', 'test/category/16/page/12', 2),
-(254, 16, 'test/aid.html', 'test/detail/aid', 3),
-(255, 17, 'test3.html', 'test3/index', 1),
-(256, 17, 'test3/17-page.html', 'article/category/17/page/12', 2),
-(257, 17, 'test3/aid.html', 'article/detail/aid', 3),
-(258, 18, 'qiye.html', 'qiye/index', 1),
-(259, 18, 'qiye/18-page.html', 'company/category/18/page/12', 2),
-(260, 18, 'qiye/aid.html', 'company/detail/aid', 3);
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `zycms_sessions`
 --
 
@@ -4164,82 +3922,6 @@ CREATE TABLE IF NOT EXISTS `zycms_sessions` (
   `data` text NOT NULL,
   `timestamp` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- 转存表中的数据 `zycms_sessions`
---
-
-INSERT INTO `zycms_sessions` (`id`, `ip_address`, `user_agent`, `last_activity`, `data`, `timestamp`) VALUES
-('0117f560cf037a2507772ae91a40f2175258c2bc', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442373745;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373990),
-('021a6eb809792a9e4c8ab7166e0bd4363996e5fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452076;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452379),
-('03a9889f1e47832ae8ed53b202aec367b97df75e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442451434;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442451704),
-('0a58b2ee88363b549443a1c3af6bbd54f58a71fd', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442394694;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442394704),
-('0c62f2e2731e9a69b94dff11d703c4e07b32cc2b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442365795;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366055),
-('0cf5bc77645a548eaef397f8ea3912b0ab522eb4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442373243;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373243),
-('11be3e69b8579e3f0672e6db7b312045e94a6684', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367218;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442367429),
-('2340718a219a08cf56668083c78faf8d0be8b32b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442382851;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442382852),
-('2366702c739b27977d6b83e4b0154eee2516d9ae', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397006;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397305),
-('28987f20984d752f8df81c1e7d734c394035f3de', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('2ab67abe19aa06479ab04ccaf0e1b38180623cbb', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454454;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454748),
-('395b0c2c7b0623fb43a3af59231935162370ddb9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398505;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398512),
-('3997e8e2bd7cc801fc2cd31ed02962bae0f6f74a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452684;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452788),
-('3ea37783ee1ea49d225ea320eaf983e28283de10', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442371277;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442371291),
-('4383fa099c8345d0039c73dd505476388897d83c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442384868;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385132),
-('44019ae485ff839dd32a5b7d47ed524013e77678', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372086;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442372385),
-('469514423e7fe65579076a4ddbe2550a2fba5af3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454760;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442455013),
-('4b6f5b0a892b0b88f53184f5a26354660b06a5e1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396342;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396608),
-('4dea38195ec883dabe93a675e85763f632c4d012', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442385581;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385699),
-('4ebfd65af94f43601513e1d3fcf7d65d633ed12b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372547;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442372551),
-('523ef41b21908953137347f36220ea3ed9776de4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442372930;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442373156),
-('57f4ca9823c383216ded7a8c8e542e3999cd4733', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397378;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397635),
-('5b00c07544e4b48c5f196bb6c22ba4d56dff80e3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396033;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396243),
-('5cf43292712fdbbf77617c529d3514bde093668b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442366458;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366570),
-('5ef6f5882fef4376a0b45e662f6a8310e110ed90', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442365174;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442365461),
-('6301cd85e56f7e1a873113c564ca2729e70789da', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442394356;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442394356),
-('72235e49f050aff73a135a2d07a05b40aa6107f6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398179;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398489),
-('72ba644c7b71e0c6df1a928aa356ed2f29f8353f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369651;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369907),
-('779f9979ad4e906f0a55c6fee071c43aceb31235', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442397690;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442397798),
-('7d75c652f61c1f887b51bf55cf1aa99ee385ec59', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442396701;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442396995),
-('86c19de3ac437acf9d0aff18ca9565cf4f538406', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442381852;redirect|s:18:"admin/channel_list";__ci_vars|a:1:{s:8:"redirect";s:3:"new";}', 1442381853),
-('88ffb2e5e6916b310bc9e11225542659d969c100', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442385276;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442385576),
-('927bf932d710a304181255133922bc9ebb8593a3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367536;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442367830),
-('95e9ae7ccaf611c7ed1a2432a9ed3e2d261d81e2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442387149;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442387149),
-('96a2b39ed6d95ba698530e5105d846be549a7da2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442451773;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452075),
-('97ef6c587f749d8df7f206210dffb3611d7da583', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442367852;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442368132),
-('9c6de858ca8e8a5393c967bf05c908c2dc29a38e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442363817;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442363973),
-('a01d90f6d9ab93fa14e09da5632f51566f1637ed', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442455182;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442455193),
-('a6ab0f97fc17df8b8c68bdae8f85074934689fe3', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442387646;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442387646),
-('aab3d81e9ff24bfdb4c5c35d2c10d9694c5bce68', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('afc7d1062f8e86a1c2fb33a4524621ef04de11e8', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442390210;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442390236),
-('b1bd5278ce4490720b6662a75ba5de8a18c00bd9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('b40da5a03edd4650884260f8d85515164f42cbf2', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442386168;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442386267),
-('b4fd07f8b7243d54c3d25dd48d489d622fb92b4b', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369995;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370292),
-('b7ff11787c6c692d6fa312275db750c16e4c97e9', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442452379;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442452683),
-('bfe3403befd11dbf0638d447e452da380d404294', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442366150;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442366439),
-('c05bde0c158d54bdb8bbf13abc8b32a081144dd1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('c1fbcfee205f6c4dba7ad656c4d6a796ac3de620', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('c59d92128179dbdcdc627b834671e1d2d669bf4f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442374075;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442374128),
-('c77f03716055b43732c27e052a4ac071e5264da0', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442364809;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442364977),
-('ce66f398c36a63384dbe1ad5b81816dcd220f92e', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370301;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370350),
-('d14c8d949a1abd8b8f5855be07c98d24e3ddee24', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442453760;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454028),
-('d188460ed988b4e8fd705863ffc2f5a3f54ba62c', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('d1978be882c4038510506443ef701232f22bb23f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370964;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442371115),
-('d26347a7989d3b5ff168645e396631de5368f69a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369022;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369287),
-('d35cbb159bb41107fc75bca446af912ec3899351', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442453389;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442453580),
-('d4458535b99c80d4744de4a7e270d57e517c61fa', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442454149;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442454345),
-('d4f97e5fd0a7c02d41865c132cd33ea83127de3f', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442386553;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442386681),
-('d76a88c99215da459a3c7ac6f26ea2c451e46194', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('d88281b2a59a46fcb98e208e68cd72b13ae3deeb', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442370635;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442370917),
-('e4fa744eef86c565ac828f29f041eeb79bb5b127', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398490;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('e5ae941897cb3af82617615bc5d7e16e7ddd4fd1', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395702;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395997),
-('ecda56ae600ed72ed72a54cf0aa243797f7591de', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442384420;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442384563),
-('ee5cd9954e3b5d48ed409945d70cf36ecc165915', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('ef855ce04164a631485fd28fcbcf01d2def3d288', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442364128;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442364370),
-('f0cb29d53018072de8b515749e688507c54143b4', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442389797;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442389797),
-('f11d3b3fff65578a0b608c418a08a6921352f404', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395009;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395308),
-('f51e9cd38f3ec193cc7d8d8ac7c017745cd225b6', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442398504;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442398504),
-('fa130c926db79f7fb5adfa5192d6e5c4cc0e351a', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442395328;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442395593),
-('fcf7046175ad12d9077ac50573d3ae1be51b3e42', '192.168.0.133', '', 0, '__ci_last_regenerate|i:1442369336;admin|a:3:{s:2:"id";s:1:"1";s:3:"rid";s:1:"0";s:8:"username";s:6:"church";}', 1442369389);
 
 --
 -- Indexes for dumped tables
@@ -4265,13 +3947,6 @@ ALTER TABLE `zycms_ad_position`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `zycms_archives`
---
-ALTER TABLE `zycms_archives`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cid` (`cid`);
-
---
 -- Indexes for table `zycms_areas`
 --
 ALTER TABLE `zycms_areas`
@@ -4293,12 +3968,6 @@ ALTER TABLE `zycms_channel`
 -- Indexes for table `zycms_cities`
 --
 ALTER TABLE `zycms_cities`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `zycms_column`
---
-ALTER TABLE `zycms_column`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4338,30 +4007,6 @@ ALTER TABLE `zycms_keywords`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `zycms_member`
---
-ALTER TABLE `zycms_member`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `zycms_message`
---
-ALTER TABLE `zycms_message`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `zycms_nav`
---
-ALTER TABLE `zycms_nav`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `zycms_order`
---
-ALTER TABLE `zycms_order`
-  ADD PRIMARY KEY (`order_number`);
-
---
 -- Indexes for table `zycms_order_product`
 --
 ALTER TABLE `zycms_order_product`
@@ -4398,12 +4043,6 @@ ALTER TABLE `zycms_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `zycms_rule`
---
-ALTER TABLE `zycms_rule`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `zycms_sessions`
 --
 ALTER TABLE `zycms_sessions`
@@ -4429,11 +4068,6 @@ ALTER TABLE `zycms_admin`
 ALTER TABLE `zycms_ad_position`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '广告位ID',AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `zycms_archives`
---
-ALTER TABLE `zycms_archives`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=5;
---
 -- AUTO_INCREMENT for table `zycms_areas`
 --
 ALTER TABLE `zycms_areas`
@@ -4448,11 +4082,6 @@ ALTER TABLE `zycms_channel`
 --
 ALTER TABLE `zycms_cities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=346;
---
--- AUTO_INCREMENT for table `zycms_column`
---
-ALTER TABLE `zycms_column`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `zycms_feedback`
 --
@@ -4484,26 +4113,6 @@ ALTER TABLE `zycms_image`
 ALTER TABLE `zycms_keywords`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
--- AUTO_INCREMENT for table `zycms_member`
---
-ALTER TABLE `zycms_member`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '会员ID',AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `zycms_message`
---
-ALTER TABLE `zycms_message`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '留言ID',AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `zycms_nav`
---
-ALTER TABLE `zycms_nav`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '导航ID',AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT for table `zycms_order`
---
-ALTER TABLE `zycms_order`
-  MODIFY `order_number` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单号';
---
 -- AUTO_INCREMENT for table `zycms_order_product`
 --
 ALTER TABLE `zycms_order_product`
@@ -4528,11 +4137,6 @@ ALTER TABLE `zycms_right`
 --
 ALTER TABLE `zycms_role`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '角色ID',AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT for table `zycms_rule`
---
-ALTER TABLE `zycms_rule`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=261;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
