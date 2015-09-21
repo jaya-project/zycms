@@ -143,6 +143,11 @@ class Admin extends Admin_Controller {
     {
         $this->view('templates');
     }
+
+    public function opera_log()
+    {
+        $this->view('opera-log');
+    }
 	
 	public function role_list()
 	{

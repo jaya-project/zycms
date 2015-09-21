@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-09-21 08:23:55
+-- Generation Time: 2015-09-21 10:00:36
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -3797,6 +3797,38 @@ CREATE TABLE IF NOT EXISTS `zycms_nav` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `zycms_opera_log`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_opera_log` (
+  `id` int(10) unsigned NOT NULL,
+  `ip` int(11) NOT NULL COMMENT 'ip2long之后的ip地址',
+  `opera_time` int(10) unsigned NOT NULL COMMENT '操作时间',
+  `cm` varchar(255) NOT NULL COMMENT '控制器和方法',
+  `user` varchar(255) NOT NULL COMMENT '操作用户'
+) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
+
+--
+-- 转存表中的数据 `zycms_opera_log`
+--
+
+INSERT INTO `zycms_opera_log` (`id`, `ip`, `opera_time`, `cm`, `user`) VALUES
+(42, -1062731643, 1442829527, 'log@get_data', 'admin'),
+(43, -1062731643, 1442829532, 'admin@black_list', 'admin'),
+(44, -1062731643, 1442829533, 'tools@get_black_list', 'admin'),
+(45, -1062731643, 1442829533, 'admin@opera_log', 'admin'),
+(46, -1062731643, 1442829533, 'log@get_data', 'admin'),
+(47, -1062731643, 1442829596, 'admin@opera_log', 'admin'),
+(48, -1062731643, 1442829596, 'log@get_data', 'admin'),
+(49, -1062731643, 1442829611, 'admin@database_backup', 'admin'),
+(50, -1062731643, 1442829611, 'tools@get_backup_file', 'admin'),
+(51, -1062731643, 1442829613, 'admin@sitemap', 'admin'),
+(52, -1062731643, 1442829616, 'admin@opera_log', 'admin'),
+(53, -1062731643, 1442829616, 'log@get_data', 'admin');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `zycms_order`
 --
 
@@ -3945,7 +3977,7 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (6, '内容碎片管理', 'admin@piece_list'),
 (7, '自定义表单', 'admin@form_list,admin@form_management'),
 (8, '用户管理', 'admin@right_list,admin@role_list,admin@user_list'),
-(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export,admin@black_list'),
+(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export,admin@black_list,admin@opera_log'),
 (10, '系统设置管理', 'admin@base_set,admin@nav_set,admin@water_image'),
 (11, '友情链接', 'admin@flink'),
 (12, '关键词管理', 'admin@hot_search,admin@keywords'),
@@ -4090,6 +4122,12 @@ ALTER TABLE `zycms_nav`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `zycms_opera_log`
+--
+ALTER TABLE `zycms_opera_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `zycms_order`
 --
 ALTER TABLE `zycms_order`
@@ -4221,6 +4259,11 @@ ALTER TABLE `zycms_message`
 --
 ALTER TABLE `zycms_nav`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '导航ID',AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `zycms_opera_log`
+--
+ALTER TABLE `zycms_opera_log`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT for table `zycms_order`
 --

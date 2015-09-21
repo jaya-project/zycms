@@ -8,13 +8,39 @@ class Admin_Controller extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		
-		
 		$this->load->library(array('MyAuth', 'session'));
-		
+        $this->write_log();
 		$this->myauth->is_logged_in(uri_string());
 		
 	}
+
+    private function write_log()
+    {
+        $this->load->model('log_model');
+        $this->load->helper('ip');
+
+        $first_segment = $this->uri->segment(1);
+        $second_segment = $this->uri->segment(2);
+        $third_segment = $this->uri->segment(3);
+        
+        $arr = array();
+        $arr['cm'] = '';
+        if ($first_segment == 'Backend')  {
+            $arr['cm'] = $second_segment . '@' . $third_segment;
+        } else {
+            $arr['cm'] = $first_segment . '@' . $second_segment;
+        }
+
+        $arr['ip'] = ip2long(getIP());
+        $arr['opera_time'] = time();
+        $admin = $this->session->userdata('admin');
+        $arr['user'] = $admin['username'];
+
+        if (!empty($arr['user'])) {
+            $this->log_model->insert($arr);
+        }
+
+    }
 	
 	public function view($view, $vars = array(), $string=false)
 	{

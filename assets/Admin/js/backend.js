@@ -2942,6 +2942,59 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
     NG.getData();
 });
 
+Module.controller('logCtrl', function($scope, $http) {
+    var NG = $scope;
+    NG.getData = function(page) {
+		var data = NG.queryObj;
+		page = typeof page == 'undefined' ? 1 : page;
+		
+		data = $.extend({}, data, {page:page});
+		$http.post('/Backend/log/get_data', data).success(function(result) {
+            if(result.code == 200 ) {
+                NG.data = result.data.data;
+                NG.totalPages = [];
+                NG.totalPages2 = result.data.total_pages;
+                
+                for (var i=1; i<=result.data.total_pages; i++) {
+                    NG.totalPages.push(i);
+                }
+                
+                NG.currentPage = result.data.current_page;
+            } else {
+                generate({"text":result.message, "type":"error"});
+            }
+        });
+    }
+
+    NG.clean = function() {
+        if (window.confirm('你真的要清空吗?')) {
+            $http.post('/Backend/log/clean').success(function(result) {
+                if(result.code == 200 ) {
+                    generate({"text":result.message, "type":"success"});
+                    NG.getData();
+                } else {
+                    generate({"text":result.message, "type":"error"});
+                }
+            });
+
+        }
+    }
+
+    NG.deleteLog = function(id) {
+        var data= {id:id};
+		$http.post('/Backend/log/delete_data', data).success(function(result) {
+            if(result.code == 200 ) {
+                generate({"text":result.message, "type":"success"});
+                NG.getData();
+            } else {
+                generate({"text":result.message, "type":"error"});
+            }
+        });
+    }
+
+    NG.getData();
+})
+
 Module.controller('databaseCtrl', function($scope, $http, List) {
 	var NG = $scope;
 	
