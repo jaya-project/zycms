@@ -26,10 +26,10 @@
     if (isset($_GET['act']) && $_GET['act'] == 'connect_database') {
         $conn = mysqli_connect($_GET['host'].':'.$_GET['port'], $_GET['username'], $_GET['password']);
         if (!$conn) {
-            echo 'error database setting';
+            echo '错误的数据库配置,请检查';
             die;
         } else {
-            mysqli_select_db($conn, $_GET['name']) or die('incorrect database name');
+            mysqli_select_db($conn, $_GET['name']) or die('错误的数据库名');
             set_config($_GET);
             echo '正在还原数据库...', '<br />';
             restore_database($conn);
@@ -130,7 +130,7 @@
             </tr>
         </table>
         
-        <button onclick="$('#step1').hide(); $('#step2').show();" class="btn">下一步</button>
+        <button onclick="$('#step1').hide(); $('#step2').show(); changeHistory();" class="btn">下一步</button>
 	</div>
 	
 	<div id="step2">
@@ -149,6 +149,15 @@
 	</div>
 
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script type="text/javascript" src="assets/js/common.js"></script>
+    <script type="text/javascript">
+        function changeHistory() {
+            history.pushState(history.state, document.title, '/install/index.php');
+        }
+
+        window.onpopstate = function() {
+            $('#step2').hide();
+            $('#step1').show();
+        }
+    </script>
 </body>
 </html>
