@@ -296,9 +296,7 @@ class Api
 			$sql = "SELECT * FROM $archives_table AS ac 
 					 LEFT JOIN $table_name AS a 
 					 ON ac.id=a.id  
-					 WHERE $where 
-					 LIMIT " . ($page - 1) * $page_length . "
-					 , " . $page_length;
+					 WHERE $where ";
 			
 			$total_count = $this->CI->db->query($sql)->num_rows();
 			
