@@ -437,6 +437,7 @@ class Api
 		foreach ($keywords as $keyword) {
 			//combine tag
 			$style = $keyword['style'];
+			$style['fontweight'] = empty($style['fontweight']) ? 'normal' : 'bold';
 			$tag = "<a href='$keyword[url]' target='$keyword[target]' style='font-size:$style[fontsize]px; font-weight:$style[fontweight]; color:$style[color];'>$keyword[keyword]</a>";
 			$content = str_replace($keyword['keyword'], $tag, $content);
 		}
