@@ -134,7 +134,7 @@
 	</div>
 	
 	<div id="step2">
-        <form action="?">
+        <form action="/install/index.php">
             <p>主机: <input type="text" placeholder="主机名" name="host" required="required" value="localhost" /></p>
             <p>账号: <input type="text" placeholder="账号" name="username" required="required" value="root"  /></p>
             <p>密码: <input type="text" placeholder="密码" name="password" required="required" value="123456"  /></p>
@@ -143,7 +143,7 @@
         
             <input type="hidden" name="act" value="connect_database">
             <button onclick="$('#step1').show(); $('#step2').hide();">上一步</button>
-            <input type="submit" value="下一步" />
+            <input type="submit" value="下一步"  />
         </form>
         
 	</div>

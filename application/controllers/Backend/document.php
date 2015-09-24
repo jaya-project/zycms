@@ -135,6 +135,7 @@ class Document extends Admin_Controller {
 									'seo_title' 		=> 	isset($data['seo_title']) ? $data['seo_title'] : '',
 									'seo_keywords'		=> 	isset($data['seo_keywords']) ? $data['seo_keywords'] : '',
 									'seo_description'	=> 	isset($data['seo_description']) ? $data['seo_description'] : '',
+									'abstract'			=>	isset($data['abstract']) ? $data['abstract'] : '',
 									'create_time'		=> 	isset($data['create_time']) ?  strtotime($data['create_time']) : time(),
 									'author'			=> 	isset($data['author']) ? $data['author'] : '',
 									'source'			=>	isset($data['source']) ? $data['source'] : '',

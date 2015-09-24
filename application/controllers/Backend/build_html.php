@@ -189,39 +189,42 @@ class Build_html extends Admin_Controller {
 	private function build_list($v)
 	{
 		$temp = explode('/', $v['source_rule']);
-		empty($temp[0]) && array_shift($temp);
-		
-		// $arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
-		// $str_cid = implode(',', $arr_columns);
-		
-		$ids = get_node_children($this->columns, $v['id']);
-		
-		$str_cid = implode(',', $ids);
-		
-		$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
-		
-		$page_count = ceil($record_count / $temp[4]);
-		
-		$page_count == 0 && $page_count = 1;
-		
-		for ($i=1; $i <= $page_count; $i++) {
-			$temp = $v;
+		if (sizeof($temp) == 5) {
 			
-			$temp['destination_rule'] = str_replace('page', $i, $temp['destination_rule']);
-			$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
+			empty($temp[0]) && array_shift($temp);
 			
-			$this->build($temp);
+			// $arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
+			// $str_cid = implode(',', $arr_columns);
 			
-			if ($i == 1) {
-				$path_info = explode('/', $temp['destination_rule']);
-				$temp['destination_rule'] = '/' . $path_info[0] . '/index.html';
+			$ids = get_node_children($this->columns, $v['id']);
+			
+			$str_cid = implode(',', $ids);
+			
+			$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
+			
+			$page_count = ceil($record_count / $temp[4]);
+			
+			$page_count == 0 && $page_count = 1;
+			
+			for ($i=1; $i <= $page_count; $i++) {
+				$temp = $v;
+				
+				$temp['destination_rule'] = str_replace('page', $i, $temp['destination_rule']);
 				$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
 				
 				$this->build($temp);
+				
+				if ($i == 1) {
+					$path_info = explode('/', $temp['destination_rule']);
+					$temp['destination_rule'] = '/' . $path_info[0] . '/index.html';
+					$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
+					
+					$this->build($temp);
+				}
 			}
+		
+		
 		}
-		
-		
 		
 	}
 	

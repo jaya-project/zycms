@@ -43,7 +43,7 @@
 					
 				</select>
 			  </td>
-              <td><a ng-click="deleteContent($index)" href="javascript:void(0)">删除</a> <a ng-click="buildSingleHtml(d.id)" href="javascript:void(0)">生成</a></td>
+              <td><a ng-click="deleteContent($index)" class="delete_button" href="javascript:void(0)">删除</a> <a ng-click="buildSingleHtml(d.id)" href="javascript:void(0)">生成</a></td>
             </tr>
   </tbody>
             <tfoot id="ResultTfoot" style="">

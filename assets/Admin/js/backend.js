@@ -3171,7 +3171,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	
 	NG.maskAndNoticeBoxShow = function() {
 		$('<div id="mask"></div>').appendTo('body');
-		$('<div id="noticeBox"><span>正在生成,请稍候...<br /></span></div>').appendTo('body');
+		$('<div id="noticeBox" style="overflow-y: scroll"><span>正在生成,请稍候...<br /></span></div>').appendTo('body');
 	}
 	
 	NG.maskHide = function() {

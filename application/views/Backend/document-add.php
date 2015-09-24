@@ -67,6 +67,15 @@
       <td>&nbsp;</td>
     </tr>
 	
+	<tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>文章摘要</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<textarea  ng-model="article.abstract" placeholder="文章摘要" cols="40" rows="3"></textarea> 
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
 	
 	
 	<tr>

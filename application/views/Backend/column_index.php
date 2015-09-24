@@ -24,7 +24,7 @@
               <td ng-bind="d.id"></td>
               <td ng-bind="d.space+d.column_name"></td>
               <td><input type="text" ng-model="d.sort" ng-change="modifySort(d.id, d.sort)" style="width:50px; text-align:center;" /></td>
-              <td><a ng-click="modifyColumn(d.id)" href="javascript:void(0)">修改</a> &nbsp;&nbsp;<a ng-click="deleteColumn(d.id)" href="javascript:void(0)">删除</a></td>
+              <td><a ng-click="modifyColumn(d.id)" href="javascript:void(0)">修改</a> &nbsp;&nbsp;<a ng-click="deleteColumn(d.id)" class="delete_button" href="javascript:void(0)">删除</a></td>
             </tr>
   </tbody>
             <tfoot id="ResultTfoot" style="">
