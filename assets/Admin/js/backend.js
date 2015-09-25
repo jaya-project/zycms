@@ -1,4 +1,5 @@
 var Module=angular.module('backend',['ngFileUpload', "ngQuickDate", 'angular-loading-bar']);
+var RootPath = '/';
 Module.filter('to_trusted', ['$sce', function ($sce) {return function (text) {return $sce.trustAsHtml(text);};}]);
 
 Module.directive('ckEditor', function() {
@@ -53,7 +54,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 	NG.channel = {"label_fields":'', 'fields':'', 'values':'', 'channel_type':'text'};
 	
 	NG.getModel = function() {
-		$http.post("/Backend/channel/get_model").success(function(result) {
+		$http.post(RootPath + "Backend/channel/get_model").success(function(result) {
 			
 			if(result.code == 200 ) {
 				
@@ -88,7 +89,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 	
 	NG.showModelStruct = function(channelId) {
 		var data = {channelId:channelId};
-		$http.post("/Backend/channel/get_model_struct", data).success(function(result) {
+		$http.post(RootPath + "Backend/channel/get_model_struct", data).success(function(result) {
 			if(result.code == 200) {
 				NG.channelId = result.data.channel_id;
 				NG.modelArray = result.data.table_struct;
@@ -101,7 +102,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 	NG.deleteFields = function(channelId, field) {
 		if (window.confirm('你确定要删除该字段吗? 删除后会丢失该字段的数据')) {
 			var data = {channel_id:channelId, field:field};
-			$http.post("/Backend/channel/delete_channel_field", data).success(function(result) {
+			$http.post(RootPath + "Backend/channel/delete_channel_field", data).success(function(result) {
 				if(result.code == 200) {
 					generate({"text":result.message, "type":"success"});
 					dialog({id:'container'}).remove();
@@ -146,7 +147,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 		
 		var data = {"new_fields":newFields, "channel_id":channelId};
 		
-		$http.post("/Backend/channel/add_channel_fields", data).success(function(result) {
+		$http.post(RootPath + "Backend/channel/add_channel_fields", data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				dialog({'id':'container'}).remove();
@@ -175,7 +176,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			}
 			
 			var data = {"channel_id":channelId, "old_field":NG.oldField, "be_modified":NG.modelArray[NG.modifyIndex]};
-			$http.post("/Backend/channel/modify_channel_field", data).success(function(result) {
+			$http.post(RootPath + "Backend/channel/modify_channel_field", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					dialog({'id':'container'}).remove();
@@ -190,7 +191,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 	NG.deleteModel = function(channelId) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"channel_id":channelId};
-			$http.post("/Backend/channel/delete_model", data).success(function(result) {
+			$http.post(RootPath + "Backend/channel/delete_model", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.data = result.data;
@@ -214,7 +215,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			}
 		}
 		
-		var url = isEdit ? '/Backend/channel/edit' : "/Backend/channel/add";
+		var url = isEdit ? RootPath + 'Backend/channel/edit' : RootPath + "Backend/channel/add";
 		
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
@@ -233,7 +234,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			return;
 		} else {
 			var data = {"channel_id":channelId};
-			$http.post("/Backend/channel/get_specify_model", data).success(function(result) {
+			$http.post(RootPath + "Backend/channel/get_specify_model", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.channel = result.data;
 					for (var i in result.data.table_struct) {
@@ -277,7 +278,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	
 	
 	 NG.$watch('files', function () {
-       upload.uploadFile('/Backend/common/upload_image', NG.files, NG, function(NG, data) {
+       upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.column = $.extend({}, NG.column, {'column_thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
@@ -289,12 +290,12 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	}
 	
 	NG.modifyColumn = function(id) {
-		window.location.href = '/admin/column_add#' + id;
+		window.location.href = RootPath + 'admin/column_add#' + id;
 	}
 	
 	NG.getSpecifyColumn = function() {
 		var data = {"id":NG.columnId};
-		$http.post("/Backend/column/get_specify_column", data).success(function(result) {
+		$http.post(RootPath + "Backend/column/get_specify_column", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.column = result.data;
 					
@@ -307,7 +308,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	NG.deleteColumn = function(id) {
 		if(window.confirm('你确定要删除吗?')) {
 			var data = {"id":id};
-			$http.post("/Backend/column/column_delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/column/column_delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					List.getAllColumn(NG);
@@ -323,7 +324,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 		var pid = typeof NG.column.pid == 'undefined' || NG.column.pid == null ? 0 : NG.column.pid;
 		
 		$.extend(data, {'pid':pid});
-		$http.post("/Backend/column/column_save", data).success(function(result) {
+		$http.post(RootPath + "Backend/column/column_save", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({'text':result.message, "type":'success'});
 					NG.column = {};
@@ -345,7 +346,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 		sortValue = parseInt(sortValue);
 		id = parseInt(id);
 		var data = {"id":id, "sort":sortValue};
-		var url = "/Backend/column/modify_sort";
+		var url = RootPath + "Backend/column/modify_sort";
 		sort.modifySort(url, data);
 	}
 	
@@ -374,7 +375,7 @@ Module.controller('autoPushCtrl', function($scope, $http) {
 		
 		
 		
-		$http.post('/Backend/tools/auto_push', data).success(function(result) {
+		$http.post(RootPath + 'Backend/tools/auto_push', data).success(function(result) {
 			if(result.code == 200 ) {
 				var message = '';
 				message += '已成功推送' + result.data.success + '条<br />';
@@ -435,7 +436,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 			
 			var data = {"ids":ids};
 			
-			$http.post('/Backend/message/bat_delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/message/bat_delete', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -463,7 +464,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 		}
 		
 		
-		$http.post('/Backend/message/send_message', data).success(function(result) {
+		$http.post(RootPath + 'Backend/message/send_message', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				$('.ui-dialog-close').click();
@@ -476,7 +477,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	
 	NG.getReplyMessage = function(id) {
 		var data = {"id":id};
-		$http.post("/Backend/message/get_reply_message", data).success(function(result) {
+		$http.post(RootPath + "Backend/message/get_reply_message", data).success(function(result) {
 			if(result.code == 200 ) {
 				var data = $compile(result.data)(NG);
 				$(data).appendTo('#message-list');
@@ -513,7 +514,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	NG.deleteMessage = function(id, obj) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"id":id};
-			$http.post("/Backend/message/delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/message/delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -529,7 +530,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	NG.searchMessage = function() {
 		var data = {"id":NG.memberId};
 		
-		$http.post("/Backend/message/search_message", data).success(function(result) {
+		$http.post(RootPath + "Backend/message/search_message", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 					
@@ -555,7 +556,7 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 	
 	NG.getContent = function(id) {
 		var data = {"id":0};
-		$http.post("/Backend/message/get_all", data).success(function(result) {
+		$http.post(RootPath + "Backend/message/get_all", data).success(function(result) {
 			if(result.code == 200 ) {
 				NG.data = result.data;
 				
@@ -589,7 +590,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 	
 	NG.clean = function() {
 		if (window.confirm('真的要清空回收站吗?清空后不可恢复!')) {
-			$http.post("/Backend/document/clean").success(function(result) {
+			$http.post(RootPath + "Backend/document/clean").success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllArticle();
@@ -611,7 +612,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 			
 			var data = {"ids":ids, "finally":1};
 			
-			$http.post("/Backend/document/bat_delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/document/bat_delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllArticle();
@@ -630,7 +631,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 		
 		data = $.extend({}, data, {page:page, 'is_delete':1});
 		
-		$http.post("/Backend/document/get_article", data).success(function(result) {
+		$http.post(RootPath + "Backend/document/get_article", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data.data;
 					NG.totalPages = [];
@@ -677,7 +678,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 		
 		
 		var data = {"ids":ids};
-		$http.post("/Backend/document/restore_document", data).success(function(result) {
+		$http.post(RootPath + "Backend/document/restore_document", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({'text':result.message, 'type':'success'});
 					NG.getAllArticle();
@@ -690,7 +691,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 	NG.deleteArticle = function(id) {
 		if (window.confirm('你真的删除这篇文章吗?')) {
 			var data = {"id":id, 'finally':1};
-			$http.post("/Backend/document/document_delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/document/document_delete", data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({'text':result.message, 'type':'success'});
 						NG.getAllArticle();
@@ -715,7 +716,7 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 		if (NG.files) {
 			NG.maskAndNoticeBoxShow();
 			Upload.upload({
-				url: '/Backend/tools/bat_export',
+				url: RootPath + 'Backend/tools/bat_export',
 				file: NG.files
 			}).success(function (data, status, headers, config) {
 				console.log(data);
@@ -748,7 +749,7 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 
 	
 	NG.exportSub = function(data) {
-		$http.post("/Backend/tools/import_company_each_time", data).success(function(result) {
+		$http.post(RootPath + "Backend/tools/import_company_each_time", data).success(function(result) {
 			if(result.code == 200) {
 				NG.maskHide();
 				generate({'text':result.message, 'type':'success'});
@@ -767,7 +768,7 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 			return;
 		}
 		
-		window.open('/download/columnTemplate/'+NG.search.cid);
+		window.open(RootPath + 'download/columnTemplate/'+NG.search.cid);
 	}
 	
 	List.getAllColumn(NG);
@@ -783,7 +784,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	
 	
 	 NG.$watch('files', function () {
-       upload.uploadFile('/Backend/common/upload_image', NG.files, NG, function(NG, data) {
+       upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.article = $.extend({}, NG.article, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
@@ -817,7 +818,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				return;
 			}
 			
-			$http.post("/Backend/document/bat_delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/document/bat_delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllArticle();
@@ -834,7 +835,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		$('.newItem').remove();
 		
 		var data = {"id":id};
-		$http.post("/Backend/document/get_column_struct", data).success(function(result) {
+		$http.post(RootPath + "Backend/document/get_column_struct", data).success(function(result) {
 				if(result.code == 200 ) {
 					
 					var data = $compile(result.data.html)(NG);
@@ -878,7 +879,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		var data = NG.article;
 		
-		var url = "/Backend/document/save";
+		var url = RootPath + "Backend/document/save";
 		
 		for (var i in data.sub_column) {
 			if (!data.sub_column[i]) {
@@ -904,7 +905,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		var data = NG.article;
 		
-		var url = "/Backend/document/save";
+		var url = RootPath + "Backend/document/save";
 		
 		for (var i in data.sub_column) {
 			if (!data.sub_column[i]) {
@@ -917,12 +918,12 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 
 	
 	NG.modifyContent = function(id) {
-		window.location.href="/admin/document_add#"+id;
+		window.location.href=RootPath+"admin/document_add#"+id;
 	}
 	
 	NG.getSpecifyDocument = function() {
 		var data = {"id":NG.documentId};
-		$http.post("/Backend/document/get_specify_article", data).success(function(result) {
+		$http.post(RootPath + "Backend/document/get_specify_article", data).success(function(result) {
 				if(result.code == 200 ) {
 					
 					NG.article = result.data;
@@ -949,7 +950,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		
 		data = $.extend({}, data, {page:page});
 		
-		$http.post("/Backend/document/get_article", data).success(function(result) {
+		$http.post(RootPath + "Backend/document/get_article", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data.data;
 					NG.totalPages = [];
@@ -969,7 +970,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	NG.deleteArticle = function(id) {
 		if (window.confirm('你真的删除这篇文章吗?')) {
 			var data = {"id":id};
-			$http.post("/Backend/document/document_delete", data).success(function(result) {
+			$http.post(RootPath + "Backend/document/document_delete", data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({'text':result.message, 'type':'success'});
 						NG.getAllArticle();
@@ -997,7 +998,7 @@ Module.controller('blackListCtrl', function($scope, $http) {
 	
 	NG.saveContent = function() {
 		var data = {blackList:NG.blackList};
-		$http.post('/Backend/tools/save_black_list', data).success(function(result) {
+		$http.post(RootPath + 'Backend/tools/save_black_list', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				NG.getContent();
@@ -1008,7 +1009,7 @@ Module.controller('blackListCtrl', function($scope, $http) {
 	}
 	
 	NG.getContent = function() {
-		$http.post('/Backend/tools/get_black_list').success(function(result) {
+		$http.post(RootPath + 'Backend/tools/get_black_list').success(function(result) {
 			if(result.code == 200 ) {
 				NG.blackList = result.data;
 			} else {
@@ -1027,7 +1028,7 @@ Module.controller('searchEngineCtrl', function($scope, $http) {
 	
 	NG.saveContent = function() {
 		var data = {"search_engine":NG.searchengine};
-		$http.post('/Backend/optimization/submit_to_sg', data).success(function(result) {
+		$http.post(RootPath + 'Backend/optimization/submit_to_sg', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 			} else {
@@ -1074,7 +1075,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/ad_position/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad_position/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1087,7 +1088,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/ad_position/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/ad_position/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1111,7 +1112,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 		var data = NG.position;
 		data = $.extend({}, data, {'is_edit':true, id:id});
 		
-		$http.post('/Backend/ad_position/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad_position/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1126,7 +1127,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/ad_position/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/ad_position/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1139,7 +1140,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 	
 	NG.getSpecifyAdPosition = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/ad_position/get_specify_ad_position', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad_position/get_specify_ad_position', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.position = result.data;
 				} else {
@@ -1158,7 +1159,7 @@ Module.controller('systemSetCtrl', function($scope, $http) {
 	
 	NG.saveContent = function() {
 		var data = NG.system;
-		$http.post('/Backend/system/save_base_set', data).success(function(result) {
+		$http.post(RootPath + 'Backend/system/save_base_set', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 				} else {
@@ -1168,7 +1169,7 @@ Module.controller('systemSetCtrl', function($scope, $http) {
 	}
 	
 	NG.getContent = function() {
-		$http.post('/Backend/system/get_base_set').success(function(result) {
+		$http.post(RootPath + 'Backend/system/get_base_set').success(function(result) {
 				if(result.code == 200 ) {
 					NG.system = result.data;
 				} else {
@@ -1186,7 +1187,7 @@ Module.controller('waterImageCtrl', function($scope, $http, upload){
 	NG.water = {'type':0, 'is_open':1, 'position':'middle_center'};
 	
 	NG.$watch('files', function () {
-       upload.uploadFile('/Backend/system/upload_image', NG.files, NG, function(NG, data) {
+       upload.uploadFile(RootPath + 'Backend/system/upload_image', NG.files, NG, function(NG, data) {
 		   NG.water = $.extend({}, NG.water, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
@@ -1203,7 +1204,7 @@ Module.controller('waterImageCtrl', function($scope, $http, upload){
 	NG.saveContent = function() {
 		var data = NG.water;
 		
-		$http.post('/Backend/system/save_water_set', data).success(function(result) {
+		$http.post(RootPath + 'Backend/system/save_water_set', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 				} else {
@@ -1214,7 +1215,7 @@ Module.controller('waterImageCtrl', function($scope, $http, upload){
 	
 	
 	NG.getContent = function() {
-		$http.post('/Backend/system/get_water_set').success(function(result) {
+		$http.post(RootPath + 'Backend/system/get_water_set').success(function(result) {
 				if(result.code == 200 ) {
 					NG.water = result.data;
 				} else {
@@ -1291,7 +1292,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 		data = $.extend({}, data, {'is_edit':false});
 		
 		
-		$http.post('/Backend/right/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/right/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1304,7 +1305,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/right/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/right/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1344,7 +1345,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 		
 		data = $.extend({}, data, {'is_edit':true});
 		
-		$http.post('/Backend/right/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/right/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1359,7 +1360,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/right/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/right/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1372,7 +1373,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 	
 	NG.getSpecifyRight = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/right/get_specify_right', data).success(function(result) {
+		$http.post(RootPath + 'Backend/right/get_specify_right', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.right.id = result.data.id;
 					NG.right.name = result.data.name;
@@ -1459,7 +1460,7 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 		data = $.extend({}, data, {'is_edit':false});
 		
 		
-		$http.post('/Backend/role/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/role/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1472,7 +1473,7 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/role/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/role/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1519,7 +1520,7 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 		
 		data = $.extend({}, data, {'is_edit':true});
 		
-		$http.post('/Backend/role/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/role/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1534,7 +1535,7 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/role/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/role/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1547,7 +1548,7 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 	
 	NG.getSpecifyRole = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/role/get_specify_role', data).success(function(result) {
+		$http.post(RootPath + 'Backend/role/get_specify_role', data).success(function(result) {
 				if(result.code == 200 ) {
 					
 					NG.role.id = result.data.id;
@@ -1642,7 +1643,7 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 		
 		
 		
-		$http.post('/Backend/user/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/user/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1655,7 +1656,7 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/user/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/user/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1700,7 +1701,7 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 		
 		
 		
-		$http.post('/Backend/user/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/user/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1715,7 +1716,7 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/user/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/user/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1728,7 +1729,7 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 	
 	NG.getSpecifyUser = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/user/get_specify_user', data).success(function(result) {
+		$http.post(RootPath + 'Backend/user/get_specify_user', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.user = result.data;
 					
@@ -1774,7 +1775,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 	}
 	
 	NG.$watch('files', function () {
-       upload.uploadFile('/Backend/common/upload_image', NG.files, NG, function(NG, data) {
+       upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.ad = $.extend({}, NG.ad, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
@@ -1793,7 +1794,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/ad/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1806,7 +1807,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/ad/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/ad/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1830,7 +1831,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 		var data = NG.ad;
 		data = $.extend({}, data, {'is_edit':true, id:id});
 		
-		$http.post('/Backend/ad/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -1845,7 +1846,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/ad/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/ad/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1858,7 +1859,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 	
 	NG.getSpecifyAd = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/ad/get_specify_ad', data).success(function(result) {
+		$http.post(RootPath + 'Backend/ad/get_specify_ad', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.ad = result.data;
 				} else {
@@ -1904,7 +1905,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/order/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/order/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -1942,7 +1943,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 	NG.setState = function(orderNumber) {
 		var data = {order_number:orderNumber};
 			
-		$http.post('/Backend/order/set_state', data).success(function(result) {
+		$http.post(RootPath + 'Backend/order/set_state', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				NG.getAllContent();
@@ -1953,7 +1954,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 	}
 	
 	NG.download = function(orderNumber) {
-		window.location.href = '/Backend/order/download/'+orderNumber;
+		window.location.href = RootPath + 'Backend/order/download/'+orderNumber;
 	}
 	
 	
@@ -1961,7 +1962,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {order_number:id};
 			
-			$http.post('/Backend/order/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/order/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -1976,7 +1977,7 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 	
 	NG.getSpecifyOrder = function(id) {
 		var data = {order_number:id};
-		$http.post('/Backend/order/get_specify_order', data).success(function(result) {
+		$http.post(RootPath + 'Backend/order/get_specify_order', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.orders = result.data;
 				} else {
@@ -2050,7 +2051,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			return;
 		}
 		
-		$http.post('/Backend/message/send_message', data).success(function(result) {
+		$http.post(RootPath + 'Backend/message/send_message', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				$('.ui-dialog-close').click();
@@ -2108,7 +2109,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/member/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/member/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2121,7 +2122,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/member/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/member/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -2159,7 +2160,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 		
 		data = $.extend({}, data, {'is_edit':true});
 		
-		$http.post('/Backend/member/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/member/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2174,7 +2175,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/member/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/member/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -2189,7 +2190,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 	
 	NG.getSpecifyMember = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/member/get_specify_member', data).success(function(result) {
+		$http.post(RootPath + 'Backend/member/get_specify_member', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.member = result.data;
 					delete NG.member.password;
@@ -2255,7 +2256,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 		
 		console.log(data)
 		
-		$http.post('/Backend/nav/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/nav/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2284,7 +2285,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 		var data = NG.nav;
 		data = $.extend({}, data, {'is_edit':1, id:id});
 		
-		$http.post('/Backend/nav/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/nav/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2299,7 +2300,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/nav/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/nav/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						List.getAllNavs(NG);
@@ -2312,7 +2313,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 	
 	NG.getSpecifyNav = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/nav/get_specify_nav', data).success(function(result) {
+		$http.post(RootPath + 'Backend/nav/get_specify_nav', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.nav = result.data;
 				} else {
@@ -2356,7 +2357,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 	}
 	
 	NG.$watch('files', function () {
-       upload.uploadFile('/Backend/common/upload_image', NG.files, NG, function(NG, data) {
+       upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.flink = $.extend({}, NG.flink, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
@@ -2371,7 +2372,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/flink/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/flink/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2384,7 +2385,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/flink/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/flink/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -2407,7 +2408,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 		var data = NG.flink;
 		data = $.extend({}, data, {'is_edit':true, id:id});
 		
-		$http.post('/Backend/flink/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/flink/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2422,7 +2423,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/flink/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/flink/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -2435,7 +2436,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 	
 	NG.getSpecifyFlink = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/flink/get_specify_flink', data).success(function(result) {
+		$http.post(RootPath + 'Backend/flink/get_specify_flink', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.flink = result.data;
 				} else {
@@ -2488,7 +2489,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/hot_search/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/hot_search/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2501,7 +2502,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/hot_search/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/hot_search/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -2524,7 +2525,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 		var data = NG.hotsearch;
 		data = $.extend({}, data, {'is_edit':true, id:id});
 		
-		$http.post('/Backend/hot_search/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/hot_search/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2539,7 +2540,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/hot_search/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/hot_search/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -2552,7 +2553,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 	
 	NG.getSpecifyFlink = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/hot_search/get_specify_hot_search', data).success(function(result) {
+		$http.post(RootPath + 'Backend/hot_search/get_specify_hot_search', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.hotsearch = result.data;
 				} else {
@@ -2606,7 +2607,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 		
 		data = $.extend({}, data, {'is_edit':false});
 		
-		$http.post('/Backend/piece/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/piece/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2619,7 +2620,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/piece/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/piece/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -2642,7 +2643,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 		var data = NG.piece;
 		data = $.extend({}, data, {'is_edit':true, id:id});
 		
-		$http.post('/Backend/piece/save', data).success(function(result) {
+		$http.post(RootPath + 'Backend/piece/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
@@ -2657,7 +2658,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
 			
-			$http.post('/Backend/piece/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/piece/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
 						NG.getAllContent();
@@ -2670,7 +2671,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 	
 	NG.getSpecifyPiece = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/piece/get_specify_piece', data).success(function(result) {
+		$http.post(RootPath + 'Backend/piece/get_specify_piece', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.piece = result.data;
 				} else {
@@ -2713,7 +2714,7 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 	}
 	
 	NG.getForm = function() {
-		$http.post("/Backend/form/get_form").success(function(result) {
+		$http.post(RootPath + "Backend/form/get_form").success(function(result) {
 			if(result.code == 200 ) {
 				
 				NG.data = result.data;
@@ -2726,7 +2727,7 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 	NG.deleteForm = function(formId) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"form_id":formId};
-			$http.post("/Backend/form/delete_form", data).success(function(result) {
+			$http.post(RootPath + "Backend/form/delete_form", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.data = result.data;
@@ -2738,7 +2739,7 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 	}
 	
 	NG.buildCode = function(formId) {
-		window.open('/Backend/form/build_form/'+formId);
+		window.open(RootPath + 'Backend/form/build_form/'+formId);
 	}
 	
 	NG.addForm = function() {
@@ -2754,7 +2755,7 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 			}
 		}
 		
-		var url = isEdit ? '/Backend/form/edit' : "/Backend/form/add";
+		var url = isEdit ? RootPath + 'Backend/form/edit' : "/Backend/form/add";
 		
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
@@ -2790,7 +2791,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 			return;
 		}
 		var data = {"formId":NG.formId};
-		$http.post('/Backend/form/get_form_content_list', data).success(function(result) {
+		$http.post(RootPath + 'Backend/form/get_form_content_list', data).success(function(result) {
 			if(result.code == 200 ) {
 				NG.data = result.data;
 			} else {
@@ -2807,7 +2808,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 			}
 			
 			var data = {"formId":NG.formId, "id":id};
-			$http.post('/Backend/form/delete_form_content', data).success(function(result) {
+			$http.post(RootPath + 'Backend/form/delete_form_content', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 					NG.showFormContent();
@@ -2855,7 +2856,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 		
 		var data = {"formId":NG.formId, "id":id};
 		
-		$http.post('/Backend/form/show_form_content', data).success(function(result) {
+		$http.post(RootPath + 'Backend/form/show_form_content', data).success(function(result) {
 			if(result.code == 200 ) {
 				NG.fields = result.data;
 			} else {
@@ -2870,7 +2871,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
     var NG = $scope;
     NG.getData = function() {
-		$http.post('/Backend/templates/get_templates').success(function(result) {
+		$http.post(RootPath + 'Backend/templates/get_templates').success(function(result) {
 				if(result.code == 200 ) {
                     NG.data = result.data;
 				} else {
@@ -2881,7 +2882,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
 
 	NG.showEditorUI = function(filename) {
         var data = {"template":'template-edit'};
-        $http.post("/Backend/template/get_template", data).success(function(result) {
+        $http.post(RootPath + "Backend/template/get_template", data).success(function(result) {
             if(result.code == 200 ) {
                 return result;
             } else {
@@ -2900,7 +2901,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
         }).then(function() {
             var data = {filename:filename};
             NG.filename = filename;
-            $http.post('/Backend/templates/get_template_content', data).success(function(result) {
+            $http.post(RootPath + 'Backend/templates/get_template_content', data).success(function(result) {
                 if(result.code == 200 ) {
                     return result;
                 } else {
@@ -2914,7 +2915,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
 	
     NG.saveTemplate = function() {
         var data = {content:editAreaLoader.getValue('template'), filename:NG.filename};
-        $http.post('/Backend/templates/save_template', data).success(function(result) {
+        $http.post(RootPath + 'Backend/templates/save_template', data).success(function(result) {
             if(result.code == 200 ) {
                 dialog({id:'editTemplate'}).remove();
                 editAreaLoader.delete_instance('template');
@@ -2928,7 +2929,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
 	NG.deleteTemplate = function(filename) {
 		if (window.confirm('你确定要删除该模板吗?删除后不可恢复')) {
 			var data = {"filename":filename};
-			$http.post('/Backend/templates/delete_templates', data).success(function(result) {
+			$http.post(RootPath + 'Backend/templates/delete_templates', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
                     NG.getData();
@@ -2949,7 +2950,7 @@ Module.controller('logCtrl', function($scope, $http) {
 		page = typeof page == 'undefined' ? 1 : page;
 		
 		data = $.extend({}, data, {page:page});
-		$http.post('/Backend/log/get_data', data).success(function(result) {
+		$http.post(RootPath + 'Backend/log/get_data', data).success(function(result) {
             if(result.code == 200 ) {
                 NG.data = result.data.data;
                 NG.totalPages = [];
@@ -2968,7 +2969,7 @@ Module.controller('logCtrl', function($scope, $http) {
 
     NG.clean = function() {
         if (window.confirm('你真的要清空吗?')) {
-            $http.post('/Backend/log/clean').success(function(result) {
+            $http.post(RootPath + 'Backend/log/clean').success(function(result) {
                 if(result.code == 200 ) {
                     generate({"text":result.message, "type":"success"});
                     NG.getData();
@@ -2982,7 +2983,7 @@ Module.controller('logCtrl', function($scope, $http) {
 
     NG.deleteLog = function(id) {
         var data= {id:id};
-		$http.post('/Backend/log/delete_data', data).success(function(result) {
+		$http.post(RootPath + 'Backend/log/delete_data', data).success(function(result) {
             if(result.code == 200 ) {
                 generate({"text":result.message, "type":"success"});
                 NG.getData();
@@ -3000,7 +3001,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 	
 	NG.backup = function(obj) {
 		$(obj).html('备份中...').prop('disabled');
-		$http.post('/Backend/tools/backup_database').success(function(result) {
+		$http.post(RootPath + 'Backend/tools/backup_database').success(function(result) {
 				$(obj).html('一键备份').removeAttr('disabled');
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -3012,7 +3013,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 	}
 	
 	NG.getBackup = function() {
-		$http.post('/Backend/tools/get_backup_file').success(function(result) {
+		$http.post(RootPath + 'Backend/tools/get_backup_file').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -3024,7 +3025,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 	NG.deleteBackup = function(filename) {
 		if (window.confirm('你确定要删除该备份吗?删除后不可恢复')) {
 			var data = {"filename":filename};
-			$http.post('/Backend/tools/delete_backup_file', data).success(function(result) {
+			$http.post(RootPath + 'Backend/tools/delete_backup_file', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getBackup();
@@ -3038,7 +3039,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 	NG.restoreBackup = function(filename) {
 		if (window.confirm('你确定要还原该备份文件吗?用户登录名和密码也会被还原')) {
 			var data = {"filename":filename};
-			$http.post('/Backend/tools/restore_backup_file', data).success(function(result) {
+			$http.post(RootPath + 'Backend/tools/restore_backup_file', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 				} else {
@@ -3059,7 +3060,7 @@ Module.controller('sitemapCtrl', function($http, $scope) {
 		domain += window.location.host;
 		
 		var data = {"domain":domain};
-		$http.post('/Backend/tools/build_sitemap', data).success(function(result) {
+		$http.post(RootPath + 'Backend/tools/build_sitemap', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 			} else {
@@ -3087,7 +3088,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	}
 	
 	NG.getRule = function() {
-		$http.post('/Backend/build_html/get_rule').success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/get_rule').success(function(result) {
 				
 			if(result.code == 200 ) {
 				NG.data = result.data;
@@ -3100,7 +3101,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	NG.buildRule = function() {
 		if (window.confirm('此操作会覆盖以下所有规则, 你确定吗?')) {
 			generate({"text":'生成中...', "type":"success"});
-			$http.post('/Backend/build_html/build_rule').success(function(result) {
+			$http.post(RootPath + 'Backend/build_html/build_rule').success(function(result) {
 					
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -3118,7 +3119,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	
 	NG.buildSingleHtml = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/build_html/build_single_html',data).success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/build_single_html',data).success(function(result) {
 				
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -3129,7 +3130,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	}
 	
 	NG.buildIndex = function() {
-		$http.post('/Backend/build_html/build_index_html').success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/build_index_html').success(function(result) {
 				
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -3141,7 +3142,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	
 	NG.buildHtml = function() {
 		NG.maskAndNoticeBoxShow();
-		$http.post('/Backend/build_html/build_html').success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/build_html').success(function(result) {
 				
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -3155,7 +3156,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	}
 	
 	NG.asynBuildHtml = function(data) {
-		$http.post('/Backend/build_html/asyn_build_html', data).success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/asyn_build_html', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
@@ -3181,7 +3182,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	
 	NG.saveRule = function() {
 		var data = {'rules': NG.data};
-		$http.post('/Backend/build_html/save_rule', data).success(function(result) {
+		$http.post(RootPath + 'Backend/build_html/save_rule', data).success(function(result) {
 					
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -3247,7 +3248,7 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 			return;
 		}
 		
-		$http.post('/Backend/keywords/add_content', data).success(function(result) {
+		$http.post(RootPath + 'Backend/keywords/add_content', data).success(function(result) {
 			
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -3278,7 +3279,7 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 		}
 		
 		
-		$http.post('/Backend/keywords/edit', data).success(function(result) {
+		$http.post(RootPath + 'Backend/keywords/edit', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					dialog({'id':'saveHotSearch'}).remove();
@@ -3291,14 +3292,14 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 	
 	NG.getSpecifyKeyword = function(id) {
 		var data = {id:id};
-		$http.post('/Backend/keywords/get_specify_keyword', data).success(function(result) {
+		$http.post(RootPath + 'Backend/keywords/get_specify_keyword', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.keyword = result.data;
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			}).then(function() {
-				$http.post("/Backend/template/get_template", {template:'keywords-add'}).success(function(result) {
+				$http.post(RootPath + "Backend/template/get_template", {template:'keywords-add'}).success(function(result) {
 					if(result.code == 200 ) {
 						NG.showAddUICallback(result.data);
 					} else {
@@ -3314,7 +3315,7 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 	NG.deleteContent = function(id) {
 		if (window.confirm('你确定要删除吗?')) {
 			var data = {id:id};
-			$http.post('/Backend/keywords/delete', data).success(function(result) {
+			$http.post(RootPath + 'Backend/keywords/delete', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllContent();
@@ -3326,7 +3327,7 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 	}
 	
 	NG.getAllContent = function() {
-		$http.post('/Backend/keywords/get_all').success(function(result) {
+		$http.post(RootPath + 'Backend/keywords/get_all').success(function(result) {
 			
 			if(result.code == 200 ) {
 				NG.data = result.data;
@@ -3347,7 +3348,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 			generate({'text':'请先输入内容', 'type':'error'});
 		} else {
 			var data = {'text':NG.qrCode};
-			$http.post('/Backend/tools/build_qr_code', data).success(function(result) {
+			$http.post(RootPath + 'Backend/tools/build_qr_code', data).success(function(result) {
 				
 				if(result.code == 200 ) {
 					$('<img src="'+result.data+'" id="qrCode" />').appendTo('#qrCodeArea');
@@ -3366,7 +3367,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 	}
 	
 	NG.getQrfile = function() {
-		$http.post('/Backend/tools/get_qrcode_file').success(function(result) {
+		$http.post(RootPath + 'Backend/tools/get_qrcode_file').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
 				} else {
@@ -3378,7 +3379,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 	NG.deleteQrcode = function(filename) {
 		if (window.confirm('你确定要删除吗?')) {
 			var data = {"filename":filename};
-			$http.post('/Backend/tools/delete_qrcode_file', data).success(function(result) {
+			$http.post(RootPath + 'Backend/tools/delete_qrcode_file', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getQrfile();
@@ -3449,7 +3450,7 @@ Module.service('sort', function($http) {
 Module.service('sConfig', function($http) {
 	var obj = {
 		getChannelTypeConfig:function(NG) {
-			$http.post("/Backend/channel/get_channel_type").success(function(result) {
+			$http.post(RootPath + "Backend/channel/get_channel_type").success(function(result) {
 				if(result.code == 200 ) {
 					NG.channelType = [];
 					for (var i in result.data) {
@@ -3461,7 +3462,7 @@ Module.service('sConfig', function($http) {
 			});
 		},
 		getFormTypeConfig:function(NG) {
-			$http.post("/Backend/form/get_form_type").success(function(result) {
+			$http.post(RootPath + "Backend/form/get_form_type").success(function(result) {
 				if(result.code == 200 ) {
 					NG.formType = [];
 					for (var i in result.data) {
@@ -3481,7 +3482,7 @@ Module.service('sConfig', function($http) {
 Module.service('List', function($http) {
 	var obj = {
 		getChannelType:function(NG) {
-			$http.post("/Backend/channel/get_model").success(function(result) {
+			$http.post(RootPath + "Backend/channel/get_model").success(function(result) {
 				if(result.code == 200 ) {
 					NG.channels = result.data;
 				} else {
@@ -3490,7 +3491,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllColumn:function(NG) {
-			$http.post("/Backend/column/get_column").success(function(result) {
+			$http.post(RootPath + "Backend/column/get_column").success(function(result) {
 				if(result.code == 200 ) {
 					NG.columns = result.data;
 					for(var i in NG.columns) {
@@ -3503,7 +3504,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllAdPosition:function(NG) {
-			$http.post('/Backend/ad_position/get_all').success(function(result) {
+			$http.post(RootPath + 'Backend/ad_position/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.adPositions = result.data;
 				} else {
@@ -3512,7 +3513,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllTables:function(NG) {
-			$http.post('/Backend/tools/get_all_tables').success(function(result) {
+			$http.post(RootPath + 'Backend/tools/get_all_tables').success(function(result) {
 				if(result.code == 200 ) {
 					NG.tables = result.data;
 				} else {
@@ -3521,7 +3522,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllRights:function(NG) {
-			$http.post('/Backend/right/get_all').success(function(result) {
+			$http.post(RootPath + 'Backend/right/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.rights = result.data;
 				} else {
@@ -3530,7 +3531,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllRoles:function(NG) {
-			$http.post('/Backend/role/get_all').success(function(result) {
+			$http.post(RootPath + 'Backend/role/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.roles = result.data;
 				} else {
@@ -3539,7 +3540,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllNavs:function(NG) {
-			$http.post('/Backend/nav/get_all').success(function(result) {
+			$http.post(RootPath + 'Backend/nav/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.navs = result.data;
 					for(var i in NG.navs) {
@@ -3551,7 +3552,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllForms:function(NG) {
-			$http.post('/Backend/form/get_form').success(function(result) {
+			$http.post(RootPath + 'Backend/form/get_form').success(function(result) {
 				if(result.code == 200 ) {
 					NG.forms = result.data;
 				} else {
@@ -3560,7 +3561,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllProvinces:function(NG) {
-			$http.post('/Backend/member/get_provinces').success(function(result) {
+			$http.post(RootPath + 'Backend/member/get_provinces').success(function(result) {
 				if(result.code == 200 ) {
 					NG.provinces = result.data;
 				} else {
@@ -3570,7 +3571,7 @@ Module.service('List', function($http) {
 		},
 		getAllCities:function(NG, provinceId) {
 			var data = {"id":provinceId};
-			$http.post('/Backend/member/get_cities', data).success(function(result) {
+			$http.post(RootPath + 'Backend/member/get_cities', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.cities = result.data;
 				} else {
@@ -3580,7 +3581,7 @@ Module.service('List', function($http) {
 		},
 		getAllAreas:function(NG, cityId) {
 			var data = {"id":cityId};
-			$http.post('/Backend/member/get_areas', data).success(function(result) {
+			$http.post(RootPath + 'Backend/member/get_areas', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.areas = result.data;
 				} else {
@@ -3589,7 +3590,7 @@ Module.service('List', function($http) {
 			});
 		},
 		getAllMembers:function(NG) {
-			$http.post('/Backend/member/get_all').success(function(result) {
+			$http.post(RootPath + 'Backend/member/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.members = result.data;
 					NG.members.unshift({"id":0, "username":'system', "true_name":'系统'});
@@ -3607,7 +3608,7 @@ Module.service('template', function($http) {
 	var obj = {
 		getTemplate:function(template, NG, callback) {
 			var data = {"template":template};
-			$http.post("/Backend/template/get_template", data).success(function(result) {
+			$http.post(RootPath + "Backend/template/get_template", data).success(function(result) {
 				if(result.code == 200 ) {
 					(callback)(result.data);
 				} else {

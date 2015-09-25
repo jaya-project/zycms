@@ -43,7 +43,7 @@ class Form extends Admin_Controller {
 		
 		$html = '';
 		
-		$html .= "<form method='post' enctype='multipart/form-data' action='/form/submit'>";
+		$html .= "<form method='post' enctype='multipart/form-data' action='/form/submit' id='ZYCMS_FEEDBACK_FORM'>";
 		
 		$html .= "<input type='hidden' name='formId' value='$formId' />";
 		
@@ -92,15 +92,22 @@ class Form extends Admin_Controller {
 			$html .= '</tr>';
 		}
 		
+		$html .= '<tr>';
+		$html .= '<td>验证码: </td> <td> <input type="text" name="validate" placeholder="验证码" /> <img src="'.site_url('form/get_code').'/" onclick="this.src+=\'\';" style="cursor:pointer;" title="看不清?点击换下一张" valign="middle"> </td>';
+		$html .= '</tr>';
+		
 		$html .= '</table>';
 		
-		$html .= '<input type="submit" value="提交" />';
+		$html .= '<input type="submit" value="提交" id="ZYCMS_FEEDBACK_SUBMIT" />';
 		
 		$html .= '</form>';
+		
 		
 		echo $html;
 	}
 	
+	
+	 
 	/**
 	 *  删除自定义表单
 	 */

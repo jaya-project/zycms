@@ -7,14 +7,28 @@ class Form extends FRONT_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('form_model');
+		$this->load->library(array('MyCaptcha', 'session'));
 		$this->load->helper(array('array', 'email'));
 		$this->header_template = '';
 		$this->footer_template = '';
 	}
 	
+	public function get_code() 
+	{
+			
+		  $code = $this->mycaptcha->getCaptcha();
+		  $this->session->set_userdata('code', $code);
+		  $this->mycaptcha->showImg();
+		  
+	}
+	
 	public function submit()
 	{
 		$data = $this->input->post();
+		
+		if (empty($data['validate']) || strtolower($data['validate']) != strtolower($this->session->userdata('code'))) {
+			die('不正确的验证码');
+		}
 		
 		if (isset($data['formId']) && !empty($data['formId'])) {
 			if ($row = $this->form_model->get_one($data['formId'])) {
