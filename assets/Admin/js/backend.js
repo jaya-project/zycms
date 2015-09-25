@@ -1091,8 +1091,6 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 		$http.post(RootPath + 'Backend/ad_position/get_all').success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
-				} else {
-					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
