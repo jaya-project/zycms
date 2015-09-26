@@ -42,6 +42,20 @@ Module.directive('ckEditor', function() {
 });
 
 
+Module.controller('icoCtrl', function($scope, $http, upload) {
+	var NG = $scope;
+	
+	NG.icoPath = '/favicon.ico';
+	
+	NG.$watch('files', function () {
+       upload.uploadFile(RootPath + 'Backend/common/upload_ico', NG.files, NG, function(NG, data) {
+		   NG.icoPath = data.data.relative_path + data.data.file_name;
+		   window.location.reload();
+	   });
+    });
+	
+});
+
 Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compile) {
 	var NG = $scope;
 	

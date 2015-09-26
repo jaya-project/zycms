@@ -114,6 +114,11 @@ class Admin extends Admin_Controller {
 		$this->view('base-set');
 	}
 	
+	public function ico_management()
+	{
+		$this->view('ico-index');
+	}
+	
 	public function water_image()
 	{
 		$this->view('water-image');

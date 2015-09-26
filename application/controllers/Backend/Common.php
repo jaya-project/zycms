@@ -46,6 +46,8 @@ class Common extends Admin_Controller {
 
 	}
 	
+	
+	
 	public function add_water_mark($image_path)
 	{
 		$TEXT = '0';
@@ -80,6 +82,33 @@ class Common extends Admin_Controller {
 			$this->image_lib->watermark();
 			
 		}
+	}
+	
+	/**
+	 *  上传图片
+	 */
+	public function upload_ico() 
+	{
+		$config['upload_path'] = './';
+		
+		$config['allowed_types'] = '*';
+		$config['max_size'] = '1024';
+		$config['overwrite'] = true;
+		$config['file_name'] = 'favicon.ico';
+		
+		$this->load->library('upload', $config);
+		
+		if ( $this->upload->do_upload('file'))
+		{
+			$data = $this->upload->data();
+			
+			die(json_encode(array('code'=>200, 'data'=>array_merge($data, array('relative_path'=>ltrim($config['upload_path'], '.'))), 'message'=>'上传成功')));
+		}	 
+		else
+		{
+			die(json_encode(array('code'=>403, 'message'=>$this->upload->display_errors())));
+		}
+
 	}
 	
 	private function get_water_mark_config() 

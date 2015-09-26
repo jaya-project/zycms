@@ -116,7 +116,8 @@ $config['backend'] = array(
 															'/admin/auto_push' => '百度主动推送',
 															'/admin/bat_export' => '文章批量导入',
 															'/admin/black_list' => '黑名单设置',
-                                                            '/admin/opera_log' => '操作日志'
+                                                            '/admin/opera_log' => '操作日志',
+															'/admin/ico_management' => '网页图标'
 														),
 									),
 									
