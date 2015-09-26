@@ -3161,6 +3161,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 				NG.maskHide();
 			} else if (result.code == 201) {
 				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				$('#noticeBox').scrollTop($('#noticeBox').height());
 				NG.asynBuildHtml(result.data);
 			} else {
 				generate({"text":result.message, "type":"error"});
