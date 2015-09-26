@@ -43,7 +43,7 @@ class Form extends Admin_Controller {
 		
 		$html = '';
 		
-		$html .= "<form method='post' enctype='multipart/form-data' action='/form/submit' id='ZYCMS_FEEDBACK_FORM'>";
+		$html .= "<form method='post' enctype='multipart/form-data' action='/form/submit' id='ZYCMS_FEEDBACK_FORM' onsubmit='return checkForm(this)'>";
 		
 		$html .= "<input type='hidden' name='formId' value='$formId' />";
 		
@@ -51,8 +51,17 @@ class Form extends Admin_Controller {
 		
 		$html .= '<table>';
 		
+		$js = '';
+		
 		foreach($table_struct as $key=>$value) {
 			$input = '';
+			$js .= <<< JS
+				if (obj.$value[fields].value == '') {
+					alert('$value[label_fields]不能为空');
+					obj.$value[fields].focus();
+					return false;
+				}
+JS;
 			switch($value['form_type']) {
 				default:
 				case 'text':
@@ -102,6 +111,15 @@ class Form extends Admin_Controller {
 		
 		$html .= '</form>';
 		
+		$html .= <<< HTML
+			<script type="text/javascript">
+				function checkForm(obj) {
+					$js
+					
+					return true;
+				}
+			</script>
+HTML;
 		
 		echo $html;
 	}

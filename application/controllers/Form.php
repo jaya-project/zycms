@@ -27,7 +27,8 @@ class Form extends FRONT_Controller {
 		$data = $this->input->post();
 		
 		if (empty($data['validate']) || strtolower($data['validate']) != strtolower($this->session->userdata('code'))) {
-			die('不正确的验证码');
+			echo '<script type="text/javascript">alert("不正确的验证码"); window.history.back();</script>';
+			die;
 		}
 		
 		if (isset($data['formId']) && !empty($data['formId'])) {
@@ -52,18 +53,22 @@ class Form extends FRONT_Controller {
 					
 					$redirect_uri = isset($data['redirect_uri']) ? $data['redirect_uri'] : '/welcome/index';
 					
-					redirect($redirect_uri);
+					echo '<script type="text/javascript">alert("提交成功"); window.location.href=\''.$redirect_uri.'\';</script>';
+					die;
 					
 				} else {
-					die('提交失败');
+					echo '<script type="text/javascript">alert("提交失败"); window.history.back();</script>';
+					die;
 				}
 				
 				
 			} else {
-				die('不存在的表单');
+				echo '<script type="text/javascript">alert("不存在的表单"); window.history.back();</script>';
+				die;
 			}
 		} else {
-			die('需要表单ID');
+			echo '<script type="text/javascript">alert(“需要表单ID"); window.history.back();</script>';
+			die;
 		}
 	}
 	
