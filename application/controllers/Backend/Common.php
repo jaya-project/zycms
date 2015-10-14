@@ -35,7 +35,9 @@ class Common extends Admin_Controller {
 		{
 			$data = $this->upload->data();
 			
-			$this->add_water_mark($data['full_path']);
+			if (in_array($data['file_ext'], array('.jpg', '.gif', '.png'))) {
+				$this->add_water_mark($data['full_path']);
+			}
 			
 			die(json_encode(array('code'=>200, 'data'=>array_merge($data, array('relative_path'=>ltrim($config['upload_path'], '.'))), 'message'=>'上传成功')));
 		}	 
