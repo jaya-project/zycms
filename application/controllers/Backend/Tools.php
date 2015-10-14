@@ -441,7 +441,7 @@ class Tools extends Admin_Controller {
 				
 				
 				
-				if ($this->db->insert('archives', $main_table_data)) {
+				if ($main_table_data['title'] && $this->db->insert('archives', $main_table_data)) {
 					$id = $this->db->insert_id();
 					array_shift($content);
 					array_unshift($content, $id);
@@ -477,6 +477,7 @@ class Tools extends Admin_Controller {
 			$code = 200;
 			$message = '导入完成';
 			$data = '';
+			@unlink($import_file);
 		}
 		
 		die(json_encode(array('code'=>$code, 'message'=>$message, 'data'=>$data)));
