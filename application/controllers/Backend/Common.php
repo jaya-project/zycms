@@ -20,7 +20,7 @@ class Common extends Admin_Controller {
 	public function upload_image() 
 	{
 		if (!is_dir('./uploads/'.date('Y').'/'.date('m').'/'.date('d').'/')) {
-			@mkdir('./uploads/'.date('Y').'/'.date('m').'/'.date('d').'/', 777, true);
+			@mkdir('./uploads/'.date('Y').'/'.date('m').'/'.date('d').'/', 0777, true);
 		}
 		
 		$config['upload_path'] = './uploads/'.date('Y').'/'.date('m').'/'.date('d').'/';
