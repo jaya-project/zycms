@@ -27,6 +27,7 @@ class Common extends Admin_Controller {
 		
 		$config['allowed_types'] = 'gif|jpg|png|rar';
 		$config['max_size'] = '1024';
+		$config['encrypt_name'] = true;
 		$config['file_name'] = date('Y').'_'.date('m').'_'.date('d').'_'.time();
 		
 		$this->load->library('upload', $config);
