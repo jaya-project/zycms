@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/ui-dialog.css')?>" type="text/css" />
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/angular.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/jquery-1.10.2.min.js')?>"></script>
+	<script type="text/javascript" src="<?=base_url('assets/Admin/js/jquery.cookie.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/jquery.noty.packaged.min.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/common.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/validate.js')?>"></script>

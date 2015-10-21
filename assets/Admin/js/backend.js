@@ -932,6 +932,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 
 	
 	NG.modifyContent = function(id) {
+		Cookies.set('status', JSON.stringify({search:NG.search, currentPage:NG.currentPage}));
 		window.location.href=RootPath+"admin/document_add#"+id;
 	}
 	
@@ -959,6 +960,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 
 	
 	NG.getAllArticle = function(page) {
+		
 		var data = NG.search;
 		page = typeof page == 'undefined' ? 1 : page;
 		
@@ -995,7 +997,22 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		}
 	}
 	
-	NG.getAllArticle();
+	NG.clearSearch = function() {
+		NG.search = '';
+		Cookies.remove('status');
+		NG.currentPage = 1;
+		NG.getAllArticle();
+	}
+	
+	if (Cookies.get('status')) {
+		var status = JSON.parse(Cookies.get('status'));
+		console.log(status)
+		NG.search = status.search;
+		NG.getAllArticle(status.currentPage);
+	} else {
+		NG.getAllArticle();
+	}
+	
 	
 	if (NG.documentId != '') {
 		NG.getSpecifyDocument();

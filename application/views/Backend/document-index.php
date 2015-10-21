@@ -10,6 +10,7 @@
 	</select>
 	<input type="search" ng-model="search.keyword" placeholder="请输入文章标题" />
 	<button ng-click="getAllArticle()">搜索</button>
+	<button ng-click="clearSearch()">清空搜索</button>
   </div>
 
   <div class="content">
