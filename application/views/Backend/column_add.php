@@ -56,6 +56,36 @@
       <td>&nbsp;</td>
     </tr>
 	
+	<tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>SEO标题</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<input type="text" placeholder="SEO标题" ng-model="column.seo_title"  />
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	<tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>SEO关键词</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<input type="text" placeholder="SEO关键词" ng-model="column.seo_keywords"  />
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	<tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>SEO描述</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<textarea name="" id="" cols="40" rows="3" ng-model="column.seo_description" placeholder="SEO描述"></textarea>
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
 	 <tr>
       <td>&nbsp;</td>
       <td align="right"><span class="red"></span>栏目封面</td>
@@ -83,40 +113,20 @@
 	
 	<tr>
       <td>&nbsp;</td>
-      <td align="right"><span class="red"></span>SEO标题</td>
-      <td>&nbsp;</td>
-      <td class="okinput k1">
-		<input type="text" name="" id="" ng-model="column.seo_title" placeholder="seo标题" /> 
-	  </td>
-      <td>&nbsp;</td>
-    </tr>
-	
-	<tr>
-      <td>&nbsp;</td>
-      <td align="right"><span class="red"></span>SEO关键词</td>
-      <td>&nbsp;</td>
-      <td class="okinput k1">
-		<input type="text" name="" id="" ng-model="column.seo_keywords" placeholder="SEO关键词" /> 
-	  </td>
-      <td>&nbsp;</td>
-    </tr>
-	
-	<tr>
-      <td>&nbsp;</td>
-      <td align="right"><span class="red"></span>SEO描述</td>
-      <td>&nbsp;</td>
-      <td class="okinput k1">
-		<textarea  ng-model="column.seo_description" placeholder="SEO描述" cols="40" rows="3"></textarea> 
-	  </td>
-      <td>&nbsp;</td>
-    </tr>
-	
-	<tr>
-      <td>&nbsp;</td>
       <td align="right"><span class="red"></span>栏目内容</td>
       <td>&nbsp;</td>
       <td class="okinput k1">
 		<textarea ck-editor ng-model="column.content"></textarea>
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
+	<tr ng-repeat="rule in column.rules">
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>{{rule.type==1?'单页':(rule.type==2?'列表':'详细')}}规则</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1">
+		<input type="text" placeholder="目标规则" ng-model="rule.destination_rule"  /> <input type="text" style="border:1px solid #ccc;" placeholder="源规则" ng-model="rule.source_rule"  />
 	  </td>
       <td>&nbsp;</td>
     </tr>

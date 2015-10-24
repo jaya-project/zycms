@@ -56,6 +56,339 @@ Module.controller('icoCtrl', function($scope, $http, upload) {
 	
 });
 
+Module.controller('accessCtrl', function($scope, $http, upload) {
+	var NG = $scope;
+	
+	NG.getBrowserPercent = function() {
+		$http.post(RootPath + "Backend/tools/get_browser_percent").success(function(result) {
+			
+			if(result.code == 200 ) {
+				var data = result.data;
+				if (data.max > 0) {
+					var seriesData = [];
+					for (var i in data.series_data) {
+						seriesData.push({value:data.series_data[i], name:i});
+					}
+					
+					var myChart = echarts.init(document.getElementById('main'));
+					var option = {
+						title : {
+							text: data.title,
+							x:'center'
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+						},
+						legend: {
+							orient : 'vertical',
+							x : 'left',
+							data:data.legend_data
+						},
+						toolbox: {
+							show : true,
+							feature : {
+								mark : {show: true},
+								dataView : {show: true, readOnly: false},
+								magicType : {
+									show: true, 
+									type: ['pie', 'funnel'],
+									option: {
+										funnel: {
+											x: '25%',
+											width: '50%',
+											funnelAlign: 'left',
+											max: data.max
+										}
+									}
+								},
+								restore : {show: true},
+								saveAsImage : {show: true}
+							}
+						},
+						calculable : true,
+						series : [
+							{
+								name:'浏览器份额',
+								type:'pie',
+								radius : '55%',
+								center: ['50%', '60%'],
+								data: seriesData
+							}
+						]
+					};
+									
+					myChart.setOption(option);
+				}
+				
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getReferer = function() {
+		$http.post(RootPath + "Backend/tools/get_referer").success(function(result) {
+			
+			if(result.code == 200 ) {
+				var data = result.data;
+				if (data.max > 0) {
+					var seriesData = [];
+					for (var i in data.series_data) {
+						seriesData.push({value:data.series_data[i], name:i});
+					}
+					
+					var myChart = echarts.init(document.getElementById('referer'));
+					var option = {
+						title : {
+							text: data.title,
+							x:'center'
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter: "{a} <br/>{b} : {c} ({d}%)"
+						},
+						legend: {
+							orient : 'vertical',
+							x : 'left',
+							data:data.legend_data
+						},
+						toolbox: {
+							show : true,
+							feature : {
+								mark : {show: true},
+								dataView : {show: true, readOnly: false},
+								magicType : {
+									show: true, 
+									type: ['pie', 'funnel'],
+									option: {
+										funnel: {
+											x: '25%',
+											width: '50%',
+											funnelAlign: 'left',
+											max: data.max
+										}
+									}
+								},
+								restore : {show: true},
+								saveAsImage : {show: true}
+							}
+						},
+						calculable : true,
+						series : [
+							{
+								name:'来源统计',
+								type:'pie',
+								radius : '55%',
+								center: ['50%', '60%'],
+								data: seriesData
+							}
+						]
+					};
+									
+					myChart.setOption(option);
+				}
+				
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getPv = function() {
+		$http.post(RootPath + "Backend/tools/get_pv").success(function(result) {
+			
+			if(result.code == 200 ) {
+				var data = result.data;
+				var sData = [];
+				for (var i in data.result) {
+					var temp = data.result[i].date.split('-');
+					sData.push([
+						new Date(temp[0], temp[1], temp[2]),
+						data.result[i].count
+					]);
+				}
+				var myChart = echarts.init(document.getElementById('pv'));
+				var	option = {
+						title : {
+							text : data.title,
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter : function (params) {
+								var date = new Date(params.value[0]);
+								data = date.getFullYear() + '-'
+									   + (date.getMonth() + 1) + '-'
+									   + date.getDate() + ' '
+									   + date.getHours() + ':'
+									   + date.getMinutes();
+								return data + '<br/>'
+									   + params.value[1] + '个页面访问量';
+							}
+						},
+						toolbox: {
+							show : true,
+							feature : {
+								mark : {show: true},
+								dataView : {show: true, readOnly: false},
+								restore : {show: true},
+								saveAsImage : {show: true}
+							}
+						},
+						dataZoom: {
+							show: true,
+							start : 0
+						},
+						legend : {
+							data : ['pv']
+						},
+						grid: {
+							y2: 80
+						},
+						xAxis : [
+							{
+								type : 'time',
+								splitNumber:10
+							}
+						],
+						yAxis : [
+							{
+								type : 'value'
+							}
+						],
+						series : [
+							{
+								name: 'pv',
+								type: 'line',
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[1]/10) + 2;
+								},
+								data: sData,
+							}
+						]
+					};
+                    
+                    
+					myChart.setOption(option);
+				
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.getUv = function() {
+		$http.post(RootPath + "Backend/tools/get_uv").success(function(result) {
+			
+			if(result.code == 200 ) {
+				var data = result.data;
+				var sData = [];
+				for (var i in data.result) {
+					var temp = data.result[i].date.split('-');
+					sData.push([
+						new Date(temp[0], temp[1], temp[2]),
+						data.result[i].count
+					]);
+				}
+				var myChart = echarts.init(document.getElementById('uv'));
+				var	option = {
+						title : {
+							text : data.title,
+						},
+						tooltip : {
+							trigger: 'item',
+							formatter : function (params) {
+								var date = new Date(params.value[0]);
+								data = date.getFullYear() + '-'
+									   + (date.getMonth() + 1) + '-'
+									   + date.getDate() + ' '
+									   + date.getHours() + ':'
+									   + date.getMinutes();
+								return data + '<br/>'
+									   + params.value[1] + '个IP访问';
+							}
+						},
+						toolbox: {
+							show : true,
+							feature : {
+								mark : {show: true},
+								dataView : {show: true, readOnly: false},
+								restore : {show: true},
+								saveAsImage : {show: true}
+							}
+						},
+						dataZoom: {
+							show: true,
+							start : 0
+						},
+						legend : {
+							data : ['uv']
+						},
+						grid: {
+							y2: 80
+						},
+						xAxis : [
+							{
+								type : 'time',
+								splitNumber:10
+							}
+						],
+						yAxis : [
+							{
+								type : 'value'
+							}
+						],
+						series : [
+							{
+								name: 'uv',
+								type: 'line',
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[1]/10) + 2;
+								},
+								data: sData,
+							}
+						]
+					};
+                    
+                    
+					myChart.setOption(option);
+				
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.needClear = function() {
+		$http.post(RootPath + "Backend/tools/get_tongji_count").success(function(result) {
+			
+			if(result.code == 200 ) {
+				NG.needClear = result.data;
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.clear = function() {
+		$http.post(RootPath + "Backend/tools/clear_tongji").success(function(result) {
+			if(result.code == 200 ) {
+				generate({"text":result.message, "type":"success"});
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.needClear();
+	NG.getBrowserPercent();
+	NG.getPv();
+	NG.getUv();
+	NG.getReferer();
+});
+
 Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compile) {
 	var NG = $scope;
 	

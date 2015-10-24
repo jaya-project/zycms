@@ -8,7 +8,7 @@ class Column extends Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->load->model(array('column_model', 'archives_model', 'channel_model'));
+		$this->load->model(array('column_model', 'archives_model', 'channel_model', 'rule_model'));
 		$this->load->library(array('session'));
 		$this->load->helper(array('array', 'url'));
 		
@@ -16,6 +16,8 @@ class Column extends Admin_Controller {
 	
 	public function get_column() 
 	{
+		$data = $this->input->stream();
+		
 		$columns = $this->column_model->get_all(array('field'=>'sort', 'way'=>'asc'));
 		
 		$new_columns = array();
@@ -24,6 +26,13 @@ class Column extends Admin_Controller {
 		}
 		$columns = getTreeData(gen_tree($new_columns, 'pid'));
 		
+		if (isset($data['channelId']) && !empty($data['channelId'])) {
+			$columns = array_filter($columns, function($item) use ($data) {
+							return $item['channel_id'] == $data['channelId'];
+						});
+		}
+		
+		$columns = array_values($columns);
 		die(json_encode(array('code'=>200, 'data'=>$columns, 'message'=>'获取成功')));
 		
 	}
@@ -37,6 +46,7 @@ class Column extends Admin_Controller {
 		
 		if (isset($data['id'])) {
 			if ($data = $this->column_model->get_one($data['id'])) {
+				$data['rules'] = $this->rule_model->get_where("cid=$data[id]");
 				$response_data['code'] = 200;
 				$response_data['message'] = '获取成功';
 				$response_data['data'] = $data;
@@ -108,6 +118,7 @@ class Column extends Admin_Controller {
 		$data = array_diff_key($data, array('is_add'=>1));
 		
 		if ( $this->column_model->insert($data)) {
+			$this->_build_column_rule($this->column_model->get_insert_id());
 			$response_data['code'] = 200;
 			$response_data['message'] = '添加成功';
 			
@@ -130,7 +141,14 @@ class Column extends Admin_Controller {
 			}
 			
 		}
-		if ($this->column_model->update($data['id'], array_diff_key($data, array('id'=>1, 'is_edit'=>1)))) {
+		$rules = $data['rules'];
+		
+		if ($rules && is_array($rules)) {
+			$this->rule_model->delete_where("cid=$data[id]");
+			$this->rule_model->multiple_insert($rules);
+		}
+		
+		if ($this->column_model->update($data['id'], array_diff_key($data, array('id'=>1, 'is_edit'=>1, 'rules'=>1)))) {
 			$response_data['code'] = 200;
 			$response_data['message'] = '编辑成功';
 			
@@ -162,6 +180,7 @@ class Column extends Admin_Controller {
 			$this->delete_archives_under_column($data['id'], $row['channel_id']);
 			
 			if ($this->column_model->delete($data['id'])) {
+				$this->rule_model->delete_where("cid=$data[id]");
 				$response_data['code'] = 200;
 				$response_data['message'] = '删除成功';
 			} else {
@@ -207,6 +226,40 @@ class Column extends Admin_Controller {
 		die($this->mysort->set_model('column_model')->modify_sort($data['id'], $data['sort']));
 	}
 	
-	
+	/**
+	 *  生成规则
+	 */
+	private function _build_column_rule($columnId)
+	{
+		$this->load->library('Pinyin');
+		$columnRow = $this->column_model->get_one($columnId);
+		$channelRow = $this->channel_model->get_one($columnRow['channel_id']);
+		
+		$pinyin = $this->pinyin;
+		$table_name = $channelRow['table_name'];
+		$column_name = $pinyin::getPinyin($columnRow['column_name']);
+		$rules[] = array(
+							'cid' => $columnId,
+							'destination_rule' => $column_name . '.html',
+							'source_rule' => $column_name . '/index',
+							'type' => 1
+						);
+						
+		$rules[] = array(
+						'cid' => $columnId,
+						'destination_rule' => $column_name . "/$columnId-page.html",
+						'source_rule' => $table_name . "/category/$columnId/page/12",
+						'type' => 2
+					);
+		
+		$rules[] = array(
+						'cid' => $columnId,
+						'destination_rule' => $column_name . "/aid.html",
+						'source_rule' => $table_name . "/detail/aid",
+						'type' => 3
+					);			
+		$this->rule_model->multiple_insert($rules);
+		
+	}
 	
 }

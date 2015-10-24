@@ -4044,7 +4044,7 @@ INSERT INTO `zycms_right` (`id`, `name`, `resource`) VALUES
 (6, '内容碎片管理', 'admin@piece_list'),
 (7, '自定义表单', 'admin@form_list,admin@form_management'),
 (8, '用户管理', 'admin@right_list,admin@role_list,admin@user_list'),
-(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export,admin@black_list,admin@opera_log'),
+(9, '工具', 'admin@database_backup,admin@sitemap,admin@qr_code,admin@auto_push,admin@bat_export,admin@black_list,admin@opera_log,admin@ico_management,admin@access_tongji'),
 (10, '系统设置管理', 'admin@base_set,admin@nav_set,admin@water_image'),
 (11, '友情链接', 'admin@flink'),
 (12, '关键词管理', 'admin@hot_search,admin@keywords'),
@@ -4098,6 +4098,47 @@ INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`
 --
 -- Indexes for dumped tables
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_tongji`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_tongji` (
+  `id` int(10) unsigned NOT NULL,
+  `user_agent` varchar(255) NOT NULL COMMENT '用户代理(什么浏览器)',
+  `ip` int(11) NOT NULL COMMENT 'ip地址',
+  `date` date NOT NULL COMMENT '访问时间',
+  `referer` varchar(255) NOT NULL COMMENT '访问网站来源'
+) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=utf8 COMMENT='统计表';
+
+--
+-- 转存表中的数据 `zycms_tongji`
+--
+
+INSERT INTO `zycms_tongji` (`id`, `user_agent`, `ip`, `date`, `referer`) VALUES
+(82, '谷歌浏览器', -1062731643, '2015-10-24', '360搜索');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `zycms_tongji`
+--
+ALTER TABLE `zycms_tongji`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `zycms_tongji`
+--
+ALTER TABLE `zycms_tongji`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=87;
 
 --
 -- Indexes for table `zycms_ad`

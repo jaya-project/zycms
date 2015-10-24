@@ -73,6 +73,11 @@ class Admin extends Admin_Controller {
 		$this->view('column_add');
 	}
 	
+	public function access_tongji()
+	{
+		$this->view('access-tongji');
+	}
+	
 	public function document_list()
 	{
 		$this->view('document-index');

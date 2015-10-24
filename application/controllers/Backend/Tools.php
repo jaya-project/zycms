@@ -16,7 +16,7 @@ class Tools extends Admin_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->library(array('session', 'MyAuth'));
-		$this->load->model(array('column_model', 'channel_model', 'archives_model'));
+		$this->load->model(array('column_model', 'channel_model', 'archives_model', 'tongji_model'));
 		$this->load->helper(array('array', 'url', 'file'));
 		
 	}
@@ -481,6 +481,99 @@ class Tools extends Admin_Controller {
 		}
 		
 		die(json_encode(array('code'=>$code, 'message'=>$message, 'data'=>$data)));
+	}
+	
+	/**
+	 *  获取浏览器份额
+	 */
+	public function get_browser_percent()
+	{
+		$temp = $this->config->item('system');
+		$title = '访问'.$temp['system_set']['title'] . "浏览器份额统计";
+		
+		$result = $this->tongji_model->get_browser();
+		$legend_data = array_column($result, 'user_agent');
+		$series_data = array_combine($legend_data, array_column($result, 'count'));
+		$max = max(array_column($result, 'count'));
+		
+		die(json_encode(array('code'=>200, 'message'=>'成功', 'data'=>array(
+			'title' => $title,
+			'legend_data' => $legend_data,
+			'series_data' => $series_data,
+			'max' => $max,
+		))));
+	}
+	
+	/**
+	 *  获取每日pv
+	 */
+	public function get_pv()
+	{
+		$temp = $this->config->item('system');
+		$title = $temp['system_set']['title'] . "日均PV统计";
+		
+		$result = $this->tongji_model->get_pv();
+		
+		die(json_encode(array('code'=>200, 'message'=>'成功', 'data'=>array(
+			'title' => $title,
+			'result' => $result
+		))));
+	}
+	
+	/**
+	 *  获取每日uv
+	 */
+	public function get_uv()
+	{
+		$temp = $this->config->item('system');
+		$title = $temp['system_set']['title'] . "日均UV统计";
+		
+		$result = $this->tongji_model->get_uv();
+		
+		die(json_encode(array('code'=>200, 'message'=>'成功', 'data'=>array(
+			'title' => $title,
+			'result' => $result
+		))));
+	}
+	
+	/**
+	 *  获取来源统计
+	 */
+	public function get_referer()
+	{
+		$temp = $this->config->item('system');
+		$title = $temp['system_set']['title'] . "来源统计";
+		
+		$result = $this->tongji_model->get_referer();
+		$legend_data = array_column($result, 'referer');
+		$series_data = array_combine($legend_data, array_column($result, 'count'));
+		$max = max(array_column($result, 'count'));
+		
+		die(json_encode(array('code'=>200, 'message'=>'成功', 'data'=>array(
+			'title' => $title,
+			'legend_data' => $legend_data,
+			'series_data' => $series_data,
+			'max' => $max,
+		))));
+	}
+	
+	/**
+	 *  统计表数量
+	 */
+	public function get_tongji_count()
+	{
+		$data = $this->tongji_model->count_records();
+		$data = $data > 20 * 10000;
+		die(json_encode(array('code'=>200, 'message'=>'成功', 'data'=>$data)));
+	}
+	
+	/**
+	 *  清理统计
+	 */
+	public function clear_tongji()
+	{
+		$this->tongji_model->delete_where("1=1");
+		die(json_encode(array('code'=>200, 'message'=>'成功')));
 	}
 	
 	private function excel_time($date, $time = false)
