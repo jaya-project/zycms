@@ -14,6 +14,7 @@ class Build_html extends Admin_Controller {
 	
 	public function __construct() {
 		parent::__construct();
+		$this->load->database();
 		$this->load->model(array('column_model', 'rule_model', 'archives_model'));
 		$this->load->library(array('session', 'Pinyin', 'MyCategory'));
 		$this->load->helper(array('array', 'url', 'file'));
@@ -96,16 +97,18 @@ class Build_html extends Admin_Controller {
 			$columns 	= 	$data['columns'];
 			$key		=	$data['key'];
 		}
-		$v = $columns[$key];
-		if ($v['type'] == self::LISTPAGE) {
-			$this->build_list($v);
-		} else if ($v['type'] == self::DETAILPAGE) {
-			$this->build_detail($v);
-		} else {
-			$this->build_single($v);
+		if (isset($columns[$key]) && $v = $columns[$key]) {
+			if ($v['type'] == self::LISTPAGE) {
+				$this->build_list($v);
+			} else if ($v['type'] == self::DETAILPAGE) {
+				$this->build_detail($columns, $key);
+			} else {
+				$this->build_single($v);
+			}
 		}
-		$key++;
 		
+		
+		$key++;
 		if ($key >= sizeof($columns)) {
 			die(json_encode(array('code'=>200, 'message'=>"生成成功")));
 		} else {
@@ -113,7 +116,7 @@ class Build_html extends Admin_Controller {
 			if ($key == 1) {
 				$message = '共 ' . sizeof($columns) . '批<br />';
 			}
-			die(json_encode(array('code'=>201, 'message'=>"$message 第 $key 批生成成功<br />", 'data'=>array('columns'=>$columns, 'key'=>$key))));
+			die(json_encode(array('code'=>201, 'message'=>"$message 第 ".$key ." 批生成成功<br />", 'data'=>array('columns'=>$columns, 'key'=>$key))));
 		}
 		
 	}
@@ -136,7 +139,7 @@ class Build_html extends Admin_Controller {
 		if ($row['type'] == self::LISTPAGE) {
 			$this->build_list($row);
 		} else if ($row['type'] == self::DETAILPAGE) {
-			$this->build_detail($row);
+			$this->build_single_detail($row);
 		} else {
 			$this->build_single($row);
 		}
@@ -240,7 +243,7 @@ class Build_html extends Admin_Controller {
 	/**
 	 *  生成详细页面
 	 */
-	private function build_detail($v)
+	private function build_single_detail($v)
 	{
 		
 		$articles = $this->archives_model->get_where("cid=$v[id]");
@@ -258,6 +261,60 @@ class Build_html extends Admin_Controller {
 			$this->build($temp);
 			
 		}
+		
+	}
+	
+	/**
+	 *  生成详细页面
+	 */
+	public function build_detail($columns=array(), $key=0, $page=1, $length=10)
+	{
+		$data = $this->input->stream();
+		
+		if ($data) {
+			$columns = $data['columns'];
+			$key = $data['key'];
+			$page = isset($data['page']) ? $data['page'] : 1;
+			$length = isset($data['length']) ? $data['length'] : 10;
+		}
+		
+		$total_records = $this->archives_model->count_all("cid={$columns[$key]['id']}");
+		$total_pages = ceil($total_records / $length);
+		
+		if ($total_pages >= $page) {
+			$articles = $this->archives_model->get_all_after_search("cid={$columns[$key]['id']}", $page, $length);
+			
+			$ids = array_column($articles, 'id');
+			
+			
+			foreach ($ids as $id) {
+				
+				$temp = $columns[$key];
+				
+				$temp['destination_rule'] = str_replace('aid', $id, $temp['destination_rule']);
+				$temp['source_rule'] = str_replace('aid', $id, $temp['source_rule']);
+				
+				$this->build($temp);
+				
+			}
+			
+			die(json_encode(array('code'=>202, 'message'=>"正在生成第 $page 批详情页面 <br />", 'data'=>array(
+				'url' => '/Backend/build_html/build_detail',
+				'data' => array(
+					'columns' => $columns,
+					'key' => $key,
+					'page' => ++$page,
+					'length' => $length
+				)
+			))));
+			
+		} else {
+			die(json_encode(array('code'=>201, 'message'=>"第 $key 批生成成功<br />", 'data'=>array(
+					'columns' => $columns,
+					'key' => ++$key
+			))));
+		}
+		
 		
 	}
 	
