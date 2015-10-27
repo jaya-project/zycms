@@ -3525,8 +3525,24 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 				NG.maskHide();
 			} else if (result.code == 201) {
 				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
-				$('#noticeBox').scrollTop($('#noticeBox').height());
 				NG.asynBuildHtml(result.data);
+			} else if (result.code == 202) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.childProcess(result.data);
+			} else {
+				generate({"text":result.message, "type":"error"});
+			}
+		});
+	}
+	
+	NG.childProcess = function(data) {
+		$http.post(data.url, data.data).success(function(result) {
+			if(result.code == 201) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.asynBuildHtml(result.data);
+			} else if (result.code == 202) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.childProcess(result.data);
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
