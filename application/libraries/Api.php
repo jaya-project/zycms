@@ -13,7 +13,7 @@ class Api
 	public function __construct() {
 		$this->CI = & get_instance();
 		$this->CI->load->database();
-		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model', 'rule_model', 'keywords_model'));
+		$this->CI->load->model(array('column_model', 'flink_model', 'piece_model','archives_model', 'rule_model', 'keywords_model', 'channel_model'));
 		$this->CI->load->helper(array('array'));
 		$this->CI->load->library(array('MyCategory'));
 	}
@@ -475,6 +475,22 @@ class Api
 		
 		return substr($html, 0, strrpos($html, $separator));
 		
+	}
+	
+	/**
+	 *  获取某个内容模型的某个字段的默认值
+	 */
+	public function get_channel_field_default_value($channelId, $field)
+	{
+		$channelRow = $this->CI->channel_model->get_one($channelId);
+		$tableStruct = unserialize($channelRow['table_struct']);
+		$values = array();
+		array_walk($tableStruct, function($item, $key) use (&$values, $field) {
+			if (array_search($field, $item) !== false) {
+				$values = explode(',', $item['values']);
+			}
+		});
+		return $values;
 	}
 	
 	/**

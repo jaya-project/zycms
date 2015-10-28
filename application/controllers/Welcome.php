@@ -10,19 +10,10 @@ class Welcome extends FRONT_Controller {
 	
 	public function index() {
 
-		echo "<div style='height:1000px;'></div>";
-		echo "hello!zycms";
-		echo '<style type="text/css">.hover {color:#f00; font-size:14px;}</style>';
+		$this->load->library('api');
+		$condition['test'] = $this->api->get_channel_field_default_value(1, 'test');
 		
-		echo '<br /><a href="/welcome/test">关键词替换测试</a>';
-		
-		echo '<br /><a href="/welcome/articles">文章延迟发布测试</a>';
-		
-		echo '<script type="text/javascript" src="/assets/Front/js/jquery-1.7.2.min.js"></script>';
-		echo '<script type="text/javascript" src="/assets/Front/js/util.js"></script>';
-		
-		echo '<script type="text/javascript">$("a").changeStyle("hover");</script>';
-		echo '<button onclick="$.scrollToWhere(1000);">顶部</button>';
+		print_r($condition);
 	}
 	
 	public function test() {
