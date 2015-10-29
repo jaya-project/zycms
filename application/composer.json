@@ -1,7 +1,6 @@
 {
     "require": {
         "pclzip/pclzip": "2.8.2",
-		"PHPOffice/PHPExcel": "1.8",
-		"twig/twig": "1.x"
+		"PHPOffice/PHPExcel": "1.8"
     }
 }
