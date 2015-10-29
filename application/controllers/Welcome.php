@@ -10,10 +10,7 @@ class Welcome extends FRONT_Controller {
 	
 	public function index() {
 
-		$this->load->library('api');
-		$condition['test'] = $this->api->get_channel_field_default_value(1, 'test');
-		
-		print_r($condition);
+		echo $this->twig->render('index.php');
 	}
 	
 	public function test() {
