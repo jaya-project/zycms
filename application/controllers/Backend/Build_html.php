@@ -172,17 +172,20 @@ class Build_html extends Admin_Controller {
 		
 		$content = curl_exec($ch);
 		
-		
-		$destination = './'.$v['destination_rule'];
-		
-		
-		$dir = dirname($destination);
+		if ($content !== false) {
+			$destination = './'.$v['destination_rule'];
 		
 		
+			$dir = dirname($destination);
+			
+			
+			
+			@mkdir($dir, 0777, TRUE);
+			
+			write_file($destination, $content);
+		}
 		
-		@mkdir($dir, 0777, TRUE);
 		
-		write_file($destination, $content);
 		
 	}
 	
