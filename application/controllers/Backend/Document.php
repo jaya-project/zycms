@@ -482,6 +482,14 @@ EOF;
 		return array('html'=>$response_html, 'code'=>$code);
 	}
 	
+	public function modify_sort()
+	{
+		$data = $this->input->stream();
+		
+		$this->load->library('MySort');
+		die($this->mysort->set_model('archives_model')->modify_sort($data['id'], $data['sort']));
+	}
+	
 	private function get_additional_table_content($article_id)
 	{
 		

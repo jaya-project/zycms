@@ -1125,7 +1125,7 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	var NG = $scope;
 	NG.delayRelease = 0;
 	
-	NG.article = {'sort':0, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':'', 'delay_time':0};
+	NG.article = {'sort':50, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':'', 'delay_time':0};
 	
 	NG.documentId = window.location.hash.substring(1);
 	
@@ -1349,6 +1349,14 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	
 	if (NG.documentId != '') {
 		NG.getSpecifyDocument();
+	}
+	
+	NG.modifySort = function(id, sortValue) {
+		sortValue = parseInt(sortValue);
+		id = parseInt(id);
+		var data = {"id":id, "sort":sortValue};
+		var url = RootPath + "Backend/document/modify_sort";
+		sort.modifySort(url, data);
 	}
 	
 	

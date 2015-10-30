@@ -32,7 +32,7 @@
 			<td ><input type="checkbox" ng-click="d.is_chk=d.id" ng-true-value="{{d.id}}" value="{{d.id}}" ng-model="d.is_chk" /> <span ng-bind="d.id"></span></td>
               <td ng-bind="d.title"></td>
               <td ng-bind="d.column_name"></td>
-              <td ng-bind="d.sort"></td>
+              <td><input type="text" ng-model="d.sort" ng-blur="modifySort(d.id, d.sort)" style="width:50px; text-align:center;" /></td>
               <td><a ng-click="deleteArticle(d.id)" href="javascript:void(0)">删除</a> <a ng-click="modifyContent(d.id)" href="javascript:void(0)">修改</a></td>
             </tr>
   </tbody>
