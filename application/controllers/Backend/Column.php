@@ -141,7 +141,11 @@ class Column extends Admin_Controller {
 			}
 			
 		}
-		$rules = $data['rules'];
+		
+		$rules = '';
+		if (isset($data['rules'])) {
+			$rules = $data['rules'];
+		}
 		
 		if ($rules && is_array($rules)) {
 			$this->rule_model->delete_where("cid=$data[id]");
