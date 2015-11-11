@@ -285,7 +285,7 @@ class Build_html extends Admin_Controller {
 		$total_pages = ceil($total_records / $length);
 		
 		if ($total_pages >= $page) {
-			$articles = $this->archives_model->get_all_after_search("cid={$columns[$key]['id']}", $page, $length);
+			$articles = $this->archives_model->get_all_after_search("cid={$columns[$key]['id']}", $page, ($page-1) * $length);
 			
 			$ids = array_column($articles, 'id');
 			
