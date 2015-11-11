@@ -281,11 +281,11 @@ class Build_html extends Admin_Controller {
 			$length = isset($data['length']) ? $data['length'] : 10;
 		}
 		
-		$total_records = $this->archives_model->count_all("cid={$columns[$key]['id']}");
+		$total_records = $this->archives_model->count_all("cid={$columns[$key]['id']} AND is_delete=0");
 		$total_pages = ceil($total_records / $length);
 		
 		if ($total_pages >= $page) {
-			$articles = $this->archives_model->get_all_after_search("cid={$columns[$key]['id']}", $page, ($page-1) * $length);
+			$articles = $this->archives_model->get_all_after_search("cid={$columns[$key]['id']} AND is_delete=0", ($page-1) * $length, $length);
 			
 			$ids = array_column($articles, 'id');
 			
