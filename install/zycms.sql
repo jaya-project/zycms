@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2015-10-24 08:52:23
+-- Generation Time: 2015-11-13 08:28:12
 -- 服务器版本： 5.5.20-log
 -- PHP Version: 5.3.10
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `testcms`
+-- Database: `zycms`
 --
 
 -- --------------------------------------------------------
@@ -98,7 +98,30 @@ CREATE TABLE IF NOT EXISTS `zycms_archives` (
   `sub_column` varchar(255) NOT NULL COMMENT '副栏目ID',
   `is_delete` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否已删除(1,已删除 0,未删除)',
   `delay_time` int(10) NOT NULL DEFAULT '0' COMMENT '延迟发布时间'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='文章主表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='文章主表';
+
+--
+-- 转存表中的数据 `zycms_archives`
+--
+
+INSERT INTO `zycms_archives` (`id`, `title`, `sub_title`, `tag`, `thumb`, `seo_title`, `seo_keywords`, `seo_description`, `abstract`, `create_time`, `author`, `source`, `sort`, `click_count`, `recommend_type`, `cid`, `sub_column`, `is_delete`, `delay_time`) VALUES
+(3, '123', '', '', '', '', '', '', '123', 1443073918, 'admin', '原创', 1, 0, '', 1, '', 0, 0),
+(4, '123', '', '', '', '', '', '', '', 1444815353, 'admin', '', 2, 0, '', 1, '', 0, 0),
+(5, '234', '', '', '', '', '', '', '', 1445388768, 'admin', '原创', 3, 0, '', 1, '', 0, 0),
+(6, '456', '', '', '', '', '', '', '', 1445388775, 'admin', '原创', 4, 0, '', 1, '', 0, 0),
+(7, '789', '', '', '', '', '', '', '', 1445388780, 'admin', '原创', 5, 0, '', 1, '', 0, 0),
+(8, '654', '', '', '', '', '', '', '', 1445388787, 'admin', '原创', 6, 0, '', 1, '', 0, 0),
+(9, '632', '', '', '', '', '', '', '', 1445388794, 'admin', '原创', 7, 0, '', 1, '', 0, 0),
+(10, '789456', '', '', '', '', '', '', '', 1445388842, 'admin', '原创', 8, 0, '', 1, '', 0, 0),
+(11, '456789123', '', '', '', '', '', '', '', 1445388849, 'admin', '原创', 9, 0, '', 1, '', 0, 0),
+(12, '789123456789', '', '', '', '', '', '', '', 1445388859, 'admin', '原创', 0, 0, '', 1, '', 0, 0),
+(13, '1231qweqweq', '', '', '', '', '', '', '', 1445388871, 'admin', '原创', 0, 0, '', 1, '', 0, 0),
+(14, 'rfsrfwerw', '', '', '', '', '', '', '', 1445388876, 'admin', '原创', 50, 0, '', 1, '', 0, 0),
+(15, 'ewqewqeq', '', '', '', '', '', '', '', 1445388887, 'admin', '原创', 0, 0, '', 1, '', 0, 0),
+(16, '1eqweqw', '', '', '', '', '', '', '', 1445388895, 'admin', '原创', 0, 0, '', 1, '', 0, 0),
+(17, 'qewqewqeqw', '', '', '', '', '', '', '', 1445388903, 'admin', '原创', 0, 0, '', 1, '', 0, 0),
+(18, 'rfsafsdfsd', '', '', '', '', '', '', '', 1445388907, 'admin', '原创', 50, 0, '', 1, '', 0, 0),
+(19, '123', '', '', '', '', '', '', '', 1445993329, 'admin', '原创', 0, 0, '', 1, '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -3268,6 +3291,41 @@ INSERT INTO `zycms_areas` (`id`, `areaid`, `area`, `cityid`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `zycms_article`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_article` (
+  `id` int(10) unsigned NOT NULL COMMENT 'ID',
+  `body` text COMMENT '内容',
+  `test` varchar(255) DEFAULT NULL COMMENT '测试'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `zycms_article`
+--
+
+INSERT INTO `zycms_article` (`id`, `body`, `test`) VALUES
+(3, '<p>12312312321</p>\n', 'test'),
+(4, '123', '123'),
+(5, '', NULL),
+(6, '', NULL),
+(7, '', NULL),
+(8, '', NULL),
+(9, '', NULL),
+(10, '', NULL),
+(11, '', NULL),
+(12, '', NULL),
+(13, '', NULL),
+(14, '', NULL),
+(15, '', NULL),
+(16, '', NULL),
+(17, '', NULL),
+(18, '', NULL),
+(19, '', ',,,4,5');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `zycms_channel`
 --
 
@@ -3277,6 +3335,13 @@ CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `table_struct` text NOT NULL COMMENT '表结构(序列化)',
   `table_name` varchar(255) NOT NULL COMMENT '表名'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='内容模型';
+
+--
+-- 转存表中的数据 `zycms_channel`
+--
+
+INSERT INTO `zycms_channel` (`channel_id`, `channel_name`, `table_struct`, `table_name`) VALUES
+(1, '文章', 'a:2:{i:0;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:6:"内容";s:12:"channel_type";s:8:"htmltext";s:6:"values";s:0:"";}i:1;a:4:{s:6:"fields";s:4:"test";s:12:"label_fields";s:6:"测试";s:6:"values";s:9:"1,2,3,4,5";s:12:"channel_type";s:8:"checkbox";}}', 'article');
 
 -- --------------------------------------------------------
 
@@ -3663,8 +3728,35 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `is_nav` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否是导航(0,不是 1,是)',
   `sort` int(10) unsigned NOT NULL COMMENT '排序字段',
   `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='栏目表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='栏目表';
 
+--
+-- 转存表中的数据 `zycms_column`
+--
+
+INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `pid`, `column_thumb`, `summary`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
+(1, '新闻', '', 1, 0, '', '', '', '', '', '', 0, 0, 1),
+(3, '123', '', 1, 1, '', '', '123', '1234', '1235', '', 0, 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zycms_feedback`
+--
+
+CREATE TABLE IF NOT EXISTS `zycms_feedback` (
+  `id` int(10) unsigned NOT NULL COMMENT 'ID',
+  `username` varchar(255) DEFAULT NULL COMMENT '姓名',
+  `company_name` varchar(255) DEFAULT NULL COMMENT '公司名',
+  `body` text COMMENT '留言内容'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `zycms_feedback`
+--
+
+INSERT INTO `zycms_feedback` (`id`, `username`, `company_name`, `body`) VALUES
+(1, '123', '123', '123');
 
 -- --------------------------------------------------------
 
@@ -3698,8 +3790,14 @@ CREATE TABLE IF NOT EXISTS `zycms_forms` (
   `table_name` varchar(255) NOT NULL COMMENT '表名',
   `table_struct` text NOT NULL COMMENT '表单结构',
   `recevied` varchar(255) NOT NULL COMMENT '接收邮箱'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='自定义表单表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='自定义表单表';
 
+--
+-- 转存表中的数据 `zycms_forms`
+--
+
+INSERT INTO `zycms_forms` (`id`, `name`, `table_name`, `table_struct`, `recevied`) VALUES
+(1, '在线留言', 'feedback', 'a:3:{i:0;a:3:{s:6:"fields";s:8:"username";s:12:"label_fields";s:6:"姓名";s:9:"form_type";s:4:"text";}i:1;a:4:{s:6:"fields";s:12:"company_name";s:12:"label_fields";s:9:"公司名";s:9:"form_type";s:4:"text";s:6:"values";s:0:"";}i:2;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:12:"留言内容";s:9:"form_type";s:8:"textarea";s:6:"values";s:0:"";}}', 'church_qi@aliyun.com');
 
 -- --------------------------------------------------------
 
@@ -3712,16 +3810,7 @@ CREATE TABLE IF NOT EXISTS `zycms_hot_search` (
   `keywords` varchar(255) NOT NULL COMMENT '热搜关键词',
   `url` varchar(255) NOT NULL COMMENT '热搜链接',
   `sort` int(10) unsigned NOT NULL COMMENT '排序'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='热搜关键词表';
-
---
--- 转存表中的数据 `zycms_hot_search`
---
-
-INSERT INTO `zycms_hot_search` (`id`, `keywords`, `url`, `sort`) VALUES
-(1, '谷歌', 'http://www.google.com', 1),
-(2, '网易', 'http://www.163.com', 2),
-(3, '百度', 'http://www.baidu.com', 3);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='热搜关键词表';
 
 -- --------------------------------------------------------
 
@@ -3818,121 +3907,7 @@ CREATE TABLE IF NOT EXISTS `zycms_opera_log` (
   `opera_time` int(10) unsigned NOT NULL COMMENT '操作时间',
   `cm` varchar(255) NOT NULL COMMENT '控制器和方法',
   `user` varchar(255) NOT NULL COMMENT '操作用户'
-) ENGINE=MyISAM AUTO_INCREMENT=150 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
-
---
--- 转存表中的数据 `zycms_opera_log`
---
-
-INSERT INTO `zycms_opera_log` (`id`, `ip`, `opera_time`, `cm`, `user`) VALUES
-(42, -1062731643, 1442829527, 'log@get_data', 'admin'),
-(43, -1062731643, 1442829532, 'admin@black_list', 'admin'),
-(44, -1062731643, 1442829533, 'tools@get_black_list', 'admin'),
-(45, -1062731643, 1442829533, 'admin@opera_log', 'admin'),
-(46, -1062731643, 1442829533, 'log@get_data', 'admin'),
-(47, -1062731643, 1442829596, 'admin@opera_log', 'admin'),
-(48, -1062731643, 1442829596, 'log@get_data', 'admin'),
-(49, -1062731643, 1442829611, 'admin@database_backup', 'admin'),
-(50, -1062731643, 1442829611, 'tools@get_backup_file', 'admin'),
-(51, -1062731643, 1442829613, 'admin@sitemap', 'admin'),
-(52, -1062731643, 1442829616, 'admin@opera_log', 'admin'),
-(53, -1062731643, 1442829616, 'log@get_data', 'admin'),
-(54, -1062731643, 1442829685, 'admin@index', 'admin'),
-(55, -1062731643, 1442829685, 'admin@welcome', 'admin'),
-(56, -1062731643, 1442829688, 'admin@channel_list', 'admin'),
-(57, -1062731643, 1442829688, 'channel@get_model', 'admin'),
-(58, -1062731643, 1442829689, 'channel@get_channel_type', 'admin'),
-(59, -1062731643, 1445676118, 'admin@', 'church'),
-(60, -1062731643, 1445676118, 'admin@welcome', 'church'),
-(61, -1062731643, 1445676144, 'admin@form_list', 'church'),
-(62, -1062731643, 1445676144, 'form@get_form_type', 'church'),
-(63, -1062731643, 1445676144, 'form@get_form', 'church'),
-(64, -1062731643, 1445676145, 'template@get_template', 'church'),
-(65, -1062731643, 1445676162, 'admin@build_html', 'church'),
-(66, -1062731643, 1445676162, 'column@get_column', 'church'),
-(67, -1062731643, 1445676162, 'build_html@get_rule', 'church'),
-(68, -1062731643, 1445676169, 'admin@', 'church'),
-(69, -1062731643, 1445676170, 'admin@welcome', 'church'),
-(70, -1062731643, 1445676172, 'admin@build_html', 'church'),
-(71, -1062731643, 1445676172, 'column@get_column', 'church'),
-(72, -1062731643, 1445676172, 'build_html@get_rule', 'church'),
-(73, -1062731643, 1445676181, 'admin@build_html', 'church'),
-(74, -1062731643, 1445676195, 'admin@build_html', 'church'),
-(75, -1062731643, 1445676195, 'column@get_column', 'church'),
-(76, -1062731643, 1445676195, 'build_html@get_rule', 'church'),
-(77, -1062731643, 1445676246, 'admin@column_list', 'church'),
-(78, -1062731643, 1445676246, 'channel@get_model', 'church'),
-(79, -1062731643, 1445676246, 'column@get_column', 'church'),
-(80, -1062731643, 1445676248, 'admin@column_add', 'church'),
-(81, -1062731643, 1445676248, 'channel@get_model', 'church'),
-(82, -1062731643, 1445676248, 'column@get_column', 'church'),
-(83, -1062731643, 1445676249, 'admin@column_list', 'church'),
-(84, -1062731643, 1445676249, 'channel@get_model', 'church'),
-(85, -1062731643, 1445676249, 'column@get_column', 'church'),
-(86, -1062731643, 1445676250, 'admin@build_html', 'church'),
-(87, -1062731643, 1445676251, 'column@get_column', 'church'),
-(88, -1062731643, 1445676251, 'build_html@get_rule', 'church'),
-(89, -1062731643, 1445676280, 'admin@build_html', 'church'),
-(90, -1062731643, 1445676281, 'build_html@get_rule', 'church'),
-(91, -1062731643, 1445676281, 'column@get_column', 'church'),
-(92, -1062731643, 1445676331, 'admin@build_html', 'church'),
-(93, -1062731643, 1445676331, 'column@get_column', 'church'),
-(94, -1062731643, 1445676331, 'build_html@get_rule', 'church'),
-(95, -1062731643, 1445676343, 'build_html@save_rule', 'church'),
-(96, -1062731643, 1445676347, 'admin@build_html', 'church'),
-(97, -1062731643, 1445676347, 'column@get_column', 'church'),
-(98, -1062731643, 1445676347, 'build_html@get_rule', 'church'),
-(99, -1062731643, 1445676353, 'admin@build_html', 'church'),
-(100, -1062731643, 1445676353, 'column@get_column', 'church'),
-(101, -1062731643, 1445676353, 'build_html@get_rule', 'church'),
-(102, -1062731643, 1445676359, 'admin@build_html', 'church'),
-(103, -1062731643, 1445676359, 'column@get_column', 'church'),
-(104, -1062731643, 1445676359, 'build_html@get_rule', 'church'),
-(105, -1062731643, 1445676361, 'admin@build_html', 'church'),
-(106, -1062731643, 1445676361, 'column@get_column', 'church'),
-(107, -1062731643, 1445676361, 'build_html@get_rule', 'church'),
-(108, -1062731643, 1445676386, 'admin@build_html', 'church'),
-(109, -1062731643, 1445676386, 'column@get_column', 'church'),
-(110, -1062731643, 1445676386, 'build_html@get_rule', 'church'),
-(111, -1062731643, 1445676419, 'admin@form_list', 'church'),
-(112, -1062731643, 1445676419, 'form@get_form_type', 'church'),
-(113, -1062731643, 1445676419, 'form@get_form', 'church'),
-(114, -1062731643, 1445676420, 'template@get_template', 'church'),
-(115, -1062731643, 1445676495, 'form@add', 'church'),
-(116, -1062731643, 1445676495, 'admin@form_list', 'church'),
-(117, -1062731643, 1445676496, 'form@get_form_type', 'church'),
-(118, -1062731643, 1445676496, 'form@get_form', 'church'),
-(119, -1062731643, 1445676497, 'admin@form_list', 'church'),
-(120, -1062731643, 1445676498, 'form@get_form', 'church'),
-(121, -1062731643, 1445676498, 'form@get_form_type', 'church'),
-(122, -1062731643, 1445676506, 'admin@hot_search', 'church'),
-(123, -1062731643, 1445676507, 'hot_search@get_all', 'church'),
-(124, -1062731643, 1445676508, 'template@get_template', 'church'),
-(125, -1062731643, 1445676521, 'hot_search@save', 'church'),
-(126, -1062731643, 1445676521, 'hot_search@get_all', 'church'),
-(127, -1062731643, 1445676522, 'template@get_template', 'church'),
-(128, -1062731643, 1445676530, 'hot_search@save', 'church'),
-(129, -1062731643, 1445676530, 'hot_search@get_all', 'church'),
-(130, -1062731643, 1445676531, 'template@get_template', 'church'),
-(131, -1062731643, 1445676538, 'hot_search@save', 'church'),
-(132, -1062731643, 1445676538, 'hot_search@get_all', 'church'),
-(133, -1062731643, 1445676540, 'admin@keywords', 'church'),
-(134, -1062731643, 1445676540, 'keywords@get_all', 'church'),
-(135, -1062731643, 1445676543, 'template@get_template', 'church'),
-(136, -1062731643, 1445676575, 'admin@hot_search', 'church'),
-(137, -1062731643, 1445676576, 'hot_search@get_all', 'church'),
-(138, -1062731643, 1445676589, 'admin@templates', 'church'),
-(139, -1062731643, 1445676589, 'templates@get_templates', 'church'),
-(140, -1062731643, 1445676597, 'template@get_template', 'church'),
-(141, -1062731643, 1445676597, 'templates@get_template_content', 'church'),
-(142, -1062731643, 1445676619, 'admin@column_list', 'church'),
-(143, -1062731643, 1445676619, 'column@get_column', 'church'),
-(144, -1062731643, 1445676619, 'channel@get_model', 'church'),
-(145, -1062731643, 1445676620, 'admin@column_add', 'church'),
-(146, -1062731643, 1445676620, 'channel@get_model', 'church'),
-(147, -1062731643, 1445676620, 'column@get_column', 'church'),
-(148, -1062731643, 1445676700, 'admin@piece_list', 'church'),
-(149, -1062731643, 1445676700, 'piece@get_all', 'church');
+) ENGINE=MyISAM AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
 
 -- --------------------------------------------------------
 
@@ -4043,7 +4018,6 @@ CREATE TABLE IF NOT EXISTS `zycms_relationship` (
 --
 
 INSERT INTO `zycms_relationship` (`roleid`, `rid`) VALUES
-(6, 1),
 (6, 3),
 (6, 4),
 (6, 5),
@@ -4125,7 +4099,20 @@ CREATE TABLE IF NOT EXISTS `zycms_rule` (
   `destination_rule` varchar(2048) NOT NULL COMMENT '目标路径规则',
   `source_rule` varchar(2048) NOT NULL COMMENT '源路径规则',
   `type` tinyint(3) unsigned NOT NULL COMMENT '生成类型(1. 单页  2.列表 3.详细)'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='规则表';
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COMMENT='规则表';
+
+--
+-- 转存表中的数据 `zycms_rule`
+--
+
+INSERT INTO `zycms_rule` (`id`, `cid`, `destination_rule`, `source_rule`, `type`) VALUES
+(93, 0, 'index.html', 'welcome/index', 1),
+(94, 1, 'xinwen.html', 'xinwen/index', 1),
+(95, 1, 'xinwen/1-page.html', 'article/category/1/page/12', 2),
+(96, 1, 'xinwen/aid.html', 'article/detail/aid', 3),
+(100, 3, '123.html', '123/index', 1),
+(101, 3, '123/3-page.html', 'article/category/3/page/12', 2),
+(102, 3, '123/aid.html', 'article/detail/aid', 3);
 
 -- --------------------------------------------------------
 
@@ -4185,6 +4172,12 @@ ALTER TABLE `zycms_areas`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `zycms_article`
+--
+ALTER TABLE `zycms_article`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `zycms_channel`
 --
 ALTER TABLE `zycms_channel`
@@ -4200,6 +4193,12 @@ ALTER TABLE `zycms_cities`
 -- Indexes for table `zycms_column`
 --
 ALTER TABLE `zycms_column`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zycms_feedback`
+--
+ALTER TABLE `zycms_feedback`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4333,7 +4332,7 @@ ALTER TABLE `zycms_ad_position`
 -- AUTO_INCREMENT for table `zycms_archives`
 --
 ALTER TABLE `zycms_archives`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=4;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `zycms_areas`
 --
@@ -4353,7 +4352,12 @@ ALTER TABLE `zycms_cities`
 -- AUTO_INCREMENT for table `zycms_column`
 --
 ALTER TABLE `zycms_column`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=2;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `zycms_feedback`
+--
+ALTER TABLE `zycms_feedback`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `zycms_flink`
 --
@@ -4363,12 +4367,12 @@ ALTER TABLE `zycms_flink`
 -- AUTO_INCREMENT for table `zycms_forms`
 --
 ALTER TABLE `zycms_forms`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '表单ID',AUTO_INCREMENT=3;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '表单ID',AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `zycms_hot_search`
 --
 ALTER TABLE `zycms_hot_search`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '热搜关键词ID',AUTO_INCREMENT=4;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '热搜关键词ID';
 --
 -- AUTO_INCREMENT for table `zycms_image`
 --
@@ -4398,7 +4402,7 @@ ALTER TABLE `zycms_nav`
 -- AUTO_INCREMENT for table `zycms_opera_log`
 --
 ALTER TABLE `zycms_opera_log`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=150;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
 --
 -- AUTO_INCREMENT for table `zycms_order`
 --
@@ -4433,7 +4437,7 @@ ALTER TABLE `zycms_role`
 -- AUTO_INCREMENT for table `zycms_rule`
 --
 ALTER TABLE `zycms_rule`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=5;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=103;
 --
 -- AUTO_INCREMENT for table `zycms_tongji`
 --
