@@ -3290,38 +3290,7 @@ INSERT INTO `zycms_areas` (`id`, `areaid`, `area`, `cityid`) VALUES
 
 -- --------------------------------------------------------
 
---
--- 表的结构 `zycms_article`
---
 
-CREATE TABLE IF NOT EXISTS `zycms_article` (
-  `id` int(10) unsigned NOT NULL COMMENT 'ID',
-  `body` text COMMENT '内容',
-  `test` varchar(255) DEFAULT NULL COMMENT '测试'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `zycms_article`
---
-
-INSERT INTO `zycms_article` (`id`, `body`, `test`) VALUES
-(3, '<p>12312312321</p>\n', 'test'),
-(4, '123', '123'),
-(5, '', NULL),
-(6, '', NULL),
-(7, '', NULL),
-(8, '', NULL),
-(9, '', NULL),
-(10, '', NULL),
-(11, '', NULL),
-(12, '', NULL),
-(13, '', NULL),
-(14, '', NULL),
-(15, '', NULL),
-(16, '', NULL),
-(17, '', NULL),
-(18, '', NULL),
-(19, '', ',,,4,5');
 
 -- --------------------------------------------------------
 
@@ -3336,12 +3305,6 @@ CREATE TABLE IF NOT EXISTS `zycms_channel` (
   `table_name` varchar(255) NOT NULL COMMENT '表名'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='内容模型';
 
---
--- 转存表中的数据 `zycms_channel`
---
-
-INSERT INTO `zycms_channel` (`channel_id`, `channel_name`, `table_struct`, `table_name`) VALUES
-(1, '文章', 'a:2:{i:0;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:6:"内容";s:12:"channel_type";s:8:"htmltext";s:6:"values";s:0:"";}i:1;a:4:{s:6:"fields";s:4:"test";s:12:"label_fields";s:6:"测试";s:6:"values";s:9:"1,2,3,4,5";s:12:"channel_type";s:8:"checkbox";}}', 'article');
 
 -- --------------------------------------------------------
 
@@ -3740,23 +3703,7 @@ INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `
 
 -- --------------------------------------------------------
 
---
--- 表的结构 `zycms_feedback`
---
 
-CREATE TABLE IF NOT EXISTS `zycms_feedback` (
-  `id` int(10) unsigned NOT NULL COMMENT 'ID',
-  `username` varchar(255) DEFAULT NULL COMMENT '姓名',
-  `company_name` varchar(255) DEFAULT NULL COMMENT '公司名',
-  `body` text COMMENT '留言内容'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `zycms_feedback`
---
-
-INSERT INTO `zycms_feedback` (`id`, `username`, `company_name`, `body`) VALUES
-(1, '123', '123', '123');
 
 -- --------------------------------------------------------
 
@@ -3791,13 +3738,6 @@ CREATE TABLE IF NOT EXISTS `zycms_forms` (
   `table_struct` text NOT NULL COMMENT '表单结构',
   `recevied` varchar(255) NOT NULL COMMENT '接收邮箱'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='自定义表单表';
-
---
--- 转存表中的数据 `zycms_forms`
---
-
-INSERT INTO `zycms_forms` (`id`, `name`, `table_name`, `table_struct`, `recevied`) VALUES
-(1, '在线留言', 'feedback', 'a:3:{i:0;a:3:{s:6:"fields";s:8:"username";s:12:"label_fields";s:6:"姓名";s:9:"form_type";s:4:"text";}i:1;a:4:{s:6:"fields";s:12:"company_name";s:12:"label_fields";s:9:"公司名";s:9:"form_type";s:4:"text";s:6:"values";s:0:"";}i:2;a:4:{s:6:"fields";s:4:"body";s:12:"label_fields";s:12:"留言内容";s:9:"form_type";s:8:"textarea";s:6:"values";s:0:"";}}', 'church_qi@aliyun.com');
 
 -- --------------------------------------------------------
 
@@ -4171,11 +4111,7 @@ ALTER TABLE `zycms_archives`
 ALTER TABLE `zycms_areas`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `zycms_article`
---
-ALTER TABLE `zycms_article`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Indexes for table `zycms_channel`
@@ -4195,11 +4131,7 @@ ALTER TABLE `zycms_cities`
 ALTER TABLE `zycms_column`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `zycms_feedback`
---
-ALTER TABLE `zycms_feedback`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Indexes for table `zycms_flink`
@@ -4353,11 +4285,7 @@ ALTER TABLE `zycms_cities`
 --
 ALTER TABLE `zycms_column`
   MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '栏目ID',AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `zycms_feedback`
---
-ALTER TABLE `zycms_feedback`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `zycms_flink`
 --
