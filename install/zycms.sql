@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `zycms_admin` (
 
 INSERT INTO `zycms_admin` (`id`, `username`, `password`, `create_time`, `is_enable`, `rid`) VALUES
 (1, 'church', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-10 07:22:20', 1, 0),
-(3, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '2015-06-23 14:20:43', 1, 6),
+(3, 'admin', '96748968da17ca098c06cc53c4e087d0196cbdde', '2015-06-23 14:20:43', 1, 6),
 (4, 'test3', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', '2015-06-27 14:19:47', 1, 7),
 (5, 'test', '45b01e3985c9c49203b3c7d38913c4bb7e639899', '2015-08-01 03:35:07', 1, 7);
 
@@ -3693,13 +3693,6 @@ CREATE TABLE IF NOT EXISTS `zycms_column` (
   `level` tinyint(3) unsigned NOT NULL COMMENT '分类级别'
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='栏目表';
 
---
--- 转存表中的数据 `zycms_column`
---
-
-INSERT INTO `zycms_column` (`id`, `column_name`, `english_name`, `channel_id`, `pid`, `column_thumb`, `summary`, `seo_title`, `seo_keywords`, `seo_description`, `content`, `is_nav`, `sort`, `level`) VALUES
-(1, '新闻', '', 1, 0, '', '', '', '', '', '', 0, 0, 1),
-(3, '123', '', 1, 1, '', '', '123', '1234', '1235', '', 0, 0, 2);
 
 -- --------------------------------------------------------
 
