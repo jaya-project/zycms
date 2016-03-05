@@ -20,3 +20,8 @@
 .font-size-12 {font-size:12px;} 
 
 .button { width:80px; height:30px; text-align:center; line-height:30px;}
+
+.drop-box { width:400px; height:200px; text-align:center; line-height:200px; font-size:16px; border:1px solid #ccc;}
+.dragover { border:1px solid #f00;}
+
+.item:hover { background:#ccc; }

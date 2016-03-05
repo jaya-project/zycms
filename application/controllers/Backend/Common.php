@@ -51,6 +51,7 @@ class Common extends Admin_Controller {
 	
 	
 	
+	
 	public function add_water_mark($image_path)
 	{
 		$TEXT = '0';
@@ -112,6 +113,12 @@ class Common extends Admin_Controller {
 			die(json_encode(array('code'=>403, 'message'=>$this->upload->display_errors())));
 		}
 
+	}
+	
+	public function delete_file()
+	{
+		$data = $this->input->stream();
+		@unlink('.'.$data['path']);
 	}
 	
 	private function get_water_mark_config() 

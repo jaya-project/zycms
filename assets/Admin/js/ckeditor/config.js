@@ -9,5 +9,5 @@ CKEDITOR.editorConfig = function( config ) {
 	config.uiColor = '#ffffff';
 	config.width = "600px";
 	config.height = "200px";
-	config.allowedContent= true;
+	config.allowedContent = true;
 };

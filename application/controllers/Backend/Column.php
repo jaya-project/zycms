@@ -134,14 +134,19 @@ class Column extends Admin_Controller {
 	
 	public function column_edit($data) 
 	{
+		$column = $this->column_model->get_one($data['id']);
+		if ($this->archives_model->is_exists("cid=$data[id]") && $data['channel_id'] != $column['channel_id']) {
+			$response_data['code'] = 403;
+			$response_data['message'] = '更改失败, 请先删除该栏目下的文章并清空回收站';
+			die(json_encode($response_data));
+		}
 		//入库之前判断是否更换过图片
 		if ($row = $this->column_model->get_one($data['id'])) {
 			if ( $row['column_thumb'] != $data['column_thumb']) {
 				@unlink('.'.$row['column_thumb']);
 			}
-			
 		}
-		
+				
 		$rules = '';
 		if (isset($data['rules'])) {
 			$rules = $data['rules'];
@@ -152,7 +157,11 @@ class Column extends Admin_Controller {
 			$this->rule_model->multiple_insert($rules);
 		}
 		
-		if ($this->column_model->update($data['id'], array_diff_key($data, array('id'=>1, 'is_edit'=>1, 'rules'=>1)))) {
+		if (isset($data['cascading']) && !empty($data['cascading'])) {
+			$this->_cascading_update_sub_column_rule($data['id']);
+		}
+		
+		if ($this->column_model->update($data['id'], array_diff_key($data, array('id'=>1, 'is_edit'=>1, 'rules'=>1, 'cascading'=>1)))) {
 			$response_data['code'] = 200;
 			$response_data['message'] = '编辑成功';
 			
@@ -232,38 +241,103 @@ class Column extends Admin_Controller {
 	
 	/**
 	 *  生成规则
+	 *  如果有父栏目,根据父栏目规则生成规则
 	 */
 	private function _build_column_rule($columnId)
 	{
-		$this->load->library('Pinyin');
 		$columnRow = $this->column_model->get_one($columnId);
-		$channelRow = $this->channel_model->get_one($columnRow['channel_id']);
 		
-		$pinyin = $this->pinyin;
-		$table_name = $channelRow['table_name'];
-		$column_name = $pinyin::getPinyin($columnRow['column_name']);
-		$rules[] = array(
+		if ($columnRow['pid'] != 0) {
+			$rules = $this->_create_rule_by_parent_column($columnRow);
+		} else {
+			$this->load->library('Pinyin');
+			$channelRow = $this->channel_model->get_one($columnRow['channel_id']);
+			
+			$pinyin = $this->pinyin;
+			$table_name = $channelRow['table_name'];
+			$column_name = $pinyin::getPinyin($columnRow['column_name']);
+			$rules[] = array(
+								'cid' => $columnId,
+								'destination_rule' => $column_name . '.html',
+								'source_rule' => $column_name . '/index',
+								'type' => 1
+							);
+							
+			$rules[] = array(
 							'cid' => $columnId,
-							'destination_rule' => $column_name . '.html',
-							'source_rule' => $column_name . '/index',
-							'type' => 1
+							'destination_rule' => $column_name . "/$columnId-page.html",
+							'source_rule' => $table_name . "/category/$columnId/page/12",
+							'type' => 2
 						);
-						
-		$rules[] = array(
-						'cid' => $columnId,
-						'destination_rule' => $column_name . "/$columnId-page.html",
-						'source_rule' => $table_name . "/category/$columnId/page/12",
-						'type' => 2
-					);
+			
+			$rules[] = array(
+							'cid' => $columnId,
+							'destination_rule' => $column_name . "/aid.html",
+							'source_rule' => $table_name . "/detail/aid",
+							'type' => 3
+						);	
+		}
 		
-		$rules[] = array(
-						'cid' => $columnId,
-						'destination_rule' => $column_name . "/aid.html",
-						'source_rule' => $table_name . "/detail/aid",
-						'type' => 3
-					);			
 		$this->rule_model->multiple_insert($rules);
 		
+	}
+	
+	/**
+	 *  创建规则 
+	 */
+	private function _create_rule_by_parent_column($column)
+	{
+		$new_rules = array();
+		$parentColumn = current($this->column_model->get_where("id=$column[pid]"));
+		$rules = $this->rule_model->get_where("cid=$parentColumn[id]");
+		foreach ($rules as $rule) {
+			if ($rule['type'] == 1) {
+				$new_rules[] = array(
+										'cid' => $column['id'],
+										'destination_rule' => $rule['destination_rule'],
+										'source_rule' => $rule['source_rule'],
+										'type' => 1
+									);
+			} elseif ($rule['type'] == 2) {
+				$temp = explode('/', $rule['destination_rule']);
+				$temp[1] = "{$column['id']}-page.html";
+				$rule['destination_rule'] = join('/', $temp);
+				
+				$temp = explode('/', $rule['source_rule']);
+				$temp[2] = $column['id'];
+				$rule['source_rule'] = join('/', $temp);
+				$new_rules[] = array(
+										'cid' => $column['id'],
+										'destination_rule' => $rule['destination_rule'],
+										'source_rule' => $rule['source_rule'],
+										'type' => 2
+									);
+			} elseif ($rule['type'] == 3) {
+				$new_rules[] = array(
+										'cid' => $column['id'],
+										'destination_rule' => $rule['destination_rule'],
+										'source_rule' => $rule['source_rule'],
+										'type' => 3
+									);
+			}
+		}
+		
+		return $new_rules;
+	}
+	
+	/**
+	 *  级联更改子栏目规则 
+	 */
+	private function _cascading_update_sub_column_rule($id)
+	{
+		$columns = $this->column_model->get_where("pid=$id");
+		if ($columns) {
+			foreach ($columns as $column) {
+				$rules = $this->_create_rule_by_parent_column($column);
+				$this->rule_model->delete_where("cid=$column[id]");
+				$this->rule_model->multiple_insert($rules);
+			}
+		}
 	}
 	
 }

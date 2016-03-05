@@ -272,6 +272,7 @@ class Channel extends Admin_Controller {
 						break;
 				case 'textarea':
 				case 'htmltext':
+				case 'multiple_image':
 						$fields = " $data_fields TEXT CHARSET UTF8  COMMENT '$data_label_fields'";
 						break;
 						break;
@@ -317,7 +318,8 @@ class Channel extends Admin_Controller {
 			case 'select':
 			case 'file':
 			case 'image':
-			case 'multiple-image':
+			default:
+			case 'multiple_image':
 				$struct['type'] = 'VARCHAR';
 				$struct['constraint'] = '255';
 				break;

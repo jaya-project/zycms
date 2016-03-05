@@ -1,5 +1,13 @@
 <?php 
-
+/**
+ *  缩略图地址
+ */
+function thumbnail($path = '', $width = 30, $height = 30)
+{
+	$path = str_replace('/', '@_@', $path);
+	return site_url('/thumbnail/build/' . $path . '/'. $width. '/'. $height);
+}
+ 
 
 /**
  *  创建静态路径

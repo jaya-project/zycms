@@ -99,7 +99,7 @@ class Build_html extends Admin_Controller {
 		}
 		if (isset($columns[$key]) && $v = $columns[$key]) {
 			if ($v['type'] == self::LISTPAGE) {
-				$this->build_list($v);
+				$this->build_list($columns, $key);
 			} else if ($v['type'] == self::DETAILPAGE) {
 				$this->build_detail($columns, $key);
 			} else {
@@ -137,7 +137,7 @@ class Build_html extends Admin_Controller {
 		$row = $this->db->get()->row_array();
 		
 		if ($row['type'] == self::LISTPAGE) {
-			$this->build_list($row);
+			$this->build_single_list($row);
 		} else if ($row['type'] == self::DETAILPAGE) {
 			$this->build_single_detail($row);
 		} else {
@@ -192,8 +192,17 @@ class Build_html extends Admin_Controller {
 	/**
 	 *  生成某个栏目列表
 	 */
-	private function build_list($v)
+	public function build_list($columns=array(), $key=0)
 	{
+		$data = $this->input->stream();
+		if ($data) {
+			$columns = $data['columns'];
+			$key = $data['key'];
+		}
+		$page = isset($data['page']) ? $data['page'] : 1;
+		
+		$v = $columns[$key];
+		
 		$temp = explode('/', $v['source_rule']);
 		if (sizeof($temp) == 5) {
 			
@@ -202,32 +211,124 @@ class Build_html extends Admin_Controller {
 			// $arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
 			// $str_cid = implode(',', $arr_columns);
 			
-			$ids = get_node_children($this->columns, $v['id']);
+			if ($page == 1) {
+				$ids = get_node_children($this->columns, $v['id']);
 			
-			$str_cid = implode(',', $ids);
+				$str_cid = implode(',', $ids);
+				
+				$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
+				
+				$page_count = ceil($record_count / $temp[4]);
+				
+				$page_count == 0 && $page_count = 1;
+			} else {
+				$page_count = $data['page_count'];
+			}
 			
-			$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
 			
-			$page_count = ceil($record_count / $temp[4]);
-			
-			$page_count == 0 && $page_count = 1;
-			
-			for ($i=1; $i <= $page_count; $i++) {
+			if ($page <= $page_count) {
 				$temp = $v;
 				
-				$temp['destination_rule'] = str_replace('page', $i, $temp['destination_rule']);
-				$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
+				$temp['destination_rule'] = str_replace('page', $page, $temp['destination_rule']);
+				$temp['source_rule'] = str_replace('page', $page, $temp['source_rule']);
 				
 				$this->build($temp);
 				
-				if ($i == 1) {
+				if ($page == 1) {
 					$path_info = explode('/', $temp['destination_rule']);
 					$temp['destination_rule'] = '/' . $path_info[0] . '/index.html';
-					$temp['source_rule'] = str_replace('page', $i, $temp['source_rule']);
+					$temp['source_rule'] = str_replace('page', $page, $temp['source_rule']);
 					
 					$this->build($temp);
 				}
+				
+				die(json_encode(array('code'=>202, 'message'=>"正在生成第 $page 批列表页 <br />", 'data'=>array(
+					'url' => '/Backend/build_html/build_list',
+					'data' => array(
+						'columns' => $columns,
+						'key' => $key,
+						'page' => ++$page,
+						'page_count' => $page_count,
+					)
+				))));
+			} else {
+				die(json_encode(array('code'=>201, 'message'=>"第 $key 批生成成功<br />", 'data'=>array(
+						'columns' => $columns,
+						'key' => ++$key
+				))));
 			}
+				
+		
+		
+		}
+		
+	}
+	
+	/**
+	 *  生成某个栏目列表
+	 */
+	public function build_single_list($v = array())
+	{
+		$data = $this->input->stream();
+		
+		if (isset($data['v'])) {
+			$v = $data['v'];
+		}
+		$page = isset($data['page']) ? $data['page'] : 1;
+		
+		$temp = explode('/', $v['source_rule']);
+		if (sizeof($temp) == 5) {
+			
+			empty($temp[0]) && array_shift($temp);
+			
+			// $arr_columns = $this->mycategory->set_model('column_model')->get_sub_category($v['id']);
+			// $str_cid = implode(',', $arr_columns);
+			
+			if ($page == 1) {
+				$ids = get_node_children($this->columns, $v['id']);
+			
+				$str_cid = implode(',', $ids);
+				
+				$record_count = $this->db->where("cid in ($str_cid)")->get('archives')->num_rows();
+				
+				$page_count = ceil($record_count / $temp[4]);
+				
+				$page_count == 0 && $page_count = 1;
+			} else {
+				$page_count = $data['page_count'];
+			}
+			
+			
+			if ($page <= $page_count) {
+				$temp = $v;
+				
+				$temp['destination_rule'] = str_replace('page', $page, $temp['destination_rule']);
+				$temp['source_rule'] = str_replace('page', $page, $temp['source_rule']);
+				
+				$this->build($temp);
+				
+				if ($page == 1) {
+					$path_info = explode('/', $temp['destination_rule']);
+					$temp['destination_rule'] = '/' . $path_info[0] . '/index.html';
+					$temp['source_rule'] = str_replace('page', $page, $temp['source_rule']);
+					
+					$this->build($temp);
+				}
+				
+				die(json_encode(array('code'=>202, 'message'=>"正在生成第 $page 批列表页 <br />", 'data'=>array(
+					'url' => '/Backend/build_html/build_single_list',
+					'data' => array(
+						'v' => $v,
+						'page' => ++$page,
+						'page_count' => $page_count,
+					)
+				))));
+			} else {
+				die(json_encode(array('code'=>200, 'message'=>"生成成功<br />", 'data'=>array(
+						'v' => $v
+				))));
+			}
+				
 		
 		
 		}
@@ -246,23 +347,47 @@ class Build_html extends Admin_Controller {
 	/**
 	 *  生成详细页面
 	 */
-	private function build_single_detail($v)
+	public function build_single_detail($v = array())
 	{
+		$data = $this->input->stream();
 		
-		$articles = $this->archives_model->get_where("cid=$v[id]");
+		$v = isset($data['v']) ? $data['v'] : $v;
+		$length = isset($data['length']) ? $data['length'] : 10;
+		$page = isset($data['page']) ? $data['page'] : 1;
 		
-		$ids = array_column($articles, 'id');
+		$total_records = $this->archives_model->count_all("cid={$v['id']} AND is_delete=0");
+		$total_pages = ceil($total_records / $length);
 		
-		
-		foreach ($ids as $id) {
+		if ($total_pages >= $page) {
+			$articles = $this->archives_model->get_all_after_search("cid={$v['id']} AND is_delete=0", ($page-1) * $length, $length);
 			
-			$temp = $v;
+			$ids = array_column($articles, 'id');
 			
-			$temp['destination_rule'] = str_replace('aid', $id, $temp['destination_rule']);
-			$temp['source_rule'] = str_replace('aid', $id, $temp['source_rule']);
 			
-			$this->build($temp);
+			foreach ($ids as $id) {
+				
+				$temp = $v;
+				
+				$temp['destination_rule'] = str_replace('aid', $id, $temp['destination_rule']);
+				$temp['source_rule'] = str_replace('aid', $id, $temp['source_rule']);
+				
+				$this->build($temp);
+				
+			}
 			
+			die(json_encode(array('code'=>202, 'message'=>"正在生成第 $page 批详情页面 <br />", 'data'=>array(
+				'url' => '/Backend/build_html/build_single_detail',
+				'data' => array(
+					'v' => $v,
+					'page' => ++$page,
+					'length' => $length
+				)
+			))));
+			
+		} else {
+			die(json_encode(array('code'=>200, 'message'=>"生成成功<br />", 'data'=>array(
+					'v' => $v,
+			))));
 		}
 		
 	}

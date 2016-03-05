@@ -630,6 +630,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	   });
     });
 	
+	NG.column = {"rule_type":2};
 	
 	NG.addColumn = function() {
 		$.extend(NG.column, {"is_add":1});
@@ -675,6 +676,7 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 				if(result.code == 200 ) {
 					generate({'text':result.message, "type":'success'});
 					NG.column = {};
+					NG.columnId = false;
 					List.getAllColumn(NG);
 					NG.is_delete = 0;
 					
@@ -1121,9 +1123,11 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 	List.getAllColumn(NG);
 })
 
-Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile) {
+Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile, deleteFile) {
 	var NG = $scope;
 	NG.delayRelease = 0;
+	
+	NG.callbacks = [];
 	
 	NG.article = {'sort':50, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':'', 'delay_time':0};
 	
@@ -1206,6 +1210,11 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.article = {'sort':50, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':''};
+					NG.files = [];
+					for (var i in NG.callbacks) {
+						(NG.callbacks[i])();
+					}
+					NG.callbacks = [];
 					$('.newItem').remove();
 				} else {
 					generate({"text":result.message, "type":"error"});
@@ -3490,11 +3499,16 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	NG.buildSingleHtml = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/build_html/build_single_html',data).success(function(result) {
-				
+			NG.maskAndNoticeBoxShow();
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
+				NG.maskHide();
+			} else if (result.code == 202) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.childProcess(result.data);
 			} else {
 				generate({"text":result.message, "type":"error"});
+				NG.maskHide();
 			}
 		});
 	}
@@ -3516,6 +3530,9 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 				
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
+			} else if (result.code == 202) {
+				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
+				NG.childProcess(result.data);
 			} else if (result.code == 201) {
 				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
 				NG.asynBuildHtml(result.data);
@@ -3545,7 +3562,10 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	
 	NG.childProcess = function(data) {
 		$http.post(data.url, data.data).success(function(result) {
-			if(result.code == 201) {
+			if (result.code == 200) {
+				generate({"text":result.message, "type":"success"});
+				NG.maskHide();
+			} else if (result.code == 201) {
 				$('<span>'+result.message+'</span>').appendTo('#noticeBox');
 				NG.asynBuildHtml(result.data);
 			} else if (result.code == 202) {
@@ -3990,6 +4010,22 @@ Module.service('List', function($http) {
 	
 	return obj;
 });
+
+Module.service('deleteFile', function($http) {
+	var obj = {
+		doIt:function(data, NG, callback) {
+			callback = callback || function() {};
+			data = {path:data};
+			$http.post(RootPath + "Backend/common/delete_file", data).success(function(result) {
+				if(result.code == 200 ) {
+					(callback)(result.data);
+				}
+			});
+		},
+	};
+	
+	return obj;
+})
 
 Module.service('template', function($http) {
 	var obj = {

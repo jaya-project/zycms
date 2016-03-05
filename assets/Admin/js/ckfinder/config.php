@@ -29,8 +29,32 @@ function CheckAuthentication()
 	// ... where $_SESSION['IsAuthorized'] is set to "true" as soon as the
 	// user logs in your system. To be able to use session variables don't
 	// forget to add session_start() at the top of this file.
+	define('BASEPATH', true);
+	include $_SERVER['DOCUMENT_ROOT'] . '/application/config/config.php';
+	$sess_cookie_name = $config['sess_cookie_name'];
 	
+	$protocol = '';
+
+	if (stripos($_SERVER['SERVER_PROTOCOL'], 'http') !== FALSE) {
+		$protocol = 'http://';
+	} else {
+		$protocol = 'https://';
+	}
+	$domainUrl = $protocol . $_SERVER['HTTP_HOST'];
+	$validateUrl = $domainUrl . '/Backend/CkfinderValidate/index';
+	$strCookie="$sess_cookie_name=".$_COOKIE[$sess_cookie_name]; 
+	
+	$ch = curl_init($validateUrl);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_COOKIE, $strCookie);
+	
+	$data = json_decode(curl_exec($ch));
+	
+	if ($data->state == 'success') {
 		return true;
+	} else {
+		return false;
+	}
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be

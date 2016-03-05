@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9c34e62440e310a20472adf10687d10",
-    "content-hash": "7cbeb5e4ddca0e16b4f46269bf7aae19",
+    "hash": "0f26a70de6b12899da953f750707172f",
+    "content-hash": "7c51843d99b48c371d8552aae0edb9b8",
     "packages": [
         {
             "name": "pclzip/pclzip",
@@ -102,7 +102,55 @@
             "time": "2014-03-02 15:22:49"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "masterexploder/phpthumb",
+            "version": "2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/masterexploder/PHPThumb.git",
+                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/masterexploder/PHPThumb/01f6aa65aa3d136e175f67da2b4ea3e316770d02.zip",
+                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPThumb": "src",
+                    "PHPThumb\\Tests": "tests"
+                }
+            },
+            "notification-url": "https://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.orghttps://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarrod Nettles",
+                    "email": "jarrod.nettles@icloud.com"
+                },
+                {
+                    "name": "Ian Selby",
+                    "email": "ian@gxdlabs.com"
+                }
+            ],
+            "description": "A library for manipulating images in PHP.",
+            "homepage": "https://github.com/masterexploder/PHPThumb",
+            "keywords": [
+                "image",
+                "resize",
+                "rotate"
+            ],
+            "time": "2015-09-08 22:55:44"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],

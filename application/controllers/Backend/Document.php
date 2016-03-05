@@ -158,11 +158,18 @@ class Document extends Admin_Controller {
 			
 		if ($row = $this->column_model->get_one($data['cid'])) {
 			
+			$target_cid = $data['cid'];
 			$row = $this->channel_model->get_one($row['channel_id']);
 			
 			$table_name = $row['table_name'];
 			
 			if ($is_edit) {
+				$org_article = $this->archives_model->get_one($data['id']);
+				if ($this->_get_channel_type($target_cid) != $this->_get_channel_type($org_article['cid'])) {
+					$response_data['code'] = 403;
+					$response_data['message'] = '新栏目的内容模型必须与原栏目的内容模型一致';
+					die(json_encode($response_data));
+				}
 				$this->edit($archives_data_struct, $sub_archives_data_struct, $table_name, $data['id']);
 			} else {
 				$this->add($archives_data_struct, $sub_archives_data_struct, $table_name);
@@ -229,7 +236,22 @@ class Document extends Admin_Controller {
 			$response_data['message'] = '非法的ID';
 		}
 		
+		$row = $this->archives_model->get_one($data['id']);
+		$column = $this->column_model->get_one($row['cid']);
+		$channel = $this->channel_model->get_one($column['channel_id']);
+		$table_struct = unserialize($channel['table_struct']);
 		$sub_archives_table = $this->get_additional_table($data['id']);
+		$sub_archive = $this->db->where("id=$data[id]")->get($sub_archives_table)->row_array();
+		foreach ($table_struct as $key=>$value) {
+			if ($value['channel_type'] == 'multiple_image') {
+				$temps = explode(',', $sub_archive[$value['fields']]);
+				foreach ($temps as $path) {
+					@unlink('.'. $path);
+				}
+			} elseif ($value['channel_type'] == 'image') {
+				@unlink('.'. $sub_archive[$value['fields']]);
+			}
+		}
 		
 		$finally = isset($data['finally']) ? $data['finally'] : '';
 		
@@ -432,7 +454,37 @@ EOF;
 								});";
 					break;
 				
-				case 'multiple-image':
+				case 'multiple_image':
+					$html[$value['fields']]['text'] = $value['label_fields'];
+					$html[$value['fields']]['html'] = '';
+					$html[$value['fields']]['style'] = 'style="background:none!important;"';
+					$html[$value['fields']]['html'] .= '<div ngf-drop ngf-select class="drop-box" ng-model="'.$value['fields'].'"  ngf-drag-over-class="\'dragover\'" ngf-multiple="true"   ngf-pattern="\'image/*,application/pdf\'">把图片拖到这儿来</div> <div ngf-no-file-drop>你的浏览器不支持拖拽,不要用了吧!</div>';
+					$html[$value['fields']]['html'] .= <<< PREVIEW
+						<p ng-repeat="img in article.$value[fields]">
+							<img src="{{img}}" width="100" alt="" /> <button ng-click="drop_$value[fields]_item(\$index)">删除</button>
+						</p>
+PREVIEW;
+					$code[] = " if (typeof NG.article.$value[fields] != 'undefined' && NG.article.$value[fields]) {  NG.article.$value[fields] = String.prototype.split.call(NG.article.$value[fields], ','); console.log(NG.article); } else { NG.article.$value[fields] = [];} ";
+					$code[] = <<< JAVASCRIPT
+							
+							var unBindWatch_$value[fields] = NG.\$watch('$value[fields]', function () {
+								NG.article.$value[fields] = NG.article.$value[fields] || [];
+								upload.uploadFile('/Backend/common/upload_image', NG.$value[fields], NG, function(NG, data) {
+								   Array.prototype.push.call(NG.article.$value[fields], data.data.relative_path + data.data.file_name)
+							   });
+							});
+							
+							NG.callbacks.push(function() {
+								NG.$value[fields] = null;
+								unBindWatch_$value[fields]();
+							});
+							
+							NG.drop_$value[fields]_item = function(index) {
+								var temp = NG.article.$value[fields];
+								deleteFile.doIt(temp[index]);
+								NG.article.$value[fields].splice(index,1);
+							}
+JAVASCRIPT;
 					break;
 			}
 		}
@@ -531,6 +583,12 @@ EOF;
 			$response_data['message'] = '不存在的文章';
 		}
 		die(json_encode($response_data));
+	}
+
+	private function _get_channel_type($cid)
+	{
+		$column = $this->column_model->get_one($cid);
+		return $column['channel_id'];
 	}
 	
 }

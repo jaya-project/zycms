@@ -35,6 +35,18 @@
 	  </td>
       <td>&nbsp;</td>
     </tr>
+	
+	 <tr>
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>规则类型</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1" style="background:none!important;">
+		<input type="radio" ng-model="column.rule_type" value="1" /> 单页
+		<input type="radio" ng-model="column.rule_type" value="2" /> 列表页
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+	
 	 <tr>
       <td>&nbsp;</td>
       <td align="right"><span class="red">*</span>父栏目</td>
@@ -127,6 +139,16 @@
       <td>&nbsp;</td>
       <td class="okinput k1">
 		<input type="text" placeholder="目标规则" ng-model="rule.destination_rule"  /> <input type="text" style="border:1px solid #ccc;" placeholder="源规则" ng-model="rule.source_rule"  />
+	  </td>
+      <td>&nbsp;</td>
+    </tr>
+   
+   <tr ng-show="columnId">
+      <td>&nbsp;</td>
+      <td align="right"><span class="red"></span>级联更改子栏目规则</td>
+      <td>&nbsp;</td>
+      <td class="okinput k1" style="background:none!important;">
+		<input type="checkbox" ng-model="column.cascading" ng-true-value="1" />
 	  </td>
       <td>&nbsp;</td>
     </tr>

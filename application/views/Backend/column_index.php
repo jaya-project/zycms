@@ -20,7 +20,7 @@
 
               </thead>
             <tbody id="ResultTbody">
-			<tr ng-repeat="d in columns">
+			<tr ng-repeat="d in columns" class="item">
               <td ng-bind="d.id"></td>
               <td ng-bind="d.space+d.column_name"></td>
               <td><input type="text" ng-model="d.sort" ng-change="modifySort(d.id, d.sort)" style="width:50px; text-align:center;" /></td>
