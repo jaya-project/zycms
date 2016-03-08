@@ -8,27 +8,27 @@ Module.directive('ckEditor', function() {
     link: function(scope, elm, attr, ngModel) {
       var ck = CKEDITOR.replace(elm[0]);
 	  CKFinder.setupCKEditor( ck, '/assets/Admin/js/ckfinder/' );
-	  
+
       if (!ngModel) return;
-	  
+
 	  ck.on('instanceReady', function(value) {
 			ck.setData(ngModel.$viewValue);
 		});
-		
+
 	  ck.on('change', function() {
 		  scope.$apply(function() {
 			  ngModel.$setViewValue(ck.getData());
 			});
 	  })
-	  
+
 	  ck.on('key', function() {
 		 scope.$apply(function() {
 			  ngModel.$setViewValue(ck.getData());
 			});
 	  })
-		
+
       ck.on('pasteState', function() {
-		  
+
         scope.$apply(function() {
           ngModel.$setViewValue(ck.getData());
         });
@@ -41,27 +41,201 @@ Module.directive('ckEditor', function() {
   };
 });
 
+Module.directive('imageselect', function() {
+	return {
+		require: '?ngModel',
+		restrict: 'E',
+		template: '<button class="button ImageSelect">从服务器选择</button>',
+		replace: true,
+		link:function(scope, element, attr, ngModel) {
+			var directory = 'uploads';
+
+			var C = {
+				id: function(id) {
+					return $('#' + id);
+				},
+				class: function(cls) {
+					return $('.' + cls);
+				}
+			}
+
+			var Box = {
+				/**
+				 * 预览图
+				 * @type {String}
+				 */
+				_Preview: 'churchPreview',
+				/**
+				 * 遮层
+				 * @type {String}
+				 */
+				_Mask: 'churchMask',
+				/**
+				 * 图片选择器class
+				 * @type {String}
+				 */
+				_BoxClass: 'churchSelectBox',
+				/**
+				 * 返回上一级class
+				 * @type {String}
+				 */
+				_BoxBackClass: 'churchBack',
+				/**
+				 * 图片选择器目录class
+				 * @type {String}
+				 */
+				_BoxDirectoryClass: 'churchSelectBoxDirectory',
+				/**
+				 * 图片选择器图片class
+				 * @type {String}
+				 */
+				_BoxImageClass: 'churchSelectBoxImage',
+				/**
+				 * 目录访问栈
+				 * @type {String}
+				 */
+				_DirStack: [],
+				/**
+				 * 选择回调
+				 * @return {[type]} [description]
+				 */
+				_Callback: function() {},
+				/**
+				 * 初始化box
+				 * @param  {[type]} target [description]
+				 * @return {[type]}        [description]
+				 */
+				init: function(target) {
+					this._DirStack.length >= 1 ? '' : this._DirStack.push(directory);
+					return this;
+				},
+				/**
+				 * 绘制box
+				 * @return {[type]} [description]
+				 */
+				_RenderBox: function() {
+					$('<div id="' + this._Mask + '"></div>').appendTo('body');
+					$('<div class="churchSelectBox"></div>').appendTo('body');
+				},
+				/**
+				 * 获取图片
+				 * @return {[type]} [description]
+				 */
+				_GetImages: function(baseDir, flag) {
+					var _this = this,
+						baseDir = '';
+					flag && _this._DirStack.pop();
+					baseDir = _this._DirStack.join('/') + '/';
+					$.post('/Backend/common/GetFiles', {baseDir: baseDir}, function(result) {
+						var html = '';
+						if (_this._DirStack.length > 1) {
+							html += '<dl class="' + _this._BoxBackClass + '">';
+							html += '<dt><img src="/assets/Admin/images/iconfont-fanhuishangyijijiantou.png" /></dt>';
+							html += '<dd>返回上一级</dd>';
+							html += '</dl>';
+						}
+						for (var i in result.files.directories) {
+							html += '<dl class="' + _this._BoxDirectoryClass + '" value="' + result.files.directories[i] + '">';
+							html += '<dt><img src="/assets/Admin/images/iconfont-dianbozhibov1213.png" /></dt>';
+							html += '<dd>' + result.files.directories[i] + '</dd>';
+							html += '</dl>';
+						}
+
+						for (var i in result.files.files) {
+							html += '<dl class="' + _this._BoxImageClass + '" value="/' + baseDir + result.files.files[i] + '">';
+							html += '<dt><img src="/' + baseDir + result.files.files[i]  +'" /></dt>';
+							html += '<dd>' + result.files.files[i] + '</dd>';
+							html += '</dl>';
+						}
+
+						C.class(_this._BoxClass).html(html);
+						_this._BindEvents();
+					}, 'json');
+				},
+				_BindEvents: function() {
+					var _this = this;
+					/**
+					 * 目录点击事件
+					 */
+					C.class(_this._BoxDirectoryClass).on('click', function() {
+						var value = $(this).attr('value');
+						_this._DirStack.push(value);
+						_this._GetImages(value);
+					});
+					/**
+					 * 返回上一级点击事件
+					 */
+					C.class(_this._BoxBackClass).on('click', function() {
+						_this._GetImages($(this).attr('value'), true);
+					});
+					/**
+					 * 图片点击事件
+					 */
+					C.class(_this._BoxImageClass).on('click', function() {
+						var t = this;
+						scope.$apply(function() {
+							ngModel.$setViewValue($(t).attr('value'));
+						});
+						_this.clearAll();
+					}).on('mouseover', function() {
+						C.class(_this._Preview).html('<img src="' + $(this).attr('value') + '" style="max-width:400px; max-height:400px;" />');
+					});
+					/**
+					 * 空白处点击事件
+					 */
+					C.id(_this._Mask).click(function() {
+						_this.clearAll();
+					});
+				},
+				ImageSelect: function(callback) {
+					_this._Callback = callback;
+				},
+				/**
+				 * 清除所有box
+				 * @return {[type]} [description]
+				 */
+				clearAll: function() {
+					C.class(this._BoxClass).remove();
+					C.id(this._Mask).remove();
+					return this;
+				},
+				/**
+				 * 显示一个box
+				 * @return {[type]} [description]
+				 */
+				show: function() {
+					this._RenderBox();
+					this._GetImages();
+				}
+			};
+
+			$(element).on('click', function(event) {
+				Box.init().clearAll().show();
+			});
+		}
+	};
+});
 
 Module.controller('icoCtrl', function($scope, $http, upload) {
 	var NG = $scope;
-	
+
 	NG.icoPath = '/favicon.ico';
-	
+
 	NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/common/upload_ico', NG.files, NG, function(NG, data) {
 		   NG.icoPath = data.data.relative_path + data.data.file_name;
 		   window.location.reload();
 	   });
     });
-	
+
 });
 
 Module.controller('accessCtrl', function($scope, $http, upload) {
 	var NG = $scope;
-	
+
 	NG.getBrowserPercent = function() {
 		$http.post(RootPath + "Backend/tools/get_browser_percent").success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				var data = result.data;
 				if (data.max > 0) {
@@ -69,7 +243,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 					for (var i in data.series_data) {
 						seriesData.push({value:data.series_data[i], name:i});
 					}
-					
+
 					var myChart = echarts.init(document.getElementById('main'));
 					var option = {
 						title : {
@@ -91,7 +265,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 								mark : {show: true},
 								dataView : {show: true, readOnly: false},
 								magicType : {
-									show: true, 
+									show: true,
 									type: ['pie', 'funnel'],
 									option: {
 										funnel: {
@@ -117,19 +291,19 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 							}
 						]
 					};
-									
+
 					myChart.setOption(option);
 				}
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.getReferer = function() {
 		$http.post(RootPath + "Backend/tools/get_referer").success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				var data = result.data;
 				if (data.max > 0) {
@@ -137,7 +311,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 					for (var i in data.series_data) {
 						seriesData.push({value:data.series_data[i], name:i});
 					}
-					
+
 					var myChart = echarts.init(document.getElementById('referer'));
 					var option = {
 						title : {
@@ -159,7 +333,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 								mark : {show: true},
 								dataView : {show: true, readOnly: false},
 								magicType : {
-									show: true, 
+									show: true,
 									type: ['pie', 'funnel'],
 									option: {
 										funnel: {
@@ -185,19 +359,19 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 							}
 						]
 					};
-									
+
 					myChart.setOption(option);
 				}
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.getPv = function() {
 		$http.post(RootPath + "Backend/tools/get_pv").success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				var data = result.data;
 				var sData = [];
@@ -268,19 +442,19 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 							}
 						]
 					};
-                    
-                    
+
+
 					myChart.setOption(option);
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.getUv = function() {
 		$http.post(RootPath + "Backend/tools/get_uv").success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				var data = result.data;
 				var sData = [];
@@ -351,19 +525,19 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 							}
 						]
 					};
-                    
-                    
+
+
 					myChart.setOption(option);
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.needClear = function() {
 		$http.post(RootPath + "Backend/tools/get_tongji_count").success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				NG.needClear = result.data;
 			} else {
@@ -371,7 +545,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 			}
 		});
 	}
-	
+
 	NG.clear = function() {
 		$http.post(RootPath + "Backend/tools/clear_tongji").success(function(result) {
 			if(result.code == 200 ) {
@@ -381,7 +555,7 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 			}
 		});
 	}
-	
+
 	NG.needClear();
 	NG.getBrowserPercent();
 	NG.getPv();
@@ -391,37 +565,37 @@ Module.controller('accessCtrl', function($scope, $http, upload) {
 
 Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compile) {
 	var NG = $scope;
-	
+
 	var isEdit = $('#channelId').val() ? true : false;
-	
+
 	var channelId = $('#channelId').val();
-	
+
 	NG.modelArray = [];
-	
+
 	NG.channel = {"label_fields":'', 'fields':'', 'values':'', 'channel_type':'text'};
-	
+
 	NG.getModel = function() {
 		$http.post(RootPath + "Backend/channel/get_model").success(function(result) {
-			
+
 			if(result.code == 200 ) {
-				
+
 				NG.data = result.data;
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.modifyModel = function(channelId) {
 		NG.addingField = false;
 		NG.modifingField = false;
 		template.getTemplate('channel-modify', NG, function(result) {
 			NG.modifyModelCallback(result);
-			
+
 			NG.showModelStruct(channelId);
 		})
 	}
-	
+
 	NG.modifyModelCallback = function(content) {
 		$('#container').remove();
 		var content = $compile(content)(NG);
@@ -430,10 +604,10 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			'title' : '修改模型',
 			'content' : $('#container'),
 			'id' : 'container'
-			
+
 		}).show();
 	}
-	
+
 	NG.showModelStruct = function(channelId) {
 		var data = {channelId:channelId};
 		$http.post(RootPath + "Backend/channel/get_model_struct", data).success(function(result) {
@@ -445,7 +619,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			}
 		});
 	}
-	
+
 	NG.deleteFields = function(channelId, field) {
 		if (window.confirm('你确定要删除该字段吗? 删除后会丢失该字段的数据')) {
 			var data = {channel_id:channelId, field:field};
@@ -460,40 +634,40 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			});
 		}
 	}
-	
+
 	NG.cancelAdd = function() {
 		NG.addingField = false;
 	}
-	
+
 	NG.showAddUI = function() {
 		NG.newFields = [{'fields':'', 'label_fields':'', 'values':'', 'channel_type':'text'}];
 		NG.addingField = true;
 	}
-	
+
 	NG.addFieldRow = function() {
 		NG.newFields.push({'fields':'', 'label_fields':'', 'values':'', 'channel_type':'text'})
 	}
-	
+
 	NG.deleteFieldRow = function(index) {
 		NG.newFields.splice(index, 1);
 	}
-	
+
 	NG.addField = function(channelId) {
-		
+
 		var newFields = [];
 		for (var i in NG.newFields) {
 			if (typeof NG.newFields[i].fields != 'undefined' && NG.newFields[i].fields != '') {
 				newFields.push(NG.newFields[i]);
 			}
 		}
-		
+
 		if (newFields.length <= 0) {
 			generate({'text':'请至少填写一个字段', 'type':'error'});
 			return;
 		}
-		
+
 		var data = {"new_fields":newFields, "channel_id":channelId};
-		
+
 		$http.post(RootPath + "Backend/channel/add_channel_fields", data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -504,24 +678,24 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			}
 		});
 	}
-	
+
 	NG.showModifyUI = function(index) {
 		NG.modifingField = true;
 		NG.oldField = $.extend({}, NG.modelArray[index]);
 		NG.modifyIndex = index;
 	}
-	
+
 	NG.cancelModify = function() {
 		NG.modifingField = false;
 	}
-	
+
 	NG.modifyField = function(channelId) {
 		if (window.confirm('你真的要更改字段吗?已经添加的数据可能会受到影响')) {
 			if (typeof NG.oldField.fields == 'undefined' || NG.oldField.fields == '') {
 				generate({'text':'字段名不能为空', 'type':'error'});
 				return;
 			}
-			
+
 			var data = {"channel_id":channelId, "old_field":NG.oldField, "be_modified":NG.modelArray[NG.modifyIndex]};
 			$http.post(RootPath + "Backend/channel/modify_channel_field", data).success(function(result) {
 				if(result.code == 200 ) {
@@ -534,7 +708,7 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			});
 		}
 	}
-	
+
 	NG.deleteModel = function(channelId) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"channel_id":channelId};
@@ -548,12 +722,12 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 			});
 		}
 	}
-	
+
 	NG.addModel = function() {
 		var First = {'fields':NG.channel.fields, 'label_fields':NG.channel.label_fields, 'channel_type':NG.channel.channel_type, 'values':NG.channel.values};
-		
+
 		var data = {'table_struct':[First], 'channel_name':NG.channel.channel_name, 'table_name':NG.channel.table_name};
-		
+
 		if (NG.modelArray.length > 0) {
 			for (var i in NG.modelArray) {
 				if (NG.modelArray[i].fields) {
@@ -561,20 +735,20 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 				}
 			}
 		}
-		
+
 		var url = isEdit ? RootPath + 'Backend/channel/edit' : RootPath + "Backend/channel/add";
-		
+
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
 					window.location.reload();
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getSpecifyModel = function() {
 		if (!channelId) {
 			generate({'text':'ID不正确', 'type':'error'});
@@ -587,72 +761,72 @@ Module.controller('modelCtrl', function($scope, $http, sConfig, template, $compi
 					for (var i in result.data.table_struct) {
 						NG.modelArray.push(result.data.table_struct[i]);
 					}
-					
+
 					var temp = NG.modelArray.shift();
-					
+
 					$.extend(NG.channel, temp);
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 		}
 	}
-	
+
 	if (isEdit) {
 		NG.getSpecifyModel();
 	}
-	
+
 	NG.addTableTr = function() {
 		NG.modelArray.push({'fields':'', 'label_fields':'', 'values':'', 'channel_type':'text'});
 	}
-	
+
 	NG.deleteTableTr = function(index) {
 		NG.modelArray.splice(index, 1);
 	}
-	
+
 	sConfig.getChannelTypeConfig(NG);
-	
-	
-	
+
+
+
 	NG.getModel();
 });
 
 Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 	var NG = $scope;
-	
+
 	NG.columnId = window.location.hash.substring(1);
-	
-	
+
+
 	 NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.column = $.extend({}, NG.column, {'column_thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
-	
+
 	NG.column = {"rule_type":2};
-	
+
 	NG.addColumn = function() {
 		$.extend(NG.column, {"is_add":1});
 		NG.saveColumn();
 	}
-	
+
 	NG.modifyColumn = function(id) {
 		window.location.href = RootPath + 'admin/column_add#' + id;
 	}
-	
+
 	NG.getSpecifyColumn = function() {
 		var data = {"id":NG.columnId};
 		$http.post(RootPath + "Backend/column/get_specify_column", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.column = result.data;
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.deleteColumn = function(id) {
 		if(window.confirm('你确定要删除吗?')) {
 			var data = {"id":id};
@@ -666,11 +840,11 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 			});
 		}
 	}
-	
+
 	NG.saveColumn = function() {
 		var data = NG.column;
 		var pid = typeof NG.column.pid == 'undefined' || NG.column.pid == null ? 0 : NG.column.pid;
-		
+
 		$.extend(data, {'pid':pid});
 		$http.post(RootPath + "Backend/column/column_save", data).success(function(result) {
 				if(result.code == 200 ) {
@@ -679,18 +853,18 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 					NG.columnId = false;
 					List.getAllColumn(NG);
 					NG.is_delete = 0;
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.updateColumn = function() {
 		$.extend(NG.column, {"is_edit":1});
 		NG.saveColumn();
 	}
-	
+
 	NG.modifySort = function(id, sortValue) {
 		sortValue = parseInt(sortValue);
 		id = parseInt(id);
@@ -698,32 +872,32 @@ Module.controller('columnCtrl', function($scope, $http, upload, List, sort) {
 		var url = RootPath + "Backend/column/modify_sort";
 		sort.modifySort(url, data);
 	}
-	
+
 	if (NG.columnId != '') {
 		NG.getSpecifyColumn();
 	}
-	
+
 	List.getChannelType(NG);
-  
+
     List.getAllColumn(NG);
-	
-	
-	
+
+
+
 })
 
 Module.controller('autoPushCtrl', function($scope, $http) {
 	var NG = $scope;
-	
+
 	NG.autoPush = function() {
 		if (typeof NG.push == 'undefined') {
 			generate({'text':'请至少填写一个链接', 'type':'error'});
 			return;
 		}
-		
+
 		var data = NG.push;
-		
-		
-		
+
+
+
 		$http.post(RootPath + 'Backend/tools/auto_push', data).success(function(result) {
 			if(result.code == 200 ) {
 				var message = '';
@@ -741,21 +915,21 @@ Module.controller('autoPushCtrl', function($scope, $http) {
 
 Module.controller('messageCtrl', function($scope, $http, List, $compile, template) {
 	var NG = $scope;
-	
+
 	NG.message = {};
-	
-	
+
+
 	NG.showMessageList = function(id) {
-		
-		
+
+
 		template.getTemplate('message-list', NG, function(content) {
 			NG.showMessageListCallback(content);
-			
+
 			NG.getReplyMessage(id);
 		});
-		
+
 	}
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.data) {
@@ -767,24 +941,24 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 			}
 		}
 	}
-	
+
 	NG.batDelete = function() {
 		if (window.confirm('你确定要删除吗?')) {
-			
+
 			var ids = [];
 			for (var i in NG.data) {
 				if (typeof NG.data[i].is_chk != 'undefined') {
 					ids.push(NG.data[i].id);
 				}
 			}
-			
+
 			if (ids.length <= 0) {
 				generate({'text':'请至少选择一条消息', 'type':'error'});
 				return;
 			}
-			
+
 			var data = {"ids":ids};
-			
+
 			$http.post(RootPath + 'Backend/message/bat_delete', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -794,25 +968,25 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
-		
+
+
 		}
 	}
-	
+
 	NG.sendMessage = function() {
 		var data = NG.message;
-		
+
 		if (typeof data.title == 'undefined') {
 			generate({'text':'标题不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof data.content == 'undefined') {
 			generate({'text':'内容不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		$http.post(RootPath + 'Backend/message/send_message', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -823,30 +997,30 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 			}
 		});
 	}
-	
+
 	NG.getReplyMessage = function(id) {
 		var data = {"id":id};
 		$http.post(RootPath + "Backend/message/get_reply_message", data).success(function(result) {
 			if(result.code == 200 ) {
 				var data = $compile(result.data)(NG);
 				$(data).appendTo('#message-list');
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.showReplyUI = function(id) {
-		
+
 		template.getTemplate('send-message', NG, function(content) {
 			NG.showReplyUICallback(content);
-			
+
 		});
-		
+
 		NG.message.pid = id;
 	}
-	
+
 	NG.showReplyUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#showSendMessage').remove();
@@ -856,10 +1030,10 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 			'title' : '消息回复',
 			'content' : $('#showSendMessage'),
 			'id' : 'showSendMessage'
-			
+
 		}).show();
 	}
-	
+
 	NG.deleteMessage = function(id, obj) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"id":id};
@@ -868,27 +1042,27 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 					generate({"text":result.message, "type":"success"});
 					$('.ui-dialog-close').click();
 					NG.getContent();
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 		}
 	}
-	
+
 	NG.searchMessage = function() {
 		var data = {"id":NG.memberId};
-		
+
 		$http.post(RootPath + "Backend/message/search_message", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data;
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.showMessageListCallback = function(content) {
 		$('.ui-popup').remove();
 		$('#messageList').remove();
@@ -898,32 +1072,32 @@ Module.controller('messageCtrl', function($scope, $http, List, $compile, templat
 			'title' : '消息回复列表',
 			'content' : $('#messageList'),
 			'id' : 'messageList'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.getContent = function(id) {
 		var data = {"id":0};
 		$http.post(RootPath + "Backend/message/get_all", data).success(function(result) {
 			if(result.code == 200 ) {
 				NG.data = result.data;
-				
+
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	List.getAllMembers(NG);
-	
+
 	NG.getContent();
-	
+
 })
 
 Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $compile) {
 	var NG = $scope;
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.data) {
@@ -934,9 +1108,9 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 				delete NG.data[i].is_chk;
 			}
 		}
-		
+
 	}
-	
+
 	NG.clean = function() {
 		if (window.confirm('真的要清空回收站吗?清空后不可恢复!')) {
 			$http.post(RootPath + "Backend/document/clean").success(function(result) {
@@ -949,7 +1123,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 			});
 		}
 	}
-	
+
 	NG.batDelete = function() {
 		if (window.confirm('你真的要删除吗?删除后不可恢复!')) {
 			var ids = [];
@@ -958,45 +1132,45 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 					ids.push(NG.data[i].id);
 				}
 			}
-			
+
 			var data = {"ids":ids, "finally":1};
-			
+
 			$http.post(RootPath + "Backend/document/bat_delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllArticle();
-					 
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 		}
 	}
-	
-	
+
+
 	NG.getAllArticle = function(page) {
 		var data = NG.search;
 		page = typeof page == 'undefined' ? 1 : page;
-		
+
 		data = $.extend({}, data, {page:page, 'is_delete':1});
-		
+
 		$http.post(RootPath + "Backend/document/get_article", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data.data;
 					NG.totalPages = [];
 					NG.totalPages2 = result.data.total_pages;
-					
+
 					for (var i=1; i<=result.data.total_pages; i++) {
 						NG.totalPages.push(i);
 					}
-					
+
 					NG.currentPage = result.data.current_page;
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.restoreDocument = function(type,id) {
 		var ids = [];
 		for (var i in NG.data) {
@@ -1004,10 +1178,10 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 				ids.push(NG.data[i].id);
 			}
 		}
-		
+
 		typeof id != 'undefined' && ids.push(id);
-		
-		
+
+
 		switch(type) {
 			case 1: //还原单个文档
 				break;
@@ -1024,8 +1198,8 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 				}
 				break;
 		}
-		
-		
+
+
 		var data = {"ids":ids};
 		$http.post(RootPath + "Backend/document/restore_document", data).success(function(result) {
 				if(result.code == 200 ) {
@@ -1036,7 +1210,7 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 				}
 			});
 	}
-	
+
 	NG.deleteArticle = function(id) {
 		if (window.confirm('你真的删除这篇文章吗?')) {
 			var data = {"id":id, 'finally':1};
@@ -1050,17 +1224,17 @@ Module.controller('restoreCtrl', function($http, $scope, upload, List, sort, $co
 				});
 		}
 	}
-	
+
 	NG.getAllArticle();
-	
-	
+
+
 	List.getAllColumn(NG);
-	
+
 })
 
 Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) {
 	var NG = $scope;
-	
+
 	NG.$watch('files', function () {
 		if (NG.files) {
 			NG.maskAndNoticeBoxShow();
@@ -1074,29 +1248,29 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 			   } else if (data.code == 201) {
 					$('<span>'+data.message+'</span>').appendTo('#noticeBox');
 				   NG.exportSub(data.data);
-				  
+
 			   } else {
 				   generate({"text":data.message, "type":"error"});
 				   NG.maskHide();
 			   }
 			});
 		}
-		
-		
+
+
     });
-	
+
 	NG.maskAndNoticeBoxShow = function() {
 		$('<div id="mask"></div>').appendTo('body');
 		$('<div id="noticeBox"><span>正在上传文件,请稍候...</span></div>').appendTo('body');
 	}
-	
+
 	NG.maskHide = function() {
 		$('#mask').remove();
 		$('#noticeBox').remove();
 	}
-	
 
-	
+
+
 	NG.exportSub = function(data) {
 		$http.post(RootPath + "Backend/tools/import_company_each_time", data).success(function(result) {
 			if(result.code == 200) {
@@ -1110,36 +1284,36 @@ Module.controller('exportCtrl', function($http, $scope, Upload, List, $compile) 
 			}
 		});
 	}
-	
+
 	NG.downloadTemplate = function() {
 		if (typeof NG.search.cid == 'undefined') {
 			generate({'text':'请先选择栏目', 'type':'error'});
 			return;
 		}
-		
+
 		window.open(RootPath + 'download/columnTemplate/'+NG.search.cid);
 	}
-	
+
 	List.getAllColumn(NG);
 })
 
 Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $compile, deleteFile) {
 	var NG = $scope;
 	NG.delayRelease = 0;
-	
+
 	NG.callbacks = [];
-	
+
 	NG.article = {'sort':50, 'author':'admin', 'source':'原创', 'seo_title':'', 'seo_description':'', 'seo_keywords':'', 'tag':'', 'delay_time':0};
-	
+
 	NG.documentId = window.location.hash.substring(1);
-	
-	
+
+
 	 NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.article = $.extend({}, NG.article, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.data) {
@@ -1150,9 +1324,9 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				delete NG.data[i].is_chk;
 			}
 		}
-		
+
 	}
-	
+
 	NG.batDelete = function() {
 		if (window.confirm('你真的要删除吗?')) {
 			var ids = [];
@@ -1161,51 +1335,51 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 					ids.push(NG.data[i].id);
 				}
 			}
-			
+
 			var data = {"ids":ids};
-			
+
 			if (ids.length == 0) {
 				generate({"text":'请至少选择一个文档', "type":"error"});
 				return;
 			}
-			
+
 			$http.post(RootPath + "Backend/document/bat_delete", data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.getAllArticle();
-					 
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 		}
 	}
-	
+
 	NG.getStruct = function(id) {
-		
+
 		$('.newItem').remove();
-		
+
 		var data = {"id":id};
 		$http.post(RootPath + "Backend/document/get_column_struct", data).success(function(result) {
 				if(result.code == 200 ) {
-					
+
 					var data = $compile(result.data.html)(NG);
 					$(data).insertAfter($('#thumb'));
-					
+
 					for(var i in result.data.code) {
 						// console.log(result.data.code[i])
 						eval(result.data.code[i])
 					}
-					
-					 
+
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.saveContent = function(url, data) {
-		
+
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1221,68 +1395,68 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				}
 			});
 	}
-	
+
 	NG.addContent = function() {
 		if (typeof NG.article.title == 'undefined') {
 			generate({'text':'请填写标题', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.article.cid == 'undefined') {
 			generate({'text':'请选择栏目ID', 'type':'error'});
 			return;
 		}
-		
+
 		var data = NG.article;
-		
+
 		var url = RootPath + "Backend/document/save";
-		
+
 		for (var i in data.sub_column) {
 			if (!data.sub_column[i]) {
 				delete data.sub_column[i];
 			}
 		}
-		
+
 		NG.saveContent(url, data);
-		
-		
+
+
 	}
-	
+
 	NG.editContent = function() {
 		if (typeof NG.article.title == 'undefined') {
 			generate({'text':'请填写标题', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.article.cid == 'undefined') {
 			generate({'text':'请选择栏目ID', 'type':'error'});
 			return;
 		}
-		
+
 		var data = NG.article;
-		
+
 		var url = RootPath + "Backend/document/save";
-		
+
 		for (var i in data.sub_column) {
 			if (!data.sub_column[i]) {
 				delete data.sub_column[i];
 			}
 		}
-		
+
 		NG.saveContent(url, data);
 	}
 
-	
+
 	NG.modifyContent = function(id) {
 		Cookies.set('status', JSON.stringify({search:NG.search, currentPage:NG.currentPage}));
 		window.location.href=RootPath+"admin/document_add#"+id;
 	}
-	
+
 	NG.getSpecifyDocument = function() {
 		var data = {"id":NG.documentId};
 		$http.post(RootPath + "Backend/document/get_specify_article", data).success(function(result) {
 				if(result.code == 200 ) {
-					
+
 					NG.article = result.data;
 					var temp = NG.article.sub_column.split(',');
 					var temp_obj = {};
@@ -1300,31 +1474,31 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 			});
 	}
 
-	
+
 	NG.getAllArticle = function(page) {
-		
+
 		var data = NG.search;
 		page = typeof page == 'undefined' ? 1 : page;
-		
+
 		data = $.extend({}, data, {page:page});
-		
+
 		$http.post(RootPath + "Backend/document/get_article", data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.data = result.data.data;
 					NG.totalPages = [];
 					NG.totalPages2 = result.data.total_pages;
-					
+
 					for (var i=1; i<=result.data.total_pages; i++) {
 						NG.totalPages.push(i);
 					}
-					
+
 					NG.currentPage = result.data.current_page;
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.deleteArticle = function(id) {
 		if (window.confirm('你真的删除这篇文章吗?')) {
 			var data = {"id":id};
@@ -1338,14 +1512,14 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 				});
 		}
 	}
-	
+
 	NG.clearSearch = function() {
 		NG.search = '';
 		Cookies.remove('status');
 		NG.currentPage = 1;
 		NG.getAllArticle();
 	}
-	
+
 	if (Cookies.get('status')) {
 		var status = JSON.parse(Cookies.get('status'));
 		console.log(status)
@@ -1354,12 +1528,12 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 	} else {
 		NG.getAllArticle();
 	}
-	
-	
+
+
 	if (NG.documentId != '') {
 		NG.getSpecifyDocument();
 	}
-	
+
 	NG.modifySort = function(id, sortValue) {
 		sortValue = parseInt(sortValue);
 		id = parseInt(id);
@@ -1367,16 +1541,16 @@ Module.controller('documentCtrl', function($http, $scope, upload, List, sort, $c
 		var url = RootPath + "Backend/document/modify_sort";
 		sort.modifySort(url, data);
 	}
-	
-	
-	
+
+
+
 	List.getAllColumn(NG);
-	
+
 })
 
 Module.controller('blackListCtrl', function($scope, $http) {
 	var NG = $scope;
-	
+
 	NG.saveContent = function() {
 		var data = {blackList:NG.blackList};
 		$http.post(RootPath + 'Backend/tools/save_black_list', data).success(function(result) {
@@ -1388,7 +1562,7 @@ Module.controller('blackListCtrl', function($scope, $http) {
 			}
 		});
 	}
-	
+
 	NG.getContent = function() {
 		$http.post(RootPath + 'Backend/tools/get_black_list').success(function(result) {
 			if(result.code == 200 ) {
@@ -1398,15 +1572,15 @@ Module.controller('blackListCtrl', function($scope, $http) {
 			}
 		});
 	}
-	
+
 	NG.getContent();
 });
 
 Module.controller('searchEngineCtrl', function($scope, $http) {
 	var NG = $scope;
-	
+
 	NG.searchengine = {'baidu':'baidu', 'google':'google', 'so':'so', 'sogou':'sogou', 'soso':'soso', 'bing':'bing'};
-	
+
 	NG.saveContent = function() {
 		var data = {"search_engine":NG.searchengine};
 		$http.post(RootPath + 'Backend/optimization/submit_to_sg', data).success(function(result) {
@@ -1421,19 +1595,19 @@ Module.controller('searchEngineCtrl', function($scope, $http) {
 
 Module.controller('adPositionCtrl', function($scope, $http, template, $compile) {
 	var NG = $scope;
-	
+
 	NG.position = {is_enable:1};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.isEdit = false;
 		template.getTemplate('ad-position-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveAdPosition').remove();
@@ -1443,19 +1617,19 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 			'title' : '添加广告位',
 			'content' : $('#saveAdPosition'),
 			'id' : 'saveAdPosition'
-			
+
 		}).show();
 	}
-	
+
 	NG.addContent = function() {
 		var data = NG.position;
 		if (typeof data.name == 'undefined') {
 			generate({'text':'广告位名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/ad_position/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1465,9 +1639,9 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/ad_position/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -1475,22 +1649,22 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyAdPosition(id);
-		
+
 		template.getTemplate('ad-position-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
-		
+
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.position;
 		data = $.extend({}, data, {'is_edit':true, id:id});
-		
+
 		$http.post(RootPath + 'Backend/ad_position/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1501,11 +1675,11 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/ad_position/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -1516,7 +1690,7 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 				});
 		}
 	}
-	
+
 	NG.getSpecifyAdPosition = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/ad_position/get_specify_ad_position', data).success(function(result) {
@@ -1527,15 +1701,15 @@ Module.controller('adPositionCtrl', function($scope, $http, template, $compile) 
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('systemSetCtrl', function($scope, $http) {
 	var NG = $scope;
-	
+
 	NG.saveContent = function() {
 		var data = NG.system;
 		$http.post(RootPath + 'Backend/system/save_base_set', data).success(function(result) {
@@ -1546,7 +1720,7 @@ Module.controller('systemSetCtrl', function($scope, $http) {
 				}
 			});
 	}
-	
+
 	NG.getContent = function() {
 		$http.post(RootPath + 'Backend/system/get_base_set').success(function(result) {
 				if(result.code == 200 ) {
@@ -1556,33 +1730,33 @@ Module.controller('systemSetCtrl', function($scope, $http) {
 				}
 			});
 	}
-	
+
 	NG.getContent();
 })
 
 Module.controller('waterImageCtrl', function($scope, $http, upload){
 	var NG = $scope;
-	
+
 	NG.water = {'type':0, 'is_open':1, 'position':'middle_center'};
-	
+
 	NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/system/upload_image', NG.files, NG, function(NG, data) {
 		   NG.water = $.extend({}, NG.water, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
-	
+
 	NG.setThumbOpacity = function (opacity) {
 		if (typeof NG.water.thumb == 'undefined') {
 			generate({'text':'请选择上传水印图片', 'type':'error'});
 			return;
 		}
-		
+
 		$('#fullPath').css('opacity', opacity / 100);
 	}
-	
+
 	NG.saveContent = function() {
 		var data = NG.water;
-		
+
 		$http.post(RootPath + 'Backend/system/save_water_set', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1591,8 +1765,8 @@ Module.controller('waterImageCtrl', function($scope, $http, upload){
 				}
 			});
 	}
-	
-	
+
+
 	NG.getContent = function() {
 		$http.post(RootPath + 'Backend/system/get_water_set').success(function(result) {
 				if(result.code == 200 ) {
@@ -1602,19 +1776,19 @@ Module.controller('waterImageCtrl', function($scope, $http, upload){
 				}
 			});
 	}
-	
+
 	NG.getContent();
 })
 
 Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 	var NG = $scope;
-		
+
 	NG.right = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.rights = [];
-	
+
 	NG.showAddUI = function() {
 		NG.right = {};
 		NG.rights = [];
@@ -1622,11 +1796,11 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 		template.getTemplate('right-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
-	
-	
+
+
+
 	NG.showAddUICallback = function(content) {
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1634,43 +1808,43 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 			'title' : '添加权限',
 			'content' : $('#saveRight'),
 			'id' : 'saveRight'
-			
+
 		}).show();
 	}
-	
+
 	NG.addResource = function() {
 		NG.rights.push({'resource':''});
 	}
-	
+
 	NG.deleteResource = function(index) {
 		NG.rights.splice(index, 1);
 	}
-	
-	
-	
+
+
+
 	NG.addContent = function() {
 		if (typeof NG.right.name == 'undefined') {
 			generate({'text':'权限资源名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		var rights = [];
-		
+
 		rights.push(NG.right.resource);
-		
+
 		for (var i in NG.rights) {
 			if (typeof NG.rights[i] != 'undefined') {
 				rights.push(NG.rights[i].resource);
 			}
 		}
-		
-		
-		
+
+
+
 		var data = {"name":NG.right.name, 'resource':rights};
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
-		
+
+
 		$http.post(RootPath + 'Backend/right/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1680,9 +1854,9 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/right/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -1692,38 +1866,38 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyRight(id);
-		
+
 		template.getTemplate('right-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 	}
-	
+
 	NG.modifyContent = function(id) {
 		if (typeof NG.right.name == 'undefined') {
 			generate({'text':'权限资源名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		var rights = [];
-		
+
 		rights.push(NG.right.resource);
-		
+
 		for (var i in NG.rights) {
 			if (typeof NG.rights[i] != 'undefined') {
 				rights.push(NG.rights[i].resource);
 			}
 		}
-		
-		
+
+
 		var data = {"name":NG.right.name, 'resource':rights, 'id':NG.right.id};
-		
+
 		data = $.extend({}, data, {'is_edit':true});
-		
+
 		$http.post(RootPath + 'Backend/right/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1734,11 +1908,11 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/right/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -1749,7 +1923,7 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 				});
 		}
 	}
-	
+
 	NG.getSpecifyRight = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/right/get_specify_right', data).success(function(result) {
@@ -1766,32 +1940,32 @@ Module.controller('rightCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('roleCtrl', function($scope, $http, template, $compile, List) {
 	var NG = $scope;
-		
+
 	NG.right = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.role = {};
-	
-	
+
+
 	NG.showAddUI = function() {
 		NG.role = {};
 		NG.isEdit = false;
 		template.getTemplate('role-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 		List.getAllRights(NG);
 	}
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.rights) {
@@ -1803,8 +1977,8 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 			}
 		}
 	}
-	
-	
+
+
 	NG.showAddUICallback = function(content) {
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1812,33 +1986,33 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 			'title' : '添加权限',
 			'content' : $('#saveRole'),
 			'id' : 'saveRole'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.addContent = function() {
 		if (typeof NG.role.name == 'undefined') {
 			generate({'text':'权限资源名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		var rids = [];
-		
-		
-		
+
+
+
 		for (var i in NG.rights) {
 			if (typeof NG.rights[i].is_chk != 'undefined' && NG.rights[i].is_chk != '') {
 				rids.push(NG.rights[i].id);
 			}
 		}
-		
-		
+
+
 		var data = {"name":NG.role.name, 'rid':rids};
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
-		
+
+
 		$http.post(RootPath + 'Backend/role/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1848,9 +2022,9 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/role/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -1860,45 +2034,45 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyRole(id);
-		
-		
+
+
 		template.getTemplate('role-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
-			
+
+
 		});
-		
+
 	}
-	
+
 	if (typeof NG.rights == 'undefined') {
 		List.getAllRights(NG);
 	}
-	
+
 	NG.modifyContent = function(id) {
 		if (typeof NG.role.name == 'undefined') {
 			generate({'text':'权限资源名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		var rids = [];
-		
-		
-		
+
+
+
 		for (var i in NG.rights) {
 			if (typeof NG.rights[i].is_chk != 'undefined' && NG.rights[i].is_chk != '') {
 				rids.push(NG.rights[i].id);
 			}
 		}
-		
-		
+
+
 		var data = {"name":NG.role.name, 'rid':rids, 'id':NG.role.id};
-		
+
 		data = $.extend({}, data, {'is_edit':true});
-		
+
 		$http.post(RootPath + 'Backend/role/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -1909,11 +2083,11 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/role/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -1924,12 +2098,12 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 				});
 		}
 	}
-	
+
 	NG.getSpecifyRole = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/role/get_specify_role', data).success(function(result) {
 				if(result.code == 200 ) {
-					
+
 					NG.role.id = result.data.id;
 					NG.role.name = result.data.name;
 					for (var i in NG.rights) {
@@ -1937,42 +2111,42 @@ Module.controller('roleCtrl', function($scope, $http, template, $compile, List) 
 							NG.rights[i].is_chk = NG.rights[i].id;
 						}
 					}
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('userCtrl', function($scope, $http, template, $compile, List) {
 	var NG = $scope;
-		
+
 	NG.user = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.role = {};
-	
+
 	if (typeof NG.roles == 'undefined') {
 		List.getAllRoles(NG);
 	}
-	
-	
+
+
 	NG.showAddUI = function() {
 		NG.role = {};
 		NG.isEdit = false;
 		template.getTemplate('user-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
-		
+
+
 	}
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.rights) {
@@ -1984,8 +2158,8 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 			}
 		}
 	}
-	
-	
+
+
 	NG.showAddUICallback = function(content) {
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -1993,35 +2167,35 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 			'title' : '添加用户',
 			'content' : $('#saveUser'),
 			'id' : 'saveUser'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.addContent = function() {
-		
+
 		if (typeof NG.user.username == 'undefined') {
 			generate({'text':'用户名不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.user.password == 'undefined') {
 			generate({'text':'密码不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.user.rid == 'undefined') {
 			generate({'text':'角色不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		var data = NG.user;
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
-		
-		
+
+
+
 		$http.post(RootPath + 'Backend/user/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2031,9 +2205,9 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/user/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2043,43 +2217,43 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyUser(id);
-		
-		
+
+
 		template.getTemplate('user-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
-			
+
+
 		});
-		
+
 	}
-	
+
 	if (typeof NG.rights == 'undefined') {
 		List.getAllRights(NG);
 	}
-	
+
 	NG.modifyContent = function(id) {
 		if (typeof NG.user.username == 'undefined') {
 			generate({'text':'用户名不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		if (typeof NG.user.rid == 'undefined') {
 			generate({'text':'角色不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		var data = NG.user;
-		
+
 		data = $.extend({}, data, {'is_edit':true});
-		
-		
-		
+
+
+
 		$http.post(RootPath + 'Backend/user/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2090,11 +2264,11 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/user/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2105,41 +2279,41 @@ Module.controller('userCtrl', function($scope, $http, template, $compile, List) 
 				});
 		}
 	}
-	
+
 	NG.getSpecifyUser = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/user/get_specify_user', data).success(function(result) {
 				if(result.code == 200 ) {
 					NG.user = result.data;
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('adCtrl', function($scope, $http, template, $compile, List, upload) {
 	var NG = $scope;
-		
+
 	NG.ad = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.ad = {};
 		NG.isEdit = false;
 		template.getTemplate('ad-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 		List.getAllAdPosition(NG);
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveAd').remove();
@@ -2149,30 +2323,30 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 			'title' : '添加广告',
 			'content' : $('#saveAd'),
 			'id' : 'saveAd'
-			
+
 		}).show();
 	}
-	
+
 	NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.ad = $.extend({}, NG.ad, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
-	
+
 	NG.addContent = function() {
 		var data = NG.ad;
 		if (typeof NG.ad.name == 'undefined') {
 			generate({'text':'广告名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.ad.pid == 'undefined') {
 			generate({'text':'请选择广告位', 'type':'error'});
 			return;
 		}
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/ad/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2182,9 +2356,9 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/ad/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2194,22 +2368,22 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyAd(id);
-		
+
 		template.getTemplate('ad-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 		List.getAllAdPosition(NG);
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.ad;
 		data = $.extend({}, data, {'is_edit':true, id:id});
-		
+
 		$http.post(RootPath + 'Backend/ad/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2220,11 +2394,11 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/ad/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2235,7 +2409,7 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 				});
 		}
 	}
-	
+
 	NG.getSpecifyAd = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/ad/get_specify_ad', data).success(function(result) {
@@ -2246,29 +2420,29 @@ Module.controller('adCtrl', function($scope, $http, template, $compile, List, up
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('orderCtrl', function($scope, $http, template, $compile, List, upload) {
 	var NG = $scope;
-		
+
 	NG.member = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.member = {};
 		NG.isEdit = false;
 		template.getTemplate('member-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 		List.getAllProvinces(NG);
 	}
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.data) {
@@ -2280,9 +2454,9 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 			}
 		}
 	}
-	
 
-	
+
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/order/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2292,20 +2466,20 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.order = {};
 		NG.isEdit = true;
 		NG.getSpecifyOrder(id);
-		
+
 		template.getTemplate('order-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
-		
-		
+
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveOrder').remove();
@@ -2315,13 +2489,13 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 			'title' : '查看订单',
 			'content' : $('#saveOrder'),
 			'id' : 'saveOrder'
-			
+
 		}).show();
 	}
-	
+
 	NG.setState = function(orderNumber) {
 		var data = {order_number:orderNumber};
-			
+
 		$http.post(RootPath + 'Backend/order/set_state', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -2331,16 +2505,16 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 			}
 		});
 	}
-	
+
 	NG.download = function(orderNumber) {
 		window.location.href = RootPath + 'Backend/order/download/'+orderNumber;
 	}
-	
-	
+
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {order_number:id};
-			
+
 			$http.post(RootPath + 'Backend/order/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2351,9 +2525,9 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 				});
 		}
 	}
-	
-	
-	
+
+
+
 	NG.getSpecifyOrder = function(id) {
 		var data = {order_number:id};
 		$http.post(RootPath + 'Backend/order/get_specify_order', data).success(function(result) {
@@ -2364,28 +2538,28 @@ Module.controller('orderCtrl', function($scope, $http, template, $compile, List,
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('memberCtrl', function($scope, $http, template, $compile, List, upload) {
 	var NG = $scope;
-		
+
 	NG.member = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.member = {};
 		NG.isEdit = false;
 		template.getTemplate('member-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.chk_all = function(obj) {
 		if ($(obj).prop('checked')) {
 			for (var i in NG.data) {
@@ -2397,39 +2571,39 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	NG.showSendMessageUI = function() {
 		var count = 0;
-		
+
 		for (var i in NG.data) {
 			NG.data[i].is_chk ? count++ : '';
 		}
-		
+
 		if (count == 0) {
 			generate({'text':'请至少选择一个会员', 'type':'error'});
 			return;
 		}
-		
+
 		template.getTemplate('send-message', NG, function(content) {
 			NG.showSendMessageUICallBack(content);
 		});
 	}
-	
+
 	NG.sendMessage = function() {
 		var data = NG.message;
-		
+
 		if (typeof data.title == 'undefined') {
 			generate({'text':'标题不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof data.content == 'undefined') {
 			generate({'text':'内容不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		$http.post(RootPath + 'Backend/message/send_message', data).success(function(result) {
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
@@ -2440,7 +2614,7 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			}
 		});
 	}
-	
+
 	NG.showSendMessageUICallBack = function(content) {
 		$('.ui-popup').remove();
 		$('#showSendMessage').remove();
@@ -2450,10 +2624,10 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			'title' : '发送留言',
 			'content' : $('#showSendMessage'),
 			'id' : 'showSendMessage'
-			
+
 		}).show();
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveMember').remove();
@@ -2463,31 +2637,31 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 			'title' : '添加会员',
 			'content' : $('#saveMember'),
 			'id' : 'saveMember'
-			
+
 		}).show();
 	}
-	
-	
-	
+
+
+
 	NG.addContent = function() {
 		var data = NG.member;
 		if (typeof NG.member.username == 'undefined') {
 			generate({'text':'用户名不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.member.password == 'undefined') {
 			generate({'text':'密码不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof NG.member.email == 'undefined') {
 			generate({'text':'邮箱地址不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/member/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2497,9 +2671,9 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/member/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2509,36 +2683,36 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.member = {};
 		NG.isEdit = true;
 		NG.getSpecifyMember(id);
-		
+
 		template.getTemplate('member-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
-		
+
 		List.getAllProvinces(NG);
-		
+
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.member;
 		if (typeof NG.member.username == 'undefined') {
 			generate({'text':'用户名不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		if (typeof NG.member.email == 'undefined') {
 			generate({'text':'邮箱地址不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		data = $.extend({}, data, {'is_edit':true});
-		
+
 		$http.post(RootPath + 'Backend/member/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2549,11 +2723,11 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/member/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2564,9 +2738,9 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 				});
 		}
 	}
-	
-	
-	
+
+
+
 	NG.getSpecifyMember = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/member/get_specify_member', data).success(function(result) {
@@ -2578,29 +2752,29 @@ Module.controller('memberCtrl', function($scope, $http, template, $compile, List
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('navCtrl', function($scope, $http, template, $compile, List, sort) {
 	var NG = $scope;
-		
+
 	NG.nav = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.nav = {position:1, pid:0};
 		NG.isEdit = false;
 		template.getTemplate('nav-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 		List.getAllNavs(NG);
 	}
-	
+
 	NG.modifySort = function(id, sortValue) {
 		sortValue = parseInt(sortValue);
 		id = parseInt(id);
@@ -2608,7 +2782,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 		var url = "/Backend/nav/modify_sort";
 		sort.modifySort(url, data);
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveNav').remove();
@@ -2618,23 +2792,23 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 			'title' : '添加导航',
 			'content' : $('#saveNav'),
 			'id' : 'saveNav'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.addContent = function() {
 		var data = NG.nav;
 		if (typeof NG.nav.name == 'undefined') {
 			generate({'text':'导航名称不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		data = $.extend({}, data, {'is_add':1});
-		
+
 		console.log(data)
-		
+
 		$http.post(RootPath + 'Backend/nav/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2644,26 +2818,26 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
-	
-	
+
+
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyNav(id);
-		
+
 		template.getTemplate('nav-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 		List.getAllNavs(NG);
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.nav;
 		data = $.extend({}, data, {'is_edit':1, id:id});
-		
+
 		$http.post(RootPath + 'Backend/nav/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2674,11 +2848,11 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/nav/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2689,7 +2863,7 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 				});
 		}
 	}
-	
+
 	NG.getSpecifyNav = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/nav/get_specify_nav', data).success(function(result) {
@@ -2700,28 +2874,28 @@ Module.controller('navCtrl', function($scope, $http, template, $compile, List, s
 				}
 			});
 	}
-	
+
 	List.getAllNavs(NG);
-	
-	
+
+
 })
 
 Module.controller('flinkCtrl', function($scope, $http, template, $compile, List, upload) {
 	var NG = $scope;
-		
+
 	NG.flink = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.flink = {};
 		NG.isEdit = false;
 		template.getTemplate('flink-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveFlink').remove();
@@ -2731,26 +2905,26 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 			'title' : '添加友情链接',
 			'content' : $('#saveFlink'),
 			'id' : 'saveFlink'
-			
+
 		}).show();
 	}
-	
+
 	NG.$watch('files', function () {
        upload.uploadFile(RootPath + 'Backend/common/upload_image', NG.files, NG, function(NG, data) {
 		   NG.flink = $.extend({}, NG.flink, {'thumb':data.data.relative_path + data.data.file_name});
 	   });
     });
-	
+
 	NG.addContent = function() {
 		var data = NG.flink;
 		if (typeof NG.flink.name == 'undefined') {
 			generate({'text':'链接名称不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/flink/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2760,9 +2934,9 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/flink/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2772,21 +2946,21 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyFlink(id);
-		
+
 		template.getTemplate('flink-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.flink;
 		data = $.extend({}, data, {'is_edit':true, id:id});
-		
+
 		$http.post(RootPath + 'Backend/flink/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2797,11 +2971,11 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/flink/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2812,7 +2986,7 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 				});
 		}
 	}
-	
+
 	NG.getSpecifyFlink = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/flink/get_specify_flink', data).success(function(result) {
@@ -2823,28 +2997,28 @@ Module.controller('flinkCtrl', function($scope, $http, template, $compile, List,
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 	var NG = $scope;
-		
+
 	NG.hotsearch = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.hotsearch = {};
 		NG.isEdit = false;
 		template.getTemplate('hot-search-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveHotSearch').remove();
@@ -2854,20 +3028,20 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 			'title' : '添加热搜关键词',
 			'content' : $('#saveHotSearch'),
 			'id' : 'saveHotSearch'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.addContent = function() {
 		var data = NG.hotsearch;
 		if (typeof NG.hotsearch.keywords == 'undefined') {
 			generate({'text':'链接名称不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/hot_search/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2877,9 +3051,9 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/hot_search/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -2889,21 +3063,21 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyFlink(id);
-		
+
 		template.getTemplate('hot-search-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.hotsearch;
 		data = $.extend({}, data, {'is_edit':true, id:id});
-		
+
 		$http.post(RootPath + 'Backend/hot_search/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2914,11 +3088,11 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/hot_search/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -2929,7 +3103,7 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 				});
 		}
 	}
-	
+
 	NG.getSpecifyFlink = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/hot_search/get_specify_hot_search', data).success(function(result) {
@@ -2940,19 +3114,19 @@ Module.controller('hotSearchCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 	var NG = $scope;
-		
+
 	NG.piece = {};
-	
+
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		$('.ui-dialog-close').click();
 		NG.piece = {};
@@ -2960,9 +3134,9 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 		template.getTemplate('piece-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -2971,21 +3145,21 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 			'content' : $('#savePiece'),
 			'id' : 'savePiece',
 			'align' : 'top center'
-			
+
 		}).show();
 	}
-	
-	
+
+
 	NG.addContent = function() {
 		var data = NG.piece;
 		if (typeof NG.piece.name == 'undefined') {
 			generate({'text':'碎片名称不能为空', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		data = $.extend({}, data, {'is_edit':false});
-		
+
 		$http.post(RootPath + 'Backend/piece/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -2995,9 +3169,9 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/piece/get_all').success(function(result) {
 				if(result.code == 200 ) {
@@ -3007,21 +3181,21 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyPiece(id);
-		
+
 		template.getTemplate('piece-add', NG, function(content) {
 			NG.showAddUICallback(content);
-			
+
 		});
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.piece;
 		data = $.extend({}, data, {'is_edit':true, id:id});
-		
+
 		$http.post(RootPath + 'Backend/piece/save', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -3032,11 +3206,11 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {id:id};
-			
+
 			$http.post(RootPath + 'Backend/piece/delete', data).success(function(result) {
 					if(result.code == 200 ) {
 						generate({"text":result.message, "type":"success"});
@@ -3047,7 +3221,7 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 				});
 		}
 	}
-	
+
 	NG.getSpecifyPiece = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/piece/get_specify_piece', data).success(function(result) {
@@ -3058,19 +3232,19 @@ Module.controller('pieceCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.getAllContent();
-	
-	
+
+
 })
 
 Module.controller('formCtrl', function($scope, $http, template, $compile, sConfig) {
 	var NG = $scope;
-	
+
 	NG.formArray = [];
-	
+
 	var isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		isEdit = false;
 		NG.form = {};
@@ -3078,9 +3252,9 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 		template.getTemplate('form-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		var content = $compile(content)(NG);
 		$(content).appendTo('.content');
@@ -3088,21 +3262,21 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 			'title' : '添加自定义表单',
 			'content' : $('#saveForm'),
 			'id' : 'saveForm',
-			
+
 		}).show();
 	}
-	
+
 	NG.getForm = function() {
 		$http.post(RootPath + "Backend/form/get_form").success(function(result) {
 			if(result.code == 200 ) {
-				
+
 				NG.data = result.data;
 			} else {
 				generate({"text":result.message, "type":"error"});
 			}
 		});
 	}
-	
+
 	NG.deleteForm = function(formId) {
 		if (window.confirm('你真的要删除吗?')) {
 			var data = {"form_id":formId};
@@ -3116,16 +3290,16 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 			});
 		}
 	}
-	
+
 	NG.buildCode = function(formId) {
 		window.open(RootPath + 'Backend/form/build_form/'+formId);
 	}
-	
+
 	NG.addForm = function() {
 		var First = {'fields':NG.form.fields, 'label_fields':NG.form.label_fields, 'form_type':NG.form.form_type, 'values':NG.form.values};
-		
+
 		var data = {'table_struct':[First], 'form_name':NG.form.name, 'table_name':NG.form.table_name, 'recevied':NG.form.recevied};
-		
+
 		if (NG.formArray.length > 0) {
 			for (var i in NG.formArray) {
 				if (NG.formArray[i].fields) {
@@ -3133,37 +3307,37 @@ Module.controller('formCtrl', function($scope, $http, template, $compile, sConfi
 				}
 			}
 		}
-		
+
 		var url = isEdit ? RootPath + 'Backend/form/edit' : "/Backend/form/add";
-		
+
 		$http.post(url, data).success(function(result) {
 				if(result.code == 200 ) {
 					window.location.reload();
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
 			});
-		
+
 	}
-	
+
 	NG.addTableTr = function() {
 		NG.formArray.push({'fields':'', 'label_fields':'', 'values':'', 'form_type':'text'});
 	}
-	
+
 	NG.deleteTableTr = function(index) {
 		NG.formArray.splice(index, 1);
 	}
-	
+
 	NG.getForm();
-	
+
 	sConfig.getFormTypeConfig(NG);
 })
 
 
 Module.controller('formManagementCtrl', function($scope, $http, List, template, $compile) {
 	var NG = $scope;
-	
+
 	NG.showFormContent = function() {
 		if (typeof NG.formId == 'undefined') {
 			generate({'text':'请先选择一个表单', 'type':'error'});
@@ -3178,14 +3352,14 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 			}
 		});
 	}
-	
+
 	NG.deleteFormContent = function(id) {
 		if (window.confirm('你确定要删除吗?')) {
 			if (typeof NG.formId == 'undefined') {
 				generate({'text':'请先选择一个表单', 'type':'error'});
 				return;
 			}
-			
+
 			var data = {"formId":NG.formId, "id":id};
 			$http.post(RootPath + 'Backend/form/delete_form_content', data).success(function(result) {
 				if(result.code == 200 ) {
@@ -3196,11 +3370,11 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 				}
 			});
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 	NG.showContentUICallback = function(content, id) {
 		$('.ui-popup').remove();
 		$('#showFormContent').remove();
@@ -3210,31 +3384,31 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 			'title' : '表单内容',
 			'content' : $('#showFormContent'),
 			'id' : 'showFormContent'
-			
+
 		}).show();
-		
+
 		NG.getSpecifyFormContent(id);
 	}
-	
-	
+
+
 	NG.showContentUI = function(id) {
-		
-		
+
+
 		template.getTemplate('form-content-show', NG, function(content) {
 			NG.showContentUICallback(content, id);
 		});
-		
-		
+
+
 	}
-	
+
 	NG.getSpecifyFormContent = function(id) {
 		if (typeof NG.formId == 'undefined') {
 			generate({'text':'请先选择一个表单', 'type':'error'});
 			return;
 		}
-		
+
 		var data = {"formId":NG.formId, "id":id};
-		
+
 		$http.post(RootPath + 'Backend/form/show_form_content', data).success(function(result) {
 			if(result.code == 200 ) {
 				NG.fields = result.data;
@@ -3243,7 +3417,7 @@ Module.controller('formManagementCtrl', function($scope, $http, List, template, 
 			}
 		});
 	}
-	
+
 	List.getAllForms(NG);
 })
 
@@ -3274,7 +3448,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
                 'title' : '编辑模板',
                 'content' : $('#editTemplate'),
                 'id' : 'editTemplate'
-                
+
             }).show();
 
         }).then(function() {
@@ -3291,7 +3465,7 @@ Module.controller('templatesCtrl', function($scope, $http, template, $compile) {
             });
         });
 	}
-	
+
     NG.saveTemplate = function() {
         var data = {content:editAreaLoader.getValue('template'), filename:NG.filename};
         $http.post(RootPath + 'Backend/templates/save_template', data).success(function(result) {
@@ -3327,18 +3501,18 @@ Module.controller('logCtrl', function($scope, $http) {
     NG.getData = function(page) {
 		var data = NG.queryObj;
 		page = typeof page == 'undefined' ? 1 : page;
-		
+
 		data = $.extend({}, data, {page:page});
 		$http.post(RootPath + 'Backend/log/get_data', data).success(function(result) {
             if(result.code == 200 ) {
                 NG.data = result.data.data;
                 NG.totalPages = [];
                 NG.totalPages2 = result.data.total_pages;
-                
+
                 for (var i=1; i<=result.data.total_pages; i++) {
                     NG.totalPages.push(i);
                 }
-                
+
                 NG.currentPage = result.data.current_page;
             } else {
                 generate({"text":result.message, "type":"error"});
@@ -3377,7 +3551,7 @@ Module.controller('logCtrl', function($scope, $http) {
 
 Module.controller('databaseCtrl', function($scope, $http, List) {
 	var NG = $scope;
-	
+
 	NG.backup = function(obj) {
 		$(obj).html('备份中...').prop('disabled');
 		$http.post(RootPath + 'Backend/tools/backup_database').success(function(result) {
@@ -3390,7 +3564,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 				}
 			});
 	}
-	
+
 	NG.getBackup = function() {
 		$http.post(RootPath + 'Backend/tools/get_backup_file').success(function(result) {
 				if(result.code == 200 ) {
@@ -3400,7 +3574,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 				}
 			});
 	}
-	
+
 	NG.deleteBackup = function(filename) {
 		if (window.confirm('你确定要删除该备份吗?删除后不可恢复')) {
 			var data = {"filename":filename};
@@ -3414,7 +3588,7 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 			});
 		}
 	}
-	
+
 	NG.restoreBackup = function(filename) {
 		if (window.confirm('你确定要还原该备份文件吗?用户登录名和密码也会被还原')) {
 			var data = {"filename":filename};
@@ -3427,17 +3601,17 @@ Module.controller('databaseCtrl', function($scope, $http, List) {
 			});
 		}
 	}
-	
+
 	NG.getBackup();
 })
 
 Module.controller('sitemapCtrl', function($http, $scope) {
 	var NG = $scope;
-	
+
 	NG.buildMap = function() {
 		var domain = window.location.protocol == 'https:' ? 'https://' : 'http://';
 		domain += window.location.host;
-		
+
 		var data = {"domain":domain};
 		$http.post(RootPath + 'Backend/tools/build_sitemap', data).success(function(result) {
 			if(result.code == 200 ) {
@@ -3451,24 +3625,24 @@ Module.controller('sitemapCtrl', function($http, $scope) {
 
 Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	var NG = $scope;
-	
+
 	NG.types = [{'id':"1", 'name':'单页'}, {'id':"2", 'name':'列表'}, {'id':"3", 'name':'详细'}]
-	
+
 	NG.data = [];
-	
+
 	NG.addRule = function() {
 		NG.data.unshift({'destination_rule':'', 'source_rule':'', 'type':2})
 		NG.changeAction();
 	}
-	
+
 	NG.deleteContent = function(index) {
 		NG.data.splice(index,1);
 		NG.changeAction();
 	}
-	
+
 	NG.getRule = function() {
 		$http.post(RootPath + 'Backend/build_html/get_rule').success(function(result) {
-				
+
 			if(result.code == 200 ) {
 				NG.data = result.data;
 			} else {
@@ -3476,12 +3650,12 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.buildRule = function() {
 		if (window.confirm('此操作会覆盖以下所有规则, 你确定吗?')) {
 			generate({"text":'生成中...', "type":"success"});
 			$http.post(RootPath + 'Backend/build_html/build_rule').success(function(result) {
-					
+
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					NG.data = result.data;
@@ -3491,11 +3665,11 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			});
 		}
 	}
-	
+
 	NG.changeAction = function() {
 		NG.isChanged = 1;
 	}
-	
+
 	NG.buildSingleHtml = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/build_html/build_single_html',data).success(function(result) {
@@ -3512,10 +3686,10 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.buildIndex = function() {
 		$http.post(RootPath + 'Backend/build_html/build_index_html').success(function(result) {
-				
+
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 			} else {
@@ -3523,11 +3697,11 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.buildHtml = function() {
 		NG.maskAndNoticeBoxShow();
 		$http.post(RootPath + 'Backend/build_html/build_html').success(function(result) {
-				
+
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 			} else if (result.code == 202) {
@@ -3541,7 +3715,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.asynBuildHtml = function(data) {
 		$http.post(RootPath + 'Backend/build_html/asyn_build_html', data).success(function(result) {
 			if(result.code == 200 ) {
@@ -3559,7 +3733,7 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.childProcess = function(data) {
 		$http.post(data.url, data.data).success(function(result) {
 			if (result.code == 200) {
@@ -3576,21 +3750,21 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 			}
 		});
 	}
-	
+
 	NG.maskAndNoticeBoxShow = function() {
 		$('<div id="mask"></div>').appendTo('body');
 		$('<div id="noticeBox" style="overflow-y: scroll"><span>正在生成,请稍候...<br /></span></div>').appendTo('body');
 	}
-	
+
 	NG.maskHide = function() {
 		$('#mask').remove();
 		$('#noticeBox').remove();
 	}
-	
+
 	NG.saveRule = function() {
 		var data = {'rules': NG.data};
 		$http.post(RootPath + 'Backend/build_html/save_rule', data).success(function(result) {
-					
+
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
 					delete NG.isChanged;
@@ -3599,10 +3773,10 @@ Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 				}
 			});
 	}
-	
-	
+
+
 	List.getAllColumn(NG);
-	
+
 	NG.getRule();
 })
 
@@ -3611,16 +3785,16 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 	NG.modelArray = [{}];
 	NG.keyword = {target:1, url: '/', style:{fontsize: 14, color:'#ff0000', fontweight:'1'}};
 	NG.isEdit = false;
-	
+
 	NG.showAddUI = function() {
 		NG.keyword = {target:1, url: '/', style:{fontsize: 14, color:'#ff0000', fontweight:'1'}};
 		NG.isEdit = false;
 		template.getTemplate('keywords-add', NG, function(content) {
 			NG.showAddUICallback(content);
 		});
-		
+
 	}
-	
+
 	NG.showAddUICallback = function(content) {
 		$('.ui-popup').remove();
 		$('#saveHotSearch').remove();
@@ -3630,10 +3804,10 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 			'title' : '添加文章关键词',
 			'content' : $('#saveHotSearch'),
 			'id' : 'saveHotSearch'
-			
+
 		}).show();
 	}
-	
+
 	NG.preview = function() {
 		var keyword = NG.keyword;
 		var target = ' target="'+(keyword.target==1?'_blank':'_self')+'"';
@@ -3642,21 +3816,21 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 		_html = '<a href="'+keyword.url+'" '+target+style+'>'+keyword.keyword+'</a>';
 		$('#fontPreview').html(_html);
 	}
-	
+
 	NG.addContent = function() {
 		var data = NG.keyword;
 		if (typeof data.keyword == 'undefined' || data.keyword == '') {
 			generate({'text':'关键词不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof data.url == 'undefined' || data.url == '') {
 			generate({'text':'必须是合法的url', 'type':'error'});
 			return;
 		}
-		
+
 		$http.post(RootPath + 'Backend/keywords/add_content', data).success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				generate({"text":result.message, "type":"success"});
 				dialog({'id':'saveHotSearch'}).remove();
@@ -3666,26 +3840,26 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 			}
 		});
 	}
-	
+
 	NG.showModifyUI = function(id) {
 		NG.isEdit = true;
 		NG.getSpecifyKeyword(id);
-		
+
 	}
-	
+
 	NG.modifyContent = function(id) {
 		var data = NG.keyword;
 		if (typeof data.keyword == 'undefined' || data.keyword == '') {
 			generate({'text':'关键词不能为空', 'type':'error'});
 			return;
 		}
-		
+
 		if (typeof data.url == 'undefined' || data.url == '') {
 			generate({'text':'必须是合法的url', 'type':'error'});
 			return;
 		}
-		
-		
+
+
 		$http.post(RootPath + 'Backend/keywords/edit', data).success(function(result) {
 				if(result.code == 200 ) {
 					generate({"text":result.message, "type":"success"});
@@ -3696,7 +3870,7 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 				}
 			});
 	}
-	
+
 	NG.getSpecifyKeyword = function(id) {
 		var data = {id:id};
 		$http.post(RootPath + 'Backend/keywords/get_specify_keyword', data).success(function(result) {
@@ -3715,10 +3889,10 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 				}).then(function() {
 					NG.preview();
 				});
-				
+
 			});
 	}
-	
+
 	NG.deleteContent = function(id) {
 		if (window.confirm('你确定要删除吗?')) {
 			var data = {id:id};
@@ -3732,10 +3906,10 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 			});
 		}
 	}
-	
+
 	NG.getAllContent = function() {
 		$http.post(RootPath + 'Backend/keywords/get_all').success(function(result) {
-			
+
 			if(result.code == 200 ) {
 				NG.data = result.data;
 			} else {
@@ -3743,20 +3917,20 @@ Module.controller('keywordsCtrl', function($scope, $http, template, $compile) {
 			}
 		});
 	}
-	
+
 	NG.getAllContent();
 });
 
 Module.controller('qrcodeCtrl', function($scope, $http) {
 	var NG = $scope;
-	
+
 	NG.buildQrcode = function() {
 		if (typeof NG.qrCode == 'undefined') {
 			generate({'text':'请先输入内容', 'type':'error'});
 		} else {
 			var data = {'text':NG.qrCode};
 			$http.post(RootPath + 'Backend/tools/build_qr_code', data).success(function(result) {
-				
+
 				if(result.code == 200 ) {
 					$('<img src="'+result.data+'" id="qrCode" />').appendTo('#qrCodeArea');
 					dialog({
@@ -3764,7 +3938,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 						'content': $('#qrCode'),
 						'id':'qrCode'
 					}).show();
-					
+
 					NG.getQrfile();
 				} else {
 					generate({"text":result.message, "type":"error"});
@@ -3772,7 +3946,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 			});
 		}
 	}
-	
+
 	NG.getQrfile = function() {
 		$http.post(RootPath + 'Backend/tools/get_qrcode_file').success(function(result) {
 				if(result.code == 200 ) {
@@ -3782,7 +3956,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 				}
 			});
 	}
-	
+
 	NG.deleteQrcode = function(filename) {
 		if (window.confirm('你确定要删除吗?')) {
 			var data = {"filename":filename};
@@ -3796,7 +3970,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 			});
 		}
 	}
-	
+
 	NG.showQrCode = function(filename) {
 		$('<img src="/uploads/qrcode/'+filename+'" id="qrCode" />').appendTo('#qrCodeArea');
 		dialog({
@@ -3805,7 +3979,7 @@ Module.controller('qrcodeCtrl', function($scope, $http) {
 				'id':'qrCode'
 			}).show();
 	}
-	
+
 	NG.getQrfile();
 })
 
@@ -3824,7 +3998,7 @@ Module.service('upload', function($http, Upload) {
 					}).success(function (data, status, headers, config) {
 						$('#process').hide();
 						if (data.code == 200) {
-							
+
 							(callback)(NG, data);
 						} else {
 							generate({'text':'上传失败', 'type':'error'});
@@ -3833,9 +4007,9 @@ Module.service('upload', function($http, Upload) {
 				}
 			}
 		},
-		
+
 	};
-	
+
 	return obj;
 });
 
@@ -3881,9 +4055,9 @@ Module.service('sConfig', function($http) {
 			});
 		}
 	};
-	
+
 	return obj;
-	
+
 });
 
 Module.service('List', function($http) {
@@ -3904,7 +4078,7 @@ Module.service('List', function($http) {
 					for(var i in NG.columns) {
 						NG.columns[i].space = "　".repeat(parseInt(NG.columns[i].level)*2);
 					}
-					
+
 				} else {
 					generate({"text":result.message, "type":"error"});
 				}
@@ -4007,7 +4181,7 @@ Module.service('List', function($http) {
 			});
 		}
 	};
-	
+
 	return obj;
 });
 
@@ -4023,7 +4197,7 @@ Module.service('deleteFile', function($http) {
 			});
 		},
 	};
-	
+
 	return obj;
 })
 
@@ -4040,6 +4214,6 @@ Module.service('template', function($http) {
 			});
 		},
 	};
-	
+
 	return obj;
 })

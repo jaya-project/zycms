@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>朝阳CMS</title>
 	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/reset.css')?>" type="text/css" />
+	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/jquery.image-select.css')?>" type="text/css" />
 	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/style.css')?>" type="text/css" />
 	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/common.css')?>" type="text/css" />
 	<link rel="stylesheet" href="<?=base_url('assets/Admin/css/loading-bar.css')?>" type="text/css" />
@@ -30,7 +31,7 @@
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/ckfinder/config.js')?>"></script>
 	<script type="text/javascript" src="<?=base_url('assets/Admin/js/backend.js')?>"></script>
 
-	
+
 </head>
 <body ng-app="backend">
 
