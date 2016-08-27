@@ -37,6 +37,7 @@
       </tr>
     </tbody></table>
     <div style="height:10px;"></div>
+    <div>注:一级栏目不能删除, 如有需要, 建议咨询程序员</div>
   </div>
 </div>
 <div class="loading2 hidden" id="loading" ng-style="loading"></div>

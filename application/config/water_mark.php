@@ -1,5 +1,5 @@
 <?php $config["water_mark"] = array (
-  'is_open' => '1',
+  'is_open' => '0',
   'type' => '0',
   'position' => 'middle_center',
   'text' => 'zycms',

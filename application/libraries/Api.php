@@ -110,6 +110,7 @@ class Api
 	}
 
 
+
 	/**
 	 *  获取指定栏目
 	 *
@@ -210,6 +211,7 @@ class Api
 			if (is_array($search_arr) && !empty($search_arr)) {
 				$where .= " AND (";
 				foreach ($search_arr as $field=>$value) {
+					$value = $this->CI->db->escape_str($value);
 					$field == 'title' ? ($where .= " ac.{$field} like '%$value%' $relationship ") : ($where .=  (isset($queryAll) ? '' : " a.{$field} like '%$value%'  $relationship "));
 				}
 				$where = rtrim($where, "$relationship ");
@@ -299,6 +301,7 @@ class Api
 			if (is_array($search_arr) && !empty($search_arr)) {
 				$where .= " AND (";
 				foreach ($search_arr as $field=>$value) {
+					$value = $this->CI->db->escape_str($value);
 					$field == 'title' ? ($where .= " ac.{$field} like '%$value%' $relationship ") : ($where .=  (isset($queryAll) ? '' : " a.{$field} like '%$value%'  $relationship "));
 				}
 				$where = rtrim($where, "$relationship ");
@@ -384,7 +387,7 @@ class Api
 	 *  @param $id 文章ID
 	 *  @param $template 模板
 	 */
-	public function get_prev_next($id, $template=array('prev'=>'<a href="%s" class="prev">上一篇: %s</a>', 'next'=>'<a href="%s" class="next">下一篇: %s</a>'))
+	public function get_prev_next($id, $template=array('prev'=>'<a href="%s" class="prev">[上一篇: %s]</a></br>', 'next'=>'<a href="%s" class="next">[下一篇: %s]</a>'))
 	{
 		$row = $this->CI->archives_model->get_one($id);
 
@@ -467,7 +470,7 @@ class Api
 	 *  @param $type [list|detail|single]
 	 *
 	 */
-	public function get_bread($id, $type, $separator = ' > ')
+	public function get_bread($id, $type, $separator = ' » ')
 	{
 		if ($type == 'detail') {
 			$row = $this->CI->archives_model->get_one($id);
@@ -508,13 +511,13 @@ class Api
 	}
 
 	/**
-	 *  构造面包屑
+	 *  构造面包屑 bak
 	 *
 	 *  递归查找父栏目, 压入栈
 	 *
 	 *  @param $id 分类ID
 	 *  @param $stack 栈引用
-	 */
+
 	private function build_bread($id, &$stack)
 	{
 		$row = $this->CI->column_model->get_one($id);
@@ -529,11 +532,54 @@ class Api
 
 		$temp = array(
 						'title' => $row['column_name'],
-						'url' => build_url(1, $id, $build_type)
+						'url' => shortcut_url(build_url(1, $id, $build_type))
 						);
 
 		array_push($stack, $temp);
 
+
+		if ($row['pid'] == 0) {
+			return $stack;
+		} else {
+			$this->build_bread($row['pid'], $stack);
+		}
+	}
+	*/
+
+	/**
+	 * jaya 20160805
+	 *  构造面包屑
+	 *
+	 *  递归查找父栏目, 压入栈
+	 *
+	 *  @param $id 分类ID
+	 *  @param $stack 栈引用
+	 */
+	private function build_bread($id, &$stack)
+	{
+
+		$row = $this->CI->column_model->get_one($id);
+		if (2 == $row['rule_type'] && $this->CI->rule_model->is_exists("cid=$id AND type=2")) {
+			$build_type = 2;
+			$temp = array(
+						'title' => $row['column_name'],
+						'url' => shortcut_url(build_url(1, $id, $build_type))
+						);
+		} else if (1 == $row['rule_type'] && $this->CI->rule_model->is_exists("cid=$id AND type=1")) {
+			$build_type = 1;
+			$temp = array(
+						'title' => $row['column_name'],
+						'url' => build_url(1, $id, $build_type)
+						);
+		} else {
+			$build_type = 2;
+			$temp = array(
+						'title' => $row['column_name'],
+						'url' => shortcut_url(build_url(1, $id, $build_type))
+						);
+		}
+
+		array_push($stack, $temp);
 
 		if ($row['pid'] == 0) {
 			return $stack;
@@ -558,7 +604,6 @@ class Api
 		$row = $this->CI->db->get()->row_array();
 		return $row['table_name'];
 	}
-
 	/**
 
 	 *  获取每日pv

@@ -55,4 +55,5 @@ class tongji_model extends MY_Model
 	{
 		return $this->db->select('1')->from('tongji')->get()->num_rows();
 	}
+
 }

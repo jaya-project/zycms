@@ -63,7 +63,6 @@ class CKFinder_Connector_Core_Connector
         if (!CKFinder_Connector_Core_Hooks::run('BeforeExecuteCommand', array(&$command))) {
             return;
         }
-
         switch ($command)
         {
             case 'FileUpload':

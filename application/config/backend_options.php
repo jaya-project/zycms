@@ -12,7 +12,7 @@ $config['backend'] = array(
 												'file' => '单文件类型',
 												'htmltext' => '富文本类型'
 											),
-					
+
 					'form_fields' => array(
 										'text' => '普通文本类型',
 										'textarea' => '文本域类型',
@@ -22,11 +22,11 @@ $config['backend'] = array(
 										'image' => '单图类型',
 										'htmltext' => '富文本类型'
 									),
-											
+
 					'recommend_types' => array(
 												'c' => '推荐',
 												'h' => '热门',
-												'n' => '最新'
+												'n' => '首页显示'
 											),
 					'menus' => array(
 									array(
@@ -84,7 +84,7 @@ $config['backend'] = array(
 															'/admin/user_list' => '用户管理',
 														),
 									),
-									
+
 									array(
 										'title' => '系统设置管理',
 										'sub_menu' => array(
@@ -106,12 +106,12 @@ $config['backend'] = array(
 															'/admin/keywords' => '文章关键词管理',
 														),
 									),
-									
+
 									array(
 										'title' => '工具',
 										'sub_menu' => array(
 															'/admin/database_backup' => '数据库备份',
-															'/admin/sitemap' => '网站地图生成',
+															// '/admin/sitemap' => '网站地图生成',
 															'/admin/qr_code' => '二维码生成器',
 															'/admin/auto_push' => '百度主动推送',
 															'/admin/bat_export' => '文章批量导入',
@@ -121,7 +121,7 @@ $config['backend'] = array(
 															'/admin/access_tongji' => '访问统计',
 														),
 									),
-									
+
 									array(
 										'title' => '生成静态',
 										'sub_menu' => array(
@@ -135,8 +135,8 @@ $config['backend'] = array(
                                                             '/admin/templates' => '模板管理'
                                                         ),
                                     ),
-									
-									/*
+
+
 									array(
 										'title' => '会员管理',
 										'sub_menu' => array(
@@ -145,6 +145,6 @@ $config['backend'] = array(
 															'/admin/message_list' => '消息列表'
 														),
 									),
-									*/
+
 								),
 					);

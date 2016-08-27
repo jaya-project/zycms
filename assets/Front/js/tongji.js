@@ -8,7 +8,7 @@
 	var Tj = {
 		userAgnet : '',
 	};
-	
+
 	Tj.GetUserAgent = function() {
 		if (navigator.userAgent.indexOf('Chrome') != -1) {
 			this.userAgent = '谷歌浏览器';
@@ -25,16 +25,23 @@
 		}
 		return this;
 	}
-	
+
 	Tj.pushData = function() {
 		if (navigator.userAgent.indexOf('spider') == -1) {
 			$.get('/tongji/index', {userAgent:this.userAgent}, function(result) {
-				
-			}) 
+
+			})
 		}
-		
+
 	}
-	
+
 	Tj.GetUserAgent().pushData();
-	
+
 })(jQuery);
+
+/**
+ *  可删除
+ *  @author jaya
+ */
+
+ console.log("//程序员可加入QQ群: 551070177");

@@ -1,8 +1,8 @@
 (function($) {
 	var command = [];
 	command.push({'command':[74, 65, 89, 65], 'callback':function() { $('#build_button').show(); $('.delete_button').show(); }});
-	command.push({'command':[70, 85, 67, 75], 'callback':function() { window.top.location.href = '/admin/logout.html'; }});
-	
+	command.push({'command':[70, 85, 67, 75], 'callback':function() { window.top.location.href = '/admin/logout'; }});
+
 	var stack = [];
 	var cleanTimer = null;
 	$(window).keydown(function(e) {
@@ -12,7 +12,7 @@
 		cleanTimer = setTimeout(function() { stack = []; }, 600);
 		bootstrapCommand(stack);
 	});
-	
+
 	function bootstrapCommand(stack) {
 		for (var i in command) {
 			if (command[i].command.toString() == stack.toString()) {

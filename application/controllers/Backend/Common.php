@@ -128,6 +128,7 @@ class Common extends Admin_Controller {
 		return $temp['water_mark'];
 
 	}
+
 	public function GetFiles()
 	{
 		$data = $this->input->post();
@@ -150,4 +151,5 @@ class Common extends Admin_Controller {
 			'files' => $files
 		)));
 	}
+
 }

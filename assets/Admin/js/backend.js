@@ -215,7 +215,6 @@ Module.directive('imageselect', function() {
 		}
 	};
 });
-
 Module.controller('icoCtrl', function($scope, $http, upload) {
 	var NG = $scope;
 
@@ -3622,7 +3621,7 @@ Module.controller('sitemapCtrl', function($http, $scope) {
 		});
 	}
 })
-
+// 123
 Module.controller('buildHtmlCtrl', function($scope, $http, List) {
 	var NG = $scope;
 

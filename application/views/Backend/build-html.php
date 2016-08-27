@@ -1,7 +1,6 @@
 ﻿<style type="text/css">
 	.item:hover { background:#ccc;}
 </style>
-
 <div class="result" ng-controller="buildHtmlCtrl">
   <div class="formtitle">生成静态</div>
   <div class="formtitleline1"></div>
@@ -40,10 +39,14 @@
               <td><input type="text" ng-model="d.source_rule" ng-change="changeAction()"  style="width:400px;" /></td>
 			  <td>
 				<select name="" ng-model="d.type" ng-options="type.id as type.name for type in types" id="">
-					
+
 				</select>
 			  </td>
-              <td><a ng-click="deleteContent($index)" class="delete_button" href="javascript:void(0)">删除</a> <a ng-click="buildSingleHtml(d.id)" href="javascript:void(0)">生成</a></td>
+              <td><a ng-click="deleteContent($index)" class="delete_button" href="javascript:void(0)">删除</a> <a ng-click="buildSingleHtml(d.id)" href="javascript:void(0)">生成</a>
+
+              </td>
+
+
             </tr>
   </tbody>
             <tfoot id="ResultTfoot" style="">
@@ -58,7 +61,7 @@
       </tr>
     </tbody></table>
     <div style="height:10px;"></div>
-	
-	
+
+
   </div>
 </div>

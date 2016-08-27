@@ -1,9 +1,7 @@
 {
     "require": {
         "pclzip/pclzip": "2.8.2",
-		"PHPOffice/PHPExcel": "1.8"
-    },
-    "require-dev": {
-		"masterexploder/phpthumb": "*"
-	}
+		"PHPOffice/PHPExcel": "1.8",
+        "phpmailer/phpmailer": "^5.2"
+    }
 }

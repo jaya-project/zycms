@@ -152,9 +152,9 @@ $config['composer_autoload'] = TRUE;
 |
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
+$config['permitted_uri_chars'] = '\x{4e00}-\x{9fa5}a-zA-Z 0-9~%.:_\-=';
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-=@';
-
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-=';
 
 /*
 |--------------------------------------------------------------------------

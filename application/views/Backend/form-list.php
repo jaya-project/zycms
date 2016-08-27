@@ -24,7 +24,7 @@
 			<tr ng-repeat="d in data">
 			<td ng-bind="d.id"></td>
               <td ng-bind="d.name"></td>
-              <td><a ng-click="deleteForm(d.id)" href="javascript:void(0)">删除</a> <a ng-click="buildCode(d.id)">生成表单</a></td>
+              <td><a ng-click="deleteForm(d.id)" class="delete_button" href="javascript:void(0)">删除</a> <a ng-click="buildCode(d.id)">生成表单</a></td>
             </tr>
   </tbody>
             <tfoot id="ResultTfoot" style="">
@@ -37,8 +37,8 @@
       </tr>
     </tbody></table>
     <div style="height:10px;"></div>
-	
-	
+
+
   </div>
 </div>
 <div class="loading2 hidden" id="loading" ng-style="loading"></div>

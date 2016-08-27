@@ -50,6 +50,11 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 
         $uploadedFile = array_shift($_FILES);
 
+        $rename = explode('.',$uploadedFile['name']);
+        $rename[0] = date('YmdHis').mt_rand(0,99);
+        $uploadedFile['name'] = $rename[0].'.'.$rename[1];
+
+
         if (!isset($uploadedFile['name'])) {
             $this->_errorHandler->throwError(CKFINDER_CONNECTOR_ERROR_UPLOADED_INVALID);
         }
