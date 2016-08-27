@@ -257,12 +257,7 @@ class Form extends FRONT_Controller {
 
     {
 
-        //获取配置参数
-        // 'smtp_server' => 'mail.114my.cn',
-        // 'smtp_port' => '',
-        // 'smtp_email' => 'sendsmtp@114my.cn',
-        // 'smtp_user' => 'sendsmtp@114my.cn',
-        // 'smtp_password' => 'abctu22020336',
+
 
         $this->config->load('system', True);
 
@@ -284,7 +279,7 @@ class Form extends FRONT_Controller {
         // $mail->Port = $conf['smtp_port'];
         $mail->setFrom($conf['smtp_user'], '朝阳cms');
         $mail->addAddress($recevied, 'xxx网站');
-        $mail->Subject = '这是来南城直递兼职表内容的提交';
+        $mail->Subject = '这是来xxx网站上的留言';
         $mail->Body    = $body;
 
        if(!$mail->send()) {
