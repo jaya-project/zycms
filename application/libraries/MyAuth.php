@@ -77,25 +77,10 @@ class MyAuth {
         $this->CI->db->limit(1);
         $result = $this->CI->db->get('admin');
         $result = $result->row_array();
-		
-		//远程验证超级管理员
-		$ch = curl_init();
-		
-		$api = 'http://mlogin.114my.net/index.php?m=Admin&c=Public&a=login&origin=app';
-		
-		$options =  array(
-			CURLOPT_URL => $api,
-			CURLOPT_POST => true,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_POSTFIELDS => array('username'=>$username, 'password'=>$password, 'version_name'=>'0.0.1'),
-		);
-		
-		curl_setopt_array($ch, $options);
-		
-		$return_data = json_decode(curl_exec($ch), true);
+ 
 		
         
-        if (sizeof($result) > 0 || !empty($return_data['status']))
+        if (sizeof($result) > 0)
         {
             $admin = array();
             $admin['admin'] = array();
